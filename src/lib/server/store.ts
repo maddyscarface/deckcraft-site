@@ -18,7 +18,9 @@ export type StoredLead = Record<string, unknown> & {
   status: string;
 };
 
-const LOCAL = path.join(process.cwd(), ".data", "leads.json");
+// Vercel/serverless filesystems are read-only except /tmp.
+const DATA_DIR = process.env.VERCEL ? path.join("/tmp", ".data") : path.join(process.cwd(), ".data");
+const LOCAL = path.join(DATA_DIR, "leads.json");
 
 async function readLocal(): Promise<StoredLead[]> {
   try { return JSON.parse(await fs.readFile(LOCAL, "utf8")); } catch { return []; }
@@ -116,7 +118,7 @@ export async function uploadFile(bucket: string, key: string, body: ArrayBuffer,
     return `${bucket}/${key}`;
   }
   assertDevFallback();
-  const dir = path.join(process.cwd(), ".data", "uploads", bucket);
+  const dir = path.join(DATA_DIR, "uploads", bucket);
   await fs.mkdir(path.dirname(path.join(dir, key)), { recursive: true });
   await fs.writeFile(path.join(dir, key), Buffer.from(body));
   return `${bucket}/${key}`;
