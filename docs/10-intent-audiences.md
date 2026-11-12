@@ -39,3 +39,9 @@ Import procedure: CSV → validate emails (bounce check) → DNC scrub phones �
 
 ## First-party remarketing (start here, it's free)
 Website visitors 30/90 days, assessment-page visitors, property-page visitors 90 days, video viewers, and GHL customer lists (as exclusions and for upsell, with the customer relationship as basis). These usually outperform purchased intent data for a local business.
+
+## Phase 2: server adapter (disabled by default)
+- `src/lib/intent/adapter.ts` provides the DataMoon and AudienceLab normalizers behind one `IntentProvider` interface.
+- `/api/intent/webhook` returns 404 unless `INTENT_ENABLED=true` and `INTENT_PROVIDER` and `INTENT_WEBHOOK_SECRET` are set.
+- Qualifying signals (score ≥ `INTENT_MIN_SCORE`) upsert a GHL contact with tags `intent:<provider>`, `intent:<band>`, `intent:no-sms` and `intent-topic:*`. No opportunity is created and no SMS is sent.
+- Confirm each vendor's field names against the live account before enabling.

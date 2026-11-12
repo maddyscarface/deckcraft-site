@@ -8,10 +8,12 @@ import type { NextConfig } from "next";
  * 'unsafe-inline' is required for the inline pixel/GTM loaders and Next.js bootstrap scripts.
  */
 const dev = process.env.NODE_ENV !== "production";
+// Optional intent-data pixel host (DataMoon / AudienceLab), e.g. "https://cdn.example.com". Only added when set.
+const intentHost = process.env.NEXT_PUBLIC_INTENT_ENABLED === "true" && process.env.INTENT_PIXEL_HOST ? ` ${process.env.INTENT_PIXEL_HOST}` : "";
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""} https://bzrcdn.openai.com https://www.googletagmanager.com https://*.google-analytics.com https://connect.facebook.net https://challenges.cloudflare.com`,
-  "connect-src 'self' https://bzr.openai.com https://bzrcdn.openai.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://www.facebook.com https://*.supabase.co https://challenges.cloudflare.com",
+  `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""} https://bzrcdn.openai.com https://www.googletagmanager.com https://*.google-analytics.com https://connect.facebook.net https://challenges.cloudflare.com https://www.googleadservices.com https://googleads.g.doubleclick.net${intentHost}`,
+  `connect-src 'self'${intentHost} https://bzr.openai.com https://www.google.com https://googleads.g.doubleclick.net https://bzrcdn.openai.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://www.facebook.com https://*.supabase.co https://challenges.cloudflare.com`,
   "img-src 'self' data: blob: https:",
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self' data:",
@@ -31,10 +33,20 @@ const securityHeaders = [
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
 ];
 
+// Staging/preview builds send noindex on every response (production is unaffected).
+const noIndex = process.env.SITE_NOINDEX === "1" || process.env.VERCEL_ENV === "preview";
+
 const config: NextConfig = {
   poweredByHeader: false,
+  images: { formats: ["image/avif", "image/webp"], deviceSizes: [640, 828, 1080, 1280, 1600, 1920] },
   async headers() {
-    return [{ source: "/(.*)", headers: securityHeaders }];
+    return [{ source: "/(.*)", headers: noIndex ? [...securityHeaders, { key: "X-Robots-Tag", value: "noindex, nofollow" }] : securityHeaders }];
+  },
+  async redirects() {
+    // Old brand domain → deckcraftbuild.com (only fires if deckcraftboston.com is ever pointed at this project).
+    return ["deckcraftboston.com", "www.deckcraftboston.com"].map((host) => ({
+      source: "/:path*", has: [{ type: "host" as const, value: host }], destination: "https://deckcraftbuild.com/:path*", permanent: true,
+    }));
   },
 };
 export default config;
