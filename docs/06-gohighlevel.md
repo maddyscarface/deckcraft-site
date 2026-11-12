@@ -39,10 +39,15 @@ The signed photo links expire after 14 days. During the first review, the review
 5. If form_type = newsletter: add tag `newsletter`, add to the "Seasonal Tips" email list, stop.
 6. Start the speed-to-lead workflow below.
 
-## 3. Pipelines
-**Residential:** New Lead → Photos Requested → Photos Received → Qualified → Estimate Booked → Estimate Sent → Follow-Up → Won → Scheduled → Completed → Paid → Lost/Nurture
+## 3. Pipelines (exact Phase 2 spec names; source of truth `src/config/ghl.ts`)
+**(a) DeckCraft · Homeowner Projects:** New → Contact attempted → Photos received → Qualified → Inspection booked → Estimate sent → Follow-up → Won/Lost
 
-**Property Accounts:** Property Inquiry → Qualified Portfolio → Walkthrough → Proposal → Board/Owner Approval → Contract → Active Work → Renewal (Lost/Nurture as a side status)
+**(b) DeckCraft · HOA / Commercial:** Inquiry → Property review → Walkthrough → Bid/RFP → Negotiation → Won/Lost
+
+"Won/Lost" is one closing stage; the opportunity **status** (won / lost) records the outcome. New website leads land in
+*New* (or *Photos received* when photos were attached) / *Inquiry*. Each contact + opportunity gets a geography
+(`dc_geography`, `geo:<region>` tag: Boston, Inner suburbs, MetroWest, North, South, Other) and a sales owner from
+`GHL_OWNER_IDS` (`{"residential":"<userId>","commercial":"<userId>","MetroWest":"<userId>"}`; geography wins).
 
 Required opportunity fields: Service, Town, Value (estimate total), Lost Reason (Price / Timing / Went DIY / Chose other / No response / Out of area / Not a fit).
 
@@ -65,7 +70,7 @@ Required opportunity fields: Service, Town, Value (estimate total), Lost Reason 
 | 10 | Seasonal maintenance | Tag `customer` + service staining | Email (and SMS if consented) at the next Oct and Apr windows: "Time for the water test" |
 | 11 | Annual inspection renewal | Property Accounts stage = Active Work → Renewal | 60 days before the anniversary: renewal email + task. 30 days: call task |
 | 12 | Sync failure alert | (website side) 3 failed GHL attempts | Website cron sets status failed. Owner email alert (Resend) |
-| 13 | Stage → ad platforms | Opportunity stage changes to Qualified / Estimate Booked / Walkthrough / Estimate Sent / Won / Paid | Webhook POST to `https://deckcraftboston.com/api/crm-webhook` with header `x-dc-secret`, body `{stage, lead_id, opportunity_id, email, phone, first_name, last_name, town, value, service, fbc, fbp}`. Stage keys: `qualified`, `estimate_booked`, `walkthrough_booked`, `estimate_sent`, `won`, `paid` |
+| 13 | Stage → ad platforms | Opportunity stage changes to Qualified / Estimate Booked / Walkthrough / Estimate Sent / Won / Paid | Webhook POST to `https://deckcraftboston.com/api/crm-webhook` with header `x-dc-secret`, body `{stage, lead_id, opportunity_id, email, phone, first_name, last_name, town, value, service, fbc, fbp}`. Event keys: `new`, `contact_attempted`, `photos_received`, `qualified`, `inspection_booked`, `estimate_sent`, `follow_up`, `inquiry`, `property_review`, `walkthrough`, `bid_rfp`, `negotiation`, `won`, `lost`, `paid` (revenue), `no_show`. Legacy `estimate_booked` / `walkthrough_booked` / `new_lead` still accepted. Idempotent per opportunity+event; retries are safe |
 
 **Opt-out handling:** GHL handles STOP/UNSUBSCRIBE automatically. Make sure "DND" applies across workflows. Never re-add opted-out contacts.
 
@@ -112,3 +117,18 @@ Subject: Your walkthrough request — DeckCraft Boston
   - Writes `revenue_won` and `revenue_paid` back to the lead for attribution.
   - Tags `stage:<stage>` and `wf:<seq>`: visit_reminders, estimate_follow_up, review_request and lost_reengage.
 - **Failed syncs** are retried by `/api/cron/retry-ghl`.
+
+
+## Phase 2 spec alignment: automations by stage
+| Trigger (webhook event) | Sequence tag | Purpose |
+|---|---|---|
+| Website lead without photos | `wf:photo_reminder` | Missing-photo prompts |
+| `contact_attempted` | `wf:no_response_recovery` | Couldn't reach them |
+| `inspection_booked` / `walkthrough` | `wf:visit_reminders` | Reminders (SMS only with consent) |
+| `no_show` | `wf:no_show_recovery` | No-show reminder / reschedule |
+| `estimate_sent` / `bid_rfp` / `follow_up` | `wf:estimate_follow_up` | Post-proposal follow-up |
+| `paid` | `wf:review_request` | Review request (ask everyone, never gate) |
+| `lost` | `wf:seasonal_reactivation` | Seasonal reactivation |
+
+Two-way sync: the site upserts contacts/opportunities (API v2) with a retry queue (`/api/cron/retry-sync`); GHL posts stage
+changes and won/paid values back to `/api/crm-webhook`, which stores them on the lead for revenue attribution.

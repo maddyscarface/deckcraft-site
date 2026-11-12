@@ -5,19 +5,20 @@
 **Positioning:** "Deck Repair. Done Right. Built for Boston." · Secondary: "Repair. Restore. Protect. Build."
 **Promise:** an honest repair-or-replace answer from photos, a written price before work starts, and one contact plus photo reports for property clients.
 
-## Color (Hunter carries 80%+ of every page)
+## Color: "Midnight & Copper" (Phase 2 spec, navy-led)
 | Token | Hex | Use |
 |---|---|---|
-| Hunter | #1A3828 | Primary backgrounds; headings on light |
-| Hunter mid | #1F4030 | Cards on hunter |
-| Hunter light | #2A5040 | Borders on hunter |
-| Linen | #D4B896 | CTAs, the "Craft" in the wordmark, accents |
-| Linen dark | #A07830 | Hover, small accents on cream |
-| Cream | #F5F0E8 | Light canvas and cards |
-| Cream dark | #E8E0CC | Dividers |
-| Patina | #4A7060 | Sparingly: eyebrows, announcement bar |
-| Amber | #C8A46A | Logo mark; "inspection recommended" tone |
-| Sage (added) | #B7C4B0 | Body text on hunter. The spec's muted #8A9A80 is only ~4.3:1 on hunter, so sage is used for body text to meet WCAG AA |
+| Midnight navy | #172637 | Primary surfaces: header, hero text panel, dark bands, primary buttons |
+| Navy 2 / 3 | #1D3045 / #2E4258 | Cards and borders on navy |
+| Cedar / copper | #AD7047 | Rules, linework, focus rings, large accents |
+| Cedar (AA fill) | #9A5E37 | Filled buttons/chips with white text (white on #AD7047 is only 4.05:1) |
+| Cedar deep | #8E5631 | Small copper text on warm white (5.3:1) |
+| Cedar light | #C99470 | Copper text on navy (5.8:1) |
+| Warm white | #F5F2EC | Page canvas |
+| Muted slate | #617080 | Secondary text (4.54:1 on warm white) |
+| Charcoal | #24282D | Body text (13.3:1) |
+
+No gradients, glow cards, emoji tiles or fake counters. Photo overlays are flat navy at 58–62% only where text sits on a photo.
 
 ## Type
 Fraunces (500–700) for editorial headlines; Inter (400–700) for body/UI. Self-hosted variable fonts (no Google Fonts call). H1 56–58px desktop / 38–40px mobile, line-height ~1.05. Eyebrows: Inter 500, 12px, uppercase, 0.15em tracking.

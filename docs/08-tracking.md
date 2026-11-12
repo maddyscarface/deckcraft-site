@@ -73,3 +73,17 @@ Only after every step passes: mark the pixel, CAPI, GA4, Ads and GHL as **live**
 - **Also captured:** first-touch source, medium and campaign (`ft_*`) and the GA client id.
 - **Revenue:** CRM stage webhooks store won and paid revenue. `/api/admin/attribution` summarizes it, and `?format=gads` exports Google Ads offline conversions.
 - **Intent pixel:** loads only with `NEXT_PUBLIC_INTENT_ENABLED=true` and after ad consent is granted. See `10-intent-audiences.md`.
+
+## Phase 2 spec §4 measurement events (source of truth `src/config/measurement.ts`)
+| Event | Where it fires | Notes |
+|---|---|---|
+| `assessment_view` | Browser dataLayer: /free-assessment, /new-deck-estimate, /request-walkthrough | `form_type` = assessment / new_deck_estimate / walkthrough |
+| `photos_uploaded` | Browser, after photos upload in a form (alongside legacy `photo_upload_success`) | **Not a conversion.** Never import it as a sale or bid on it as a purchase |
+| `qualified_lead` | Browser at submit when tier is hot/warm; server (GA4 MP + Meta CAPI `QualifiedLead` + OpenAI custom) when GHL moves to *Qualified* | |
+| `appointment_booked` | Server, GHL *Inspection booked* / *Walkthrough* | Meta `Schedule`, OpenAI `appointment_scheduled` |
+| `estimate_sent` | Server, GHL *Estimate sent* / *Bid/RFP* | |
+| `won_job` | Server, GHL won (with contract value) | Meta `WonJob` |
+| `revenue` | Server, GHL `paid` event (with collected value, `transaction_id` = opportunity id) | Meta `Purchase`; Google Ads offline import via `/api/admin/attribution?format=gads` |
+
+`generate_lead` still fires on every successful form so existing conversions keep working. All server events use
+`event_id = <opportunity_id>:<event>` and the webhook is idempotent, so GHL retries never double count.
