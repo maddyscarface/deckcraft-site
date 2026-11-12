@@ -129,7 +129,7 @@ export function PhotoAssessmentForm({ presetService, presetTown, presetCustomerT
       <Field id="first_name" label="First name *" error={errors.first_name}><input id="first_name" className="field" autoComplete="given-name" value={v.first_name} onChange={(e) => set("first_name")(e.target.value)} /></Field>
       {!condensed && <Field id="last_name" label="Last name *" error={errors.last_name}><input id="last_name" className="field" autoComplete="family-name" value={v.last_name} onChange={(e) => set("last_name")(e.target.value)} /></Field>}
       <Field id="email" label="Email *" error={errors.email}><input id="email" type="email" className="field" autoComplete="email" value={v.email} onChange={(e) => set("email")(e.target.value)} /></Field>
-      <Field id="phone" label="Phone *" error={errors.phone} hint="Mobile preferred, so we can text a quick question"><input id="phone" type="tel" className="field" autoComplete="tel" value={v.phone} onChange={(e) => set("phone")(e.target.value)} /></Field>
+      <div className={condensed ? "sm:col-span-2" : ""}><Field id="phone" label="Phone *" error={errors.phone} hint="Mobile preferred, so we can text a quick question"><input id="phone" type="tel" className="field" autoComplete="tel" value={v.phone} onChange={(e) => set("phone")(e.target.value)} /></Field></div>
       <div className="sm:col-span-2"><SmsConsent checked={v.sms_consent} onChange={set("sms_consent")} /></div>
     </div>
   );
@@ -223,7 +223,7 @@ export function PhotoAssessmentForm({ presetService, presetTown, presetCustomerT
       <div className="mt-6 flex gap-3">
         {!condensed && step > 0 && <button type="button" className="btn border border-navy" onClick={() => setStep(step - 1)} disabled={!!busy}>Back</button>}
         <button type="submit" disabled={!!busy} className="btn btn-char h-[52px] flex-1">
-          {condensed || step === LAST ? submitLabel : step === 3 && !files.length ? "Skip photos for now" : "Continue"}
+          {condensed || step === LAST ? (submitLabel === "Send My Photos — Get Free Assessment" ? <>Send My Photos<span className="hidden sm:inline"> — Get Free Assessment</span></> : submitLabel) : step === 3 && !files.length ? "Skip photos for now" : "Continue"}
         </button>
       </div>
       {(condensed || step >= 3) && <PrivacyNote />}

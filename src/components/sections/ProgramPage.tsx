@@ -30,7 +30,17 @@ export type ProgramPageProps = {
 
 export function ProgramTable() {
   return (
-    <div className="overflow-x-auto border border-line bg-white">
+    <>
+    <ul className="space-y-4 md:hidden">
+      {PROGRAMS.map((p) => (
+        <li key={p.name} className="border border-line border-l-2 border-l-cedar bg-white p-5">
+          <h3 className="font-display text-lg leading-snug">{p.name}</h3>
+          <p className="mt-2 text-[15px] leading-relaxed text-hunter/80">{p.gets}</p>
+          <p className="mt-3 text-sm text-stone"><span className="font-semibold text-char">Best for:</span> {p.bestFor}</p>
+        </li>
+      ))}
+    </ul>
+    <div className="hidden overflow-x-auto border border-line bg-white md:block">
       <table className="w-full min-w-[640px] text-left text-[15px]">
         <thead className="bg-char text-white"><tr><th className="p-4">Program</th><th className="p-4">What you get</th><th className="p-4">Best for</th></tr></thead>
         <tbody>
@@ -42,6 +52,7 @@ export function ProgramTable() {
         </tbody>
       </table>
     </div>
+    </>
   );
 }
 
@@ -87,7 +98,7 @@ export function ProgramPage(p: ProgramPageProps) {
       {p.faqs && <FaqSection faqs={p.faqs} />}
       <section id="get-started" className="scroll-mt-20 bg-char px-5 py-24 lg:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="font-display text-[32px] leading-tight text-white md:text-[42px]">Tell us about your properties. <span className="accent text-cedar-light">We&apos;ll come walk them.</span></h2>
+          <h2 className="font-display text-[32px] leading-tight text-white md:text-[42px]">Tell us about your properties. <span className="accent text-cedar-light">We&apos;ll scope the next step.</span></h2>
           <p className="mt-3 mb-10 text-white/70">Free walkthrough for associations, landlords and commercial properties.</p>
           <WalkthroughForm presetType={p.presetType} />
         </div>

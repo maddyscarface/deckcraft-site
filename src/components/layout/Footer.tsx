@@ -5,8 +5,8 @@ import { site } from "@/config/site";
 import { TOWNS } from "@/lib/towns";
 
 const services = [
-  ["Deck Repair", "/services/deck-repair"], ["Staining and Sealing", "/services/deck-staining-sealing"],
-  ["Boards, Railings and Stairs", "/services/board-railing-stairs"], ["New Decks", "/services/new-decks"], ["Rebuild and Resurface", "/services/deck-rebuild-resurfacing"], ["Project Calculator", "/project-calculator"],
+  ["New Decks", "/services/new-decks"], ["Rebuild and Resurface", "/services/deck-rebuild-resurfacing"], ["Structural Deck Repair", "/services/deck-repair"],
+  ["Railing and Stair Safety", "/services/board-railing-stairs"], ["Staining and Sealing", "/services/deck-staining-sealing"], ["Project Calculator", "/project-calculator"],
   ["Residential Fencing", "/fencing/residential"], ["Commercial Fencing", "/fencing/commercial"],
   ["Repair-or-Replace Checker", "/repair-or-replace"],
 ];
@@ -18,7 +18,7 @@ const company = [
 export function Footer() {
   const socials = Object.entries(site.social).filter(([, u]) => u) as [string, string][];
   return (
-    <footer className="bg-char pb-14 text-white lg:pb-0">
+    <footer className="border-t border-white/10 bg-char pb-14 text-white lg:pb-0">
       <div className="border-b border-white/10 px-5 py-14 lg:px-8">
         <div className="mx-auto grid max-w-[1320px] items-end gap-8 lg:grid-cols-[1.2fr_1fr]">
           <div>
@@ -35,7 +35,7 @@ export function Footer() {
         <div className="mx-auto grid max-w-[1320px] gap-12 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
           <div>
             <Wordmark />
-            <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-fog">Deck repair, refinishing, railings and fencing for Greater Boston homes, associations and property owners.</p>
+            <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-fog">New decks, rebuilds, repairs, staining and fencing for Greater Boston homes, associations and commercial properties.</p>
             {socials.length > 0 && (
               <div className="mt-5 flex gap-4 text-sm">
                 {socials.map(([k, u]) => <a key={k} className="text-white/80 underline-offset-4 hover:text-white hover:underline" href={u} rel="noopener" target="_blank">{k[0].toUpperCase() + k.slice(1)}</a>)}

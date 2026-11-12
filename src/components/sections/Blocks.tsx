@@ -1,9 +1,10 @@
 import { PricingViewBeacon } from "@/components/estimate/PricingViewBeacon";
+import { PricingTag } from "../ui/PricingTag";
 import Link from "next/link";
 import { Icon } from "../ui/Icon";
 import { Photo } from "../ui/Photo";
 import { SERVICE_CARDS, PRICE_DISCLAIMER, type PriceRow } from "@/lib/services";
-import { PRICING, pricingLabel } from "@/config/pricing";
+import { PRICING } from "@/config/pricing";
 import { TOWNS } from "@/lib/towns";
 import { site } from "@/config/site";
 import type { PhotoKey } from "@/lib/photos";
@@ -76,7 +77,7 @@ export function PriceGuide({ rows, title = "How pricing works" }: { rows: PriceR
   return (
     <div id="price-guide" className="scroll-mt-24 border border-line bg-white p-6 shadow-card md:p-10">
       <PricingViewBeacon where="price-guide" />
-      <p className="eyebrow text-cedar-deep">{pricingLabel()}</p>
+      <PricingTag />
       <h3 className="mt-3 font-display text-2xl md:text-3xl">{title}</h3>
       <table className="mt-6 w-full text-left text-[15px]">
         <tbody>
@@ -100,7 +101,7 @@ export function PriceGuide({ rows, title = "How pricing works" }: { rows: PriceR
 export const PROCESS = [
   { icon: "Camera", title: "Send us photos", body: "Upload 3 photos: the whole deck or fence, the worst spots, and the stairs or gates. It takes about 2 minutes." },
   { icon: "MessageCircle", title: "We assess and advise", body: "We review your photos and tell you honestly whether it looks like a repair, a refinish or a rebuild, and how we would price it." },
-  { icon: "Calendar", title: "We confirm on site", body: "A short visit to confirm scope and lock your price in writing before any work starts." },
+  { icon: "Calendar", title: "We confirm the scope", body: "If anything needs a closer look, we agree a site visit with you. Your price is set in writing before any work starts." },
   { icon: "Sparkles", title: "We do the work and send photos", body: "We finish, clean up and walk it with you. Property clients get a photo report." },
 ];
 
