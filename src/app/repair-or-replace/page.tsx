@@ -10,8 +10,8 @@ export default function Page() {
   return (
     <>
       <JsonLd data={faqSchema([{ q: "Is it better to repair or replace a deck?", a: "If the framing, joists, posts and ledger are sound, repair is usually the better value. If rot has reached the structure, replacement is often safer. An in-person look confirms it." }])} />
-      <PageHero compact eyebrow="REPAIR-OR-REPLACE CHECKER" h1="Repair or replace? Get a preliminary read in a minute." sub="Seven questions about age, boards, framing, railings and stairs. Then add photos and dimensions so we can confirm." />
-      <section className="bg-cream px-5 py-16"><div className="mx-auto max-w-3xl"><RepairOrReplaceChecker /></div></section>
+      <PageHero photo="weatheredBoards" position="50% 40%" eyebrow="Repair-or-replace checker" h1="Repair or replace? Get a preliminary read in a minute." sub="Seven questions about age, boards, framing, railings and stairs. Then add photos and dimensions so we can confirm." />
+      <section className="bg-bone px-5 py-16"><div className="mx-auto max-w-3xl"><RepairOrReplaceChecker /></div></section>
       <section className="bg-white px-5 py-16">
         <div className="prose-dc mx-auto max-w-3xl">
           <h2>How we actually decide</h2>

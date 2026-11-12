@@ -10,12 +10,12 @@ export const metadata = meta("/request-walkthrough", "Request a Property Walkthr
 export default function Page() {
   return (
     <>
-      <ViewService name="Walkthrough Page" />
+      <ViewService name="Walkthrough Page" assessment="walkthrough" />
       <section className="bg-hunter px-5 pt-16 pb-28 text-white">
         <div className="mx-auto max-w-3xl text-center">
           <p className="eyebrow text-linen">PROPERTY WALKTHROUGH</p>
-          <h1 className="mt-3 font-display text-[36px] leading-tight font-bold md:text-[48px]">Tell us about your properties. We&apos;ll come walk them.</h1>
-          <p className="mt-4 text-lg text-sage">Free walkthrough for associations, landlords and commercial properties, followed by written findings and pricing.</p>
+          <h1 className="mt-3 font-display text-[36px] leading-tight font-bold md:text-[48px]">Tell us about your properties. We&apos;ll scope the right next step.</h1>
+          <p className="mt-4 text-lg text-sage">For HOAs, condo associations, landlords and commercial sites. We review your portfolio, confirm a walkthrough date with you, then send written findings and pricing per property.</p>
         </div>
       </section>
       <section className="-mt-16 px-5 pb-20">
