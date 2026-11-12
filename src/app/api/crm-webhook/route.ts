@@ -4,6 +4,9 @@ import { z } from "zod";
 import { env } from "@/lib/server/env";
 import { sendCapi, sendGa4 } from "@/lib/server/integrations";
 import { openAiStageEvent, sendOpenAiEvent } from "@/lib/openai-ads/server";
+import { updateLead } from "@/lib/server/store";
+import { tagContact } from "@/lib/server/ghl-api";
+import { STAGE_SEQUENCES } from "@/lib/crm/follow-up";
 
 export const runtime = "nodejs";
 
@@ -19,6 +22,7 @@ const STAGE_EVENTS = {
   estimate_sent: { ga4: "estimate_sent", meta: "EstimateSent" },
   won: { ga4: "contract_signed", meta: "SubmitApplication" },
   paid: { ga4: "purchase", meta: "Purchase" },
+  lost: { ga4: "lead_lost", meta: "LeadLost" },
 } as const;
 
 const body = z.object({
@@ -37,6 +41,7 @@ const body = z.object({
   ga_client_id: z.string().optional(),
   openai_obref: z.string().optional(),
   openai_oppref: z.string().optional(),
+  contact_id: z.string().optional(),
 });
 
 function authorized(req: Request) {
@@ -55,6 +60,18 @@ export async function POST(req: Request) {
   // Deterministic event_id per opportunity+stage so GHL retries never double count.
   const eventId = `${d.opportunity_id}:${d.stage}`;
   const value = d.stage === "won" || d.stage === "paid" ? d.value : undefined;
+
+  // Revenue attribution: write the stage + value back onto the lead so /api/admin/attribution and the
+  // Google Ads offline-conversion export can tie revenue to the original click / campaign.
+  const now = new Date().toISOString();
+  const patch: Record<string, unknown> = { stage: d.stage, stage_at: now, ghl_opportunity_id: d.opportunity_id };
+  if (d.stage === "won") Object.assign(patch, { revenue_won: d.value ?? null, won_at: now });
+  if (d.stage === "paid") Object.assign(patch, { revenue_paid: d.value ?? null, paid_at: now });
+  const stored = await updateLead(d.lead_id, patch).then(() => true).catch((e) => { console.error("[crm-webhook] lead update", String(e).slice(0, 200)); return false; });
+  const seq = STAGE_SEQUENCES[d.stage];
+  const followUp = seq && d.contact_id ? await tagContact(d.contact_id, [`wf:${seq.key}`, `stage:${d.stage}`]) : { skipped: true };
+
+  if (d.stage === "lost") return NextResponse.json({ ok: true, event_id: eventId, stored, followUp });
 
   const oa = openAiStageEvent(d.stage);
   const [meta, ga4, openai] = await Promise.all([
@@ -75,5 +92,5 @@ export async function POST(req: Request) {
         })
       : Promise.resolve({ sent: false, skipped: "no mapping" }),
   ]);
-  return NextResponse.json({ ok: true, event_id: eventId, meta, ga4, openai });
+  return NextResponse.json({ ok: true, event_id: eventId, stored, followUp, meta, ga4, openai });
 }
