@@ -7,15 +7,18 @@ export const OWNER_TO_CONFIRM = "[OWNER TO CONFIRM]";
 
 export const site = {
   name: "DeckCraft Boston",
-  domain: "deckcraftboston.com",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://deckcraftboston.com",
+  domain: "deckcraftbuild.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://deckcraftbuild.com",
   tagline: "Deck Repair. Done Right. Built for Boston.",
   secondaryTagline: "Repair. Restore. Protect. Build.",
-  email: "hello@deckcraftboston.com",
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@deckcraftbuild.com",
 
-  /** Replace before launch. `null` hides phone CTAs and shows "Send photos" instead. */
-  phone: process.env.NEXT_PUBLIC_PHONE || null as string | null, // e.g. "(617) 555-0100"
-  phoneE164: process.env.NEXT_PUBLIC_PHONE_E164 || null as string | null, // e.g. "+16175550100"
+  /**
+   * No business number yet. Phone + click-to-call render ONLY when BOTH env vars are set
+   * (display format + E.164). Never hard-code or show a placeholder number.
+   */
+  phone: (process.env.NEXT_PUBLIC_PHONE && process.env.NEXT_PUBLIC_PHONE_E164 ? process.env.NEXT_PUBLIC_PHONE : null) as string | null,
+  phoneE164: (process.env.NEXT_PUBLIC_PHONE && process.env.NEXT_PUBLIC_PHONE_E164 ? process.env.NEXT_PUBLIC_PHONE_E164 : null) as string | null,
 
   /** Business-hour response promise. null → copy says "within one business day" is NOT claimed; neutral wording used. */
   responseHours: process.env.NEXT_PUBLIC_RESPONSE_HOURS || null as string | null, // e.g. "4"
@@ -24,11 +27,12 @@ export const site = {
 
   hours: null as null | { days: string[]; opens: string; closes: string; label: string },
 
+  /** Social profiles: unverified handles are hidden. Set the env var once the profile exists. */
   social: {
-    instagram: "https://www.instagram.com/deckcraftboston",
-    facebook: "https://www.facebook.com/deckcraftboston",
-    tiktok: "https://www.tiktok.com/@deckcraftboston",
-  },
+    instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL || null,
+    facebook: process.env.NEXT_PUBLIC_FACEBOOK_URL || null,
+    tiktok: process.env.NEXT_PUBLIC_TIKTOK_URL || null,
+  } as Record<"instagram" | "facebook" | "tiktok", string | null>,
 
   /** Credentials: leave false/null until verified with documents. */
   credentials: {
@@ -49,6 +53,9 @@ export const site = {
 
   inspectionsPerDay: 8, // OWNER TO CONFIRM — Portfolio Inspection Planner rate
 } as const;
+
+/** Staging / preview builds must never be indexed. Production on Vercel has VERCEL_ENV=production. */
+export const noIndex = process.env.SITE_NOINDEX === "1" || process.env.VERCEL_ENV === "preview";
 
 export function responsePhrase() {
   return site.responseHours
