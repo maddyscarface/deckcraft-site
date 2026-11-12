@@ -13,7 +13,8 @@ import { sendOpenAiEvent } from "../openai-ads/server";
 import { budgetFit, qualifierFields, qualifierScore, sanitizeQualifiers, type Qualifiers } from "../estimate/qualifiers";
 import { renderLeadBrief, sendLeadBrief } from "../estimate/lead-brief";
 import { START_TO_TIMELINE, estimateConfig, briefTheme } from "@/config/estimate";
-import { SERVICE_LABELS } from "../lead-schema";
+import { SERVICE_LABELS, WORK_TYPE_LABELS, MATERIAL_PREF_LABELS, URGENCY_LABELS, CONTACT_PREF_LABELS } from "../lead-schema";
+import { geographyFor } from "../towns";
 
 /** Build the exact payload GHL's inbound webhook receives (field map in docs/06-gohighlevel.md). */
 export async function ghlPayload(lead: LeadInput, stored: { id: string; score: number }, q?: Qualifiers) {
@@ -46,6 +47,11 @@ export async function ghlPayload(lead: LeadInput, stored: { id: string; score: n
     budget_process: lead.budget_process,
     maintenance_frequency: lead.maintenance_frequency,
     message: lead.message,
+    zip: lead.zip, work_type: lead.work_type, current_structure: lead.current_structure,
+    material_preference: lead.material_preference, access: lead.access, hoa_permit: lead.hoa_permit, availability: lead.availability,
+    urgency: lead.urgency, procurement: lead.procurement?.join(", "), preferred_contact: lead.preferred_contact,
+    walkthrough_requested: lead.walkthrough_requested,
+    geography: geographyFor(lead.town ?? lead.towns?.[0]),
     checker_result: lead.checker_result,
     photo_urls: photos.join("\n"),
     photo_count: photos.length,
@@ -89,6 +95,7 @@ export async function submitLead(lead: LeadInput, ctx: { ip?: string; ua?: strin
     sms_consent_at: lead.sms_consent ? new Date().toISOString() : null,
     sms_consent_ip: lead.sms_consent ? ctx.ip : null,
     funnel,
+    geography: geographyFor(lead.town ?? lead.towns?.[0]),
     pipeline: pipelineFor(lead),
     tags: tagsFor(lead),
     lead_score: score,
@@ -135,6 +142,11 @@ export async function submitLead(lead: LeadInput, ctx: { ip?: string; ua?: strin
           details: [
             ["Services", lead.services?.map((s) => SERVICE_LABELS[s]).join(", ")], ["Material now", lead.material], ["Size noted", lead.size_estimate],
             ["Customer", lead.customer_type], ["Company", lead.company_name], ["Properties", lead.property_count ? String(lead.property_count) : undefined],
+            ["Repair / replace / new", lead.work_type ? WORK_TYPE_LABELS[lead.work_type] : undefined], ["Current structure", lead.current_structure],
+            ["Preferred material", lead.material_preference ? MATERIAL_PREF_LABELS[lead.material_preference] : undefined], ["Access", lead.access],
+            ["HOA / permit", lead.hoa_permit], ["ZIP", lead.zip], ["Availability", lead.availability],
+            ["Urgency", lead.urgency ? URGENCY_LABELS[lead.urgency] : undefined], ["Sites / structures", lead.structure_count ? String(lead.structure_count) : undefined],
+            ["Procurement", lead.procurement?.join(", ")], ["Preferred contact", lead.preferred_contact ? CONTACT_PREF_LABELS[lead.preferred_contact] : undefined],
             ["Checker result", lead.checker_result], ["Notes", lead.message],
           ],
           photoUrls: String(payload.photo_urls || "").split("\n").filter(Boolean),

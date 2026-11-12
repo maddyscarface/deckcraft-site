@@ -47,7 +47,7 @@ const redact = (email: string) => email.replace(/^(.).*(@.*)$/, "$1***$2");
 
 export async function syncLeadToGhl(l: LeadForGhl, plan: Sequence[], c: GhlConfig = ghlConfig()): Promise<GhlSyncResult> {
   if (!ghlApiReady(c)) {
-    console.info("[ghl:log]", JSON.stringify({ lead: l.lead_id, email: redact(l.email), pipeline: pipelineLabel(l.pipeline), stage: l.stage ?? "new_lead", score: l.score, tier: l.tier, tags: l.tags.length, sequences: plan.map((s) => s.key) }));
+    console.info("[ghl:log]", JSON.stringify({ lead: l.lead_id, email: redact(l.email), pipeline: pipelineLabel(l.pipeline), stage: l.stage ?? "new", geography: l.geography ?? null, score: l.score, tier: l.tier, tags: l.tags.length, sequences: plan.map((s) => s.key) }));
     return { mode: "log", ok: true, workflows: plan.map((s) => s.key) };
   }
   const contact = await call(c, "/contacts/upsert", contactBody(l, c));
