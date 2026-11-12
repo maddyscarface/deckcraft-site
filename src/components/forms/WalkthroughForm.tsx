@@ -105,7 +105,7 @@ function WalkthroughFormInner({ presetType, presetService }: { presetType?: Excl
   }
 
   return (
-    <form className="relative rounded-xl border border-hunter bg-white p-6 shadow-premium md:p-8" noValidate data-testid="walkthrough-form"
+    <form className="relative rounded-[2px] border border-line bg-white p-6 shadow-premium md:p-10" noValidate data-testid="walkthrough-form"
       onSubmit={(e) => { e.preventDefault(); if (step === 4) onSubmit(); else if (validate(step)) setStep(step + 1); }}>
       <Honeypot value={hp} onChange={setHp} />
       <Progress step={step} total={5} labels={LABELS} />
@@ -157,7 +157,7 @@ function WalkthroughFormInner({ presetType, presetService }: { presetType?: Excl
           {CAL ? (
             <>
               <p className="text-sm">Pick a walkthrough time below, then submit. If no time works, leave a preferred window instead.</p>
-              <iframe src={CAL} title="Book a walkthrough" className="h-[560px] w-full rounded-md border border-cream-dark" />
+              <iframe src={CAL} title="Book a walkthrough" className="h-[560px] w-full rounded-[2px] border border-cream-dark" />
             </>
           ) : null}
           <Field id="w_window" label="Preferred walkthrough window" hint="e.g. weekday mornings in the next two weeks"><input id="w_window" className="field" value={v.preferred_window} onChange={(e) => set("preferred_window")(e.target.value)} /></Field>
@@ -173,5 +173,5 @@ function WalkthroughFormInner({ presetType, presetService }: { presetType?: Excl
 }
 
 export function WalkthroughForm(props: { presetType?: Exclude<CustomerType, "homeowner">; presetService?: ServiceKey }) {
-  return <Suspense fallback={<div className="h-96 rounded-xl border border-hunter bg-white" />}><WalkthroughFormInner {...props} /></Suspense>;
+  return <Suspense fallback={<div className="h-96 rounded-[2px] border border-line bg-white" />}><WalkthroughFormInner {...props} /></Suspense>;
 }

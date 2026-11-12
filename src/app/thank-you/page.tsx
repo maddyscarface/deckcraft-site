@@ -10,15 +10,15 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ t
   const walk = type === "walkthrough";
   return (
     <section className="bg-cream px-5 py-24">
-      <div className="mx-auto max-w-2xl rounded-xl bg-white p-8 shadow-premium">
+      <div className="mx-auto max-w-2xl rounded-[2px] bg-white p-8 shadow-premium">
         {walk ? (
           <SuccessState title="Request received." body={`A DeckCraft project lead will contact you ${site.responseHours ? `within ${site.responseHours} business hours` : "shortly"} to confirm a walkthrough date. Check your email for confirmation.`}>
             <Link href="/property-programs" className="btn btn-hunter">See Property Programs</Link>
           </SuccessState>
         ) : (
-          <SuccessState title="Photos received!" body={`We're reviewing your request now and will reply ${responsePhrase()}. Check your texts and email for confirmation.`}>
-            <Link href="/gallery" className="btn btn-hunter">See Our Recent Work</Link>
-            <a href={site.social.instagram} className="btn border border-hunter" rel="noopener">Follow on Instagram</a>
+          <SuccessState title="Photos received!" body={`We're reviewing your request now and will reply ${responsePhrase()}. Check your email for confirmation.`}>
+            <Link href="/repair-or-replace" className="btn btn-hunter">Try the Repair-or-Replace Checker</Link>
+            {site.social.instagram && <a href={site.social.instagram} className="btn border border-hunter" rel="noopener">Follow on Instagram</a>}
           </SuccessState>
         )}
       </div>

@@ -17,12 +17,12 @@ export function NewsletterForm() {
     else { setState("error"); setMsg(r.fields?.email ?? r.error ?? "Something went wrong"); }
   }
 
-  if (state === "done") return <p className="font-medium text-hunter">You're on the list. Seasonal tips only, and you can unsubscribe anytime.</p>;
+  if (state === "done") return <p className="font-medium text-white">You're on the list. Seasonal tips only, and you can unsubscribe anytime.</p>;
   return (
     <form onSubmit={onSubmit} className="flex w-full max-w-md flex-col gap-2 sm:flex-row" noValidate>
       <label htmlFor="nl-email" className="sr-only">Email address</label>
       <input id="nl-email" type="email" required className="field flex-1" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
-      <button className="btn bg-hunter text-white hover:bg-hunter-light" disabled={state === "sending"}>{state === "sending" ? "Subscribing…" : "Subscribe"}</button>
+      <button className="btn btn-cedar" disabled={state === "sending"}>{state === "sending" ? "Subscribing…" : "Subscribe"}</button>
       {state === "error" && <p className="err sm:basis-full">{msg}</p>}
     </form>
   );

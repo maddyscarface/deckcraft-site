@@ -120,7 +120,7 @@ export function PhotoAssessmentForm({ presetService, presetTown, presetCustomerT
       <Field id="first_name" label="First name *" error={errors.first_name}><input id="first_name" className="field" autoComplete="given-name" value={v.first_name} onChange={(e) => set("first_name")(e.target.value)} /></Field>
       {!condensed && <Field id="last_name" label="Last name *" error={errors.last_name}><input id="last_name" className="field" autoComplete="family-name" value={v.last_name} onChange={(e) => set("last_name")(e.target.value)} /></Field>}
       <Field id="email" label="Email *" error={errors.email}><input id="email" type="email" className="field" autoComplete="email" value={v.email} onChange={(e) => set("email")(e.target.value)} /></Field>
-      <Field id="phone" label="Phone *" error={errors.phone} hint="(617) 000-0000"><input id="phone" type="tel" className="field" autoComplete="tel" value={v.phone} onChange={(e) => set("phone")(e.target.value)} /></Field>
+      <Field id="phone" label="Phone *" error={errors.phone} hint="Mobile preferred, so we can text a quick question"><input id="phone" type="tel" className="field" autoComplete="tel" value={v.phone} onChange={(e) => set("phone")(e.target.value)} /></Field>
       <div className="sm:col-span-2"><SmsConsent checked={v.sms_consent} onChange={set("sms_consent")} /></div>
     </div>
   );
@@ -131,7 +131,7 @@ export function PhotoAssessmentForm({ presetService, presetTown, presetCustomerT
         <ChoiceGrid name="Customer type" value={v.customer_type} onChange={set("customer_type")} options={(Object.keys(CUSTOMER_LABELS) as CustomerType[]).map((k) => ({ value: k, label: CUSTOMER_LABELS[k] }))} />
       </div>
       {isProperty && (
-        <div className="rounded-md bg-linen-pale p-4 text-sm">
+        <div className="rounded-[2px] bg-linen-pale p-4 text-sm">
           <Field id="property_count" label="How many properties?"><input id="property_count" type="number" min={1} className="field max-w-[160px]" value={v.property_count} onChange={(e) => set("property_count")(e.target.value)} /></Field>
           <p className="mt-2">Multiple properties? <Link href="/request-walkthrough" className="font-semibold underline">Request a walkthrough instead →</Link></p>
         </div>
@@ -177,7 +177,7 @@ export function PhotoAssessmentForm({ presetService, presetTown, presetCustomerT
   const submitLabel = busy === "uploading" ? `Uploading photos ${uploaded}/${files.length}…` : busy === "sending" ? "Sending…" : "Send My Photos — Get Free Assessment";
 
   return (
-    <form className="relative rounded-xl border border-hunter bg-white p-6 shadow-premium md:p-8" onSubmit={(e) => { e.preventDefault(); if (condensed || step === LAST) onSubmit(); else if (validate(step)) goTo(step + 1); }} noValidate data-testid="assessment-form">
+    <form className="relative rounded-[2px] border border-line bg-white p-6 shadow-premium md:p-10" onSubmit={(e) => { e.preventDefault(); if (condensed || step === LAST) onSubmit(); else if (validate(step)) goTo(step + 1); }} noValidate data-testid="assessment-form">
       <Honeypot value={hp} onChange={setHp} />
       {condensed ? (
         <div className="space-y-5">{contact}{project}{qualifiers}{photos}</div>
