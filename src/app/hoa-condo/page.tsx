@@ -12,10 +12,10 @@ export default function Page() {
       eyebrow="HOA AND CONDO ASSOCIATIONS"
       h1="Board-ready proposals. Resident-friendly work."
       sub="Inspections, repairs, staining and fencing for shared decks, balconies, stairs and common areas."
-      body="Condo boards and HOAs carry the responsibility for shared decks, balconies, stairs and fences, and they answer to every resident. DeckCraft inspects every structure, documents its condition and gives the board a clear, prioritized plan it can vote on."
+      body="Condo boards and HOAs carry the responsibility for shared decks, balconies, stairs and fences, and they answer to every resident. DeckCraft inspects the structures you put in scope, documents their condition and gives the board a clear, prioritized plan it can vote on."
       listTitle="The board package"
       list={[
-        "Condition report with photos for every structure",
+        "Condition report with photos for each structure inspected",
         "Priority ranking: safety now / repair this year / monitor",
         "Pricing per item and per building",
         "Phased schedule options matched to the budget or reserve plan",

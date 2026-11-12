@@ -15,7 +15,7 @@ export default function Page() {
           <PortfolioPlanner />
           <div>
             <h2 className="font-display text-2xl">What the inspection delivers</h2>
-            <div className="mt-4"><Checklist items={["Every deck, balcony, porch, stair, railing and fence run inspected", "Written condition report with photos", "Priority ratings: safety now / repair this year / monitor", "Pricing per item and per property", "A phased schedule matched to your budget approval process"]} /></div>
+            <div className="mt-4"><Checklist items={["Each deck, balcony, porch, stair, railing and fence run in scope inspected", "Written condition report with photos", "Priority ratings: safety now / repair this year / monitor", "Pricing per item and per property", "A phased schedule matched to your budget approval process"]} /></div>
             <p className="mt-6 text-sm text-hunter/70">{PROGRAMS[0].bestFor}.</p>
           </div>
         </div>

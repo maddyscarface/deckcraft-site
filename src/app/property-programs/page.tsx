@@ -18,7 +18,7 @@ const PATHS = [
 export default function Page() {
   return (
     <>
-      <PageHero photo="townhomeDeck" eyebrow="PROPERTY PROGRAMS" h1="Every deck and fence on your properties, handled by one team." sub="Inspections, repairs, staining and fencing for associations, landlords and commercial properties across Greater Boston.">
+      <PageHero photo="townhomeDeck" eyebrow="PROPERTY PROGRAMS" h1="The decks and fences on your properties, handled by one team." sub="Inspections, repairs, staining and fencing for associations, landlords and commercial properties across Greater Boston.">
         <Link href="#get-started" className="btn btn-linen">Request a Property Walkthrough</Link>
       </PageHero>
       <section className="bg-cream px-5 py-20">
