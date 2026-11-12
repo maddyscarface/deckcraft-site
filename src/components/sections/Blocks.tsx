@@ -1,54 +1,92 @@
 import { PricingViewBeacon } from "@/components/estimate/PricingViewBeacon";
 import Link from "next/link";
 import { Icon } from "../ui/Icon";
+import { Photo } from "../ui/Photo";
 import { SERVICE_CARDS, PRICE_DISCLAIMER, type PriceRow } from "@/lib/services";
 import { TOWNS } from "@/lib/towns";
 import { site } from "@/config/site";
+import type { PhotoKey } from "@/lib/photos";
+import { SERVICE_CARD_PHOTO } from "@/lib/page-photos";
 
-export function PageHero({ eyebrow, h1, sub, children, compact = false }: { eyebrow?: string; h1: string; sub?: string; children?: React.ReactNode; compact?: boolean }) {
+/** Interior page hero. With `photo` it becomes a full-bleed, photography-led header. */
+export function PageHero({ eyebrow, h1, sub, children, compact = false, photo, position }: { eyebrow?: string; h1: string; sub?: string; children?: React.ReactNode; compact?: boolean; photo?: PhotoKey; position?: string }) {
+  if (photo && !compact) {
+    return (
+      <section className="relative isolate overflow-hidden bg-char text-white">
+        <div className="photo-shade-side absolute inset-0 -z-10"><Photo k={photo} priority sizes="100vw" position={position} /></div>
+        <div className="mx-auto flex min-h-[460px] max-w-[1320px] flex-col justify-end px-5 pt-24 pb-16 md:min-h-[540px] lg:px-8 lg:pb-20">
+          {eyebrow && <p className="eyebrow rule rise text-cedar-light">{eyebrow}</p>}
+          <h1 className="rise-2 mt-5 max-w-4xl font-display text-[38px] leading-[1.02] md:text-[60px]">{h1}</h1>
+          {sub && <p className="rise-3 mt-6 max-w-2xl text-[17px] leading-relaxed text-white/85 md:text-lg">{sub}</p>}
+          {children && <div className="rise-3 mt-9 flex flex-wrap gap-3">{children}</div>}
+        </div>
+      </section>
+    );
+  }
   return (
-    <section className={`bg-hunter px-5 text-white ${compact ? "py-16" : "py-20 md:py-28"}`}>
-      <div className="mx-auto max-w-5xl">
-        {eyebrow && <p className="eyebrow text-linen">{eyebrow}</p>}
-        <h1 className="mt-3 font-display text-[38px] leading-[1.05] font-bold md:text-[54px]">{h1}</h1>
-        {sub && <p className="mt-5 max-w-2xl text-lg text-sage">{sub}</p>}
+    <section className={`grain bg-char px-5 text-white lg:px-8 ${compact ? "py-16 md:py-20" : "py-20 md:py-28"}`}>
+      <div className="relative mx-auto max-w-[1320px]">
+        {eyebrow && <p className="eyebrow rule text-cedar-light">{eyebrow}</p>}
+        <h1 className="mt-5 max-w-4xl font-display text-[36px] leading-[1.04] md:text-[54px]">{h1}</h1>
+        {sub && <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/80">{sub}</p>}
         {children && <div className="mt-8 flex flex-wrap gap-3">{children}</div>}
       </div>
     </section>
   );
 }
 
+export function SectionHead({ eyebrow, title, accent, sub, dark = false, center = false }: { eyebrow?: string; title: string; accent?: string; sub?: string; dark?: boolean; center?: boolean }) {
+  return (
+    <div className={center ? "mx-auto max-w-3xl text-center" : "max-w-3xl"}>
+      {eyebrow && <p className={`eyebrow ${center ? "" : "rule"} ${dark ? "text-cedar-light" : "text-cedar"}`}>{eyebrow}</p>}
+      <h2 className={`mt-4 font-display text-[32px] leading-[1.06] md:text-[46px] ${dark ? "text-white" : "text-char"}`}>
+        {title}{accent && <> <span className={`accent ${dark ? "text-cedar-light" : "text-cedar"}`}>{accent}</span></>}
+      </h2>
+      {sub && <p className={`mt-5 text-[17px] leading-relaxed ${dark ? "text-white/75" : "text-stone"}`}>{sub}</p>}
+    </div>
+  );
+}
+
 export function ServicesGrid({ dark = true }: { dark?: boolean }) {
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {SERVICE_CARDS.map((c) => (
-        <Link key={c.href} href={c.href} className={dark ? "card-dark block p-7 text-white" : "block rounded-lg border border-cream-dark bg-white p-7 shadow-card transition hover:-translate-y-0.5 hover:border-linen"}>
-          <Icon name={c.icon} className="text-linen" size={26} />
-          <h3 className="mt-4 font-display text-xl">{c.title}</h3>
-          <p className={`mt-2 text-[15px] leading-relaxed ${dark ? "text-sage" : "text-hunter/75"}`}>{c.body}</p>
-          <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-linen-dark">Learn more <Icon name="ArrowRight" size={14} /></span>
-        </Link>
-      ))}
+    <div className="grid gap-px overflow-hidden border border-transparent sm:grid-cols-2 lg:grid-cols-3">
+      {SERVICE_CARDS.map((c) => {
+        const k = SERVICE_CARD_PHOTO[c.href];
+        return (
+          <Link key={c.href} href={c.href} className={`group block ${dark ? "bg-char-2 text-white" : "bg-white text-char"} transition`}>
+            <div className="relative aspect-[16/10] overflow-hidden">
+              {k ? <Photo k={k} sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw" className="transition duration-700 group-hover:scale-[1.04]" /> : null}
+              <span className="absolute left-4 top-4 flex h-9 w-9 items-center justify-center bg-char/80 text-cedar-light backdrop-blur"><Icon name={c.icon} size={18} /></span>
+            </div>
+            <div className="p-6 md:p-7">
+              <h3 className="font-display text-[21px]">{c.title}</h3>
+              <p className={`mt-2 text-[15px] leading-relaxed ${dark ? "text-white/70" : "text-stone"}`}>{c.body}</p>
+              <span className={`mt-5 inline-flex items-center gap-1.5 text-sm font-semibold ${dark ? "text-cedar-light" : "text-cedar"}`}>Explore <Icon name="ArrowRight" size={14} className="transition group-hover:translate-x-1" /></span>
+            </div>
+          </Link>
+        );
+      })}
     </div>
   );
 }
 
 export function PriceGuide({ rows, title = "What Greater Boston owners typically spend" }: { rows: PriceRow[]; title?: string }) {
   return (
-    <div id="price-guide" className="scroll-mt-24 rounded-lg border-2 border-hunter bg-cream p-6 md:p-8">
+    <div id="price-guide" className="scroll-mt-24 border border-line bg-white p-6 shadow-card md:p-10">
       <PricingViewBeacon where="price-guide" />
-      <h3 className="font-display text-2xl">{title}</h3>
-      <table className="mt-5 w-full text-left text-[15px]">
+      <p className="eyebrow text-cedar">Planning ranges</p>
+      <h3 className="mt-3 font-display text-2xl md:text-3xl">{title}</h3>
+      <table className="mt-6 w-full text-left text-[15px]">
         <tbody>
           {rows.map((r) => (
-            <tr key={r.item} className="border-b border-cream-dark last:border-0">
-              <th className="py-3 pr-4 font-medium">{r.item}</th>
-              <td className="py-3 text-right font-semibold whitespace-nowrap">{r.range}</td>
+            <tr key={r.item} className="border-b border-line last:border-0">
+              <th className="py-4 pr-4 font-medium">{r.item}</th>
+              <td className="num py-4 text-right text-[17px] whitespace-nowrap">{r.range}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <p className="mt-4 text-sm text-hunter/70">{PRICE_DISCLAIMER}</p>
+      <p className="mt-5 text-sm leading-relaxed text-stone">{PRICE_DISCLAIMER}</p>
     </div>
   );
 }
@@ -62,21 +100,19 @@ export const PROCESS = [
 
 export function Process({ cta = true }: { cta?: boolean }) {
   return (
-    <section className="bg-cream px-5 py-20">
-      <div className="mx-auto max-w-6xl">
-        <p className="eyebrow text-patina">HOW IT WORKS</p>
-        <h2 className="mt-2 font-display text-3xl md:text-4xl">Simple. Fast. No pressure.</h2>
-        <ol className="mt-10 grid gap-8 md:grid-cols-4">
+    <section className="bg-bone px-5 py-24 lg:px-8">
+      <div className="mx-auto max-w-[1320px]">
+        <SectionHead eyebrow="How it works" title="Four steps." accent="No pressure, no guesswork." />
+        <ol className="mt-14 grid gap-10 border-t border-line pt-10 md:grid-cols-4 md:gap-8">
           {PROCESS.map((s, i) => (
-            <li key={s.title} className="relative">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-hunter text-linen"><Icon name={s.icon} /></div>
-              <p className="mt-4 text-xs font-semibold tracking-wider text-patina">STEP {i + 1}</p>
-              <h3 className="mt-1 text-lg font-semibold">{s.title}</h3>
-              <p className="mt-2 text-[15px] leading-relaxed text-hunter/75">{s.body}</p>
+            <li key={s.title}>
+              <p className="num text-[44px] leading-none text-cedar">0{i + 1}</p>
+              <h3 className="mt-5 text-lg font-semibold">{s.title}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-stone">{s.body}</p>
             </li>
           ))}
         </ol>
-        {cta && <Link href="/free-assessment" className="btn btn-hunter mt-10">Start With a Free Photo Assessment</Link>}
+        {cta && <Link href="/free-assessment" className="btn btn-char mt-12">Start with a free photo assessment</Link>}
       </div>
     </section>
   );
@@ -84,9 +120,9 @@ export function Process({ cta = true }: { cta?: boolean }) {
 
 export function Checklist({ items, dark = false }: { items: string[]; dark?: boolean }) {
   return (
-    <ul className="space-y-3">
+    <ul className="space-y-3.5">
       {items.map((t) => (
-        <li key={t} className="flex gap-3"><Icon name="CircleCheck" className="mt-0.5 shrink-0 text-linen-dark" /><span className={dark ? "text-white" : ""}>{t}</span></li>
+        <li key={t} className="flex gap-3"><Icon name="Check" size={18} className={`mt-0.5 shrink-0 ${dark ? "text-cedar-light" : "text-cedar"}`} /><span className={dark ? "text-white/90" : ""}>{t}</span></li>
       ))}
     </ul>
   );
@@ -96,24 +132,25 @@ export function TownPills() {
   return (
     <div className="flex flex-wrap gap-2">
       {TOWNS.map((t) => (
-        <Link key={t.slug} href={`/${t.slug}`} className="rounded-full border border-hunter px-4 py-1.5 text-sm font-medium transition hover:bg-hunter hover:text-white">{t.name}</Link>
+        <Link key={t.slug} href={`/${t.slug}`} className="border border-char/25 px-4 py-2 text-sm font-medium transition hover:border-char hover:bg-char hover:text-white">{t.name}</Link>
       ))}
     </div>
   );
 }
 
+/** Verified-only trust strip: reviews and licensing appear only once confirmed in config. */
 export function TrustBar() {
   const items: [string, string][] = [];
-  if (site.reviews.live && site.reviews.rating && site.reviews.count) items.push(["Star", `${site.reviews.rating} on Google: ${site.reviews.count} reviews`]);
-  if (site.credentials.licensedAndInsuredVerified) items.push(["ShieldCheck", "Licensed and Insured in Massachusetts"]);
-  items.push(["Camera", site.responseHours ? `Photo Assessment Within ${site.responseHours} Business Hours` : "Free Photo Assessment"]);
-  items.push(["MapPin", `Serving ${TOWNS.length}+ Greater Boston Communities`]);
-  items.push(["Building2", "HOA, Landlord and Commercial Programs"]);
-  items.push(["FileText", "Written Scope and Price Before Work Starts"]);
+  if (site.reviews.live && site.reviews.rating && site.reviews.count) items.push(["Star", `${site.reviews.rating} on Google · ${site.reviews.count} reviews`]);
+  if (site.credentials.licensedAndInsuredVerified) items.push(["ShieldCheck", "Licensed and insured in Massachusetts"]);
+  items.push(["Camera", site.responseHours ? `Photo assessment within ${site.responseHours} business hours` : "Free photo assessment"]);
+  items.push(["MapPin", `${TOWNS.length}+ Greater Boston communities`]);
+  items.push(["Building2", "HOA, landlord and commercial programs"]);
+  items.push(["FileText", "Written scope and price before work starts"]);
   return (
-    <div className="bg-linen px-5 py-5">
-      <ul className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[13px] font-medium text-hunter">
-        {items.map(([i, t]) => <li key={t} className="flex items-center gap-2"><Icon name={i} size={16} />{t}</li>)}
+    <div className="border-b border-line bg-ivory px-5 py-5 lg:px-8">
+      <ul className="mx-auto flex max-w-[1320px] flex-wrap items-center justify-center gap-x-10 gap-y-3 text-[13px] font-medium text-char/80">
+        {items.map(([i, t]) => <li key={t} className="flex items-center gap-2"><Icon name={i} size={16} className="text-cedar" />{t}</li>)}
       </ul>
     </div>
   );
@@ -121,24 +158,26 @@ export function TrustBar() {
 
 export function RelatedLinks({ links }: { links: { href: string; label: string }[] }) {
   return (
-    <section className="bg-cream px-5 pb-20">
-      <div className="mx-auto max-w-6xl">
-        <h2 className="font-display text-2xl">Related</h2>
-        <div className="mt-4 flex flex-wrap gap-3">
-          {links.map((l) => <Link key={l.href} href={l.href} className="rounded-md border border-hunter px-4 py-2 text-sm font-semibold hover:bg-hunter hover:text-white">{l.label} →</Link>)}
+    <section className="bg-bone px-5 pb-24 lg:px-8">
+      <div className="mx-auto max-w-[1320px] border-t border-line pt-10">
+        <p className="eyebrow text-stone">Related</p>
+        <div className="mt-5 flex flex-wrap gap-3">
+          {links.map((l) => <Link key={l.href} href={l.href} className="border border-char/25 px-4 py-2.5 text-sm font-semibold transition hover:bg-char hover:text-white">{l.label} →</Link>)}
         </div>
       </div>
     </section>
   );
 }
 
-export function CtaBand({ title, sub, href = "/free-assessment", label = "Send 3 Photos — Get a Free Assessment", secondary }: { title: string; sub?: string; href?: string; label?: string; secondary?: { href: string; label: string } }) {
+export function CtaBand({ title, sub, href = "/free-assessment", label = "Send 3 photos for a free assessment", secondary, photo = "eveningLights" }: { title: string; sub?: string; href?: string; label?: string; secondary?: { href: string; label: string }; photo?: PhotoKey }) {
   return (
-    <section className="bg-hunter px-5 py-20 text-center text-white">
-      <h2 className="mx-auto max-w-3xl font-display text-3xl md:text-4xl">{title}</h2>
-      {sub && <p className="mx-auto mt-4 max-w-xl text-sage">{sub}</p>}
-      <div className="mt-8 flex flex-wrap justify-center gap-3">
-        <Link href={href} className="btn btn-linen">{label}</Link>
+    <section className="relative isolate overflow-hidden bg-char px-5 py-24 text-center text-white lg:px-8">
+      <div className="absolute inset-0 -z-10 opacity-35"><Photo k={photo} sizes="100vw" /></div>
+      <div className="absolute inset-0 -z-10 bg-char/55" />
+      <h2 className="mx-auto max-w-3xl font-display text-[32px] leading-tight md:text-[44px]">{title}</h2>
+      {sub && <p className="mx-auto mt-5 max-w-xl text-white/80">{sub}</p>}
+      <div className="mt-9 flex flex-wrap justify-center gap-3">
+        <Link href={href} className="btn btn-cedar">{label}</Link>
         {secondary && <Link href={secondary.href} className="btn btn-ghost">{secondary.label}</Link>}
       </div>
     </section>
