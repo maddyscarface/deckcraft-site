@@ -1,3 +1,4 @@
+import { site } from "@/config/site";
 import { meta } from "@/lib/seo";
 import { PageHero } from "@/components/sections/Blocks";
 import { PrivacyChoicesLink } from "@/components/ui/PrivacyChoicesLink";
@@ -20,11 +21,11 @@ export default function Page() {
           <h2>Who we share it with</h2>
           <p>Service providers that help us operate: website hosting, our CRM, data storage, email and SMS delivery, analytics and advertising platforms. We do not sell your personal information.</p>
           <h2>Your choices</h2>
-          <p>You can opt out of texts by replying STOP, unsubscribe from emails using the link in any email, and ask us to access or delete your information by emailing hello@deckcraftboston.com. We honor Global Privacy Control signals for advertising cookies. <PrivacyChoicesLink /></p>
+          <p>You can opt out of texts by replying STOP, unsubscribe from emails using the link in any email, and ask us to access or delete your information by emailing {site.email}. We honor Global Privacy Control signals for advertising cookies. <PrivacyChoicesLink /></p>
           <h2>Retention and security</h2>
           <p>We keep records as long as needed to serve you and meet legal and tax obligations, and protect them with access controls and encryption in transit.</p>
           <h2>Contact</h2>
-          <p>DeckCraft Boston · hello@deckcraftboston.com</p>
+          <p>DeckCraft Boston · {site.email}</p>
         </div>
       </section>
     </>
