@@ -1,4 +1,5 @@
 import type { LeadInput } from "./lead-schema";
+import { SCORING } from "@/config/lead-scoring";
 
 /** Maps a validated lead to funnel, GHL pipeline, tags and a simple priority score. Pure + unit-tested. */
 
@@ -44,19 +45,20 @@ export function tagsFor(lead: LeadInput): string[] {
   return [...t];
 }
 
-/** 0–100. Used to order the BDR call list; not shown to customers. Weights are owner-editable. */
+/** 0–100. Used to order the BDR call list; not shown to customers. Weights live in src/config/lead-scoring.ts. */
 export function scoreLead(lead: LeadInput): number {
-  let s = 20;
-  if (lead.form_type === "walkthrough") s += 25;
-  if (lead.customer_type && lead.customer_type !== "homeowner") s += 15;
-  if ((lead.property_count ?? 0) >= 5) s += 10;
-  if ((lead.property_count ?? 0) >= 20) s += 10;
-  if (lead.photo_urls?.length) s += 15;
-  if (lead.timeline === "asap") s += 15;
-  else if (lead.timeline === "this_season") s += 10;
-  if (lead.services?.some((x) => ["deck_repair", "railings_stairs", "new_deck", "new_fence"].includes(x))) s += 5;
-  if (lead.checker_result === "inspection_recommended") s += 5;
-  if (lead.phone) s += 5;
+  const W = SCORING;
+  let s: number = W.base;
+  if (lead.form_type === "walkthrough") s += W.walkthroughForm;
+  if (lead.customer_type && lead.customer_type !== "homeowner") s += W.propertyCustomer;
+  if ((lead.property_count ?? 0) >= 5) s += W.portfolio5Plus;
+  if ((lead.property_count ?? 0) >= 20) s += W.portfolio20Plus;
+  if (lead.photo_urls?.length) s += W.photosAttached;
+  if (lead.timeline === "asap") s += W.timelineAsap;
+  else if (lead.timeline === "this_season") s += W.timelineThisSeason;
+  if (lead.services?.some((x) => (W.highValueServices as readonly string[]).includes(x))) s += W.highValueService;
+  if (lead.checker_result === "inspection_recommended") s += W.checkerInspection;
+  if (lead.phone) s += W.phoneProvided;
   return Math.max(0, Math.min(100, s));
 }
 

@@ -13,5 +13,5 @@ export const SERVICE_PROMISE = [
   "One project lead from walkthrough to final report",
   "Photo report at start and completion for each property",
   "Work scheduled around residents, tenants and business hours",
-  site.coiHours ? `Certificate of insurance within ${site.coiHours} hours of request; W-9 and vendor setup handled` : "Certificate of insurance on request; W-9 and vendor setup handled",
+  site.coiHours ? `Certificate of insurance within ${site.coiHours} hours of request; W-9 and vendor setup handled` : site.credentials.licensedAndInsuredVerified ? "Certificate of insurance on request; W-9 and vendor setup handled" : "W-9 and vendor setup handled",
 ];
