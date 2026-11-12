@@ -4,3 +4,9 @@ node_modules
 .env*.local
 *.tsbuildinfo
 next-env.d.ts
+# restored from *.b64 at build time
+/src/fonts/*.woff2
+/public/og.png
+/public/images/**/*.webp
+tests/screens/
+/tests/fixtures/*.jpg

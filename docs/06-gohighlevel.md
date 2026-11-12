@@ -97,3 +97,18 @@ Subject: Your walkthrough request — DeckCraft Boston
 2. Confirm the SMS arrives only when consent is checked and the email always arrives.
 3. Move the opportunity to Estimate Booked and confirm `/api/crm-webhook` returns 200 (GHL execution log) and Meta Events Manager shows `Schedule` (test code).
 4. Reply STOP to the SMS and confirm DND is set and later workflows skip it.
+
+## Phase 2: API v2 sync (supersedes the webhook as the primary path)
+- **Order:** API v2 (`GHL_API_TOKEN` + `GHL_LOCATION_ID`), then the inbound webhook (`GHL_WEBHOOK_URL`), then LOG mode.
+- **Contacts:** `POST /contacts/upsert`. GHL de-duplicates on email and phone, so retries and repeat forms update a single contact.
+- **Opportunities:** `POST /opportunities/upsert` into "DeckCraft · Residential" or "DeckCraft · Property Programs". Stage ids come from `GHL_STAGE_IDS`.
+- **Scoring:** tags `score:N` and `tier:hot|warm|nurture` (hot ≥ 70, warm ≥ 45), plus the `dc_lead_score` and `dc_lead_tier` custom fields. Weights live in `src/config/lead-scoring.ts`.
+- **Follow-up:**
+  - Sequences are applied as `wf:<key>` tags: speed_to_lead, hot_lead_alert, property_walkthrough, photo_reminder, long_nurture, no_response_recovery and newsletter_welcome.
+  - Use those tags as workflow triggers, or map keys to workflow IDs in `GHL_WORKFLOW_IDS` for direct enrollment.
+  - SMS steps run only when `sms_consent` is true.
+- **Stage webhook** (`/api/crm-webhook`, `x-dc-secret`):
+  - Send `{lead_id, stage, value?, contact_id?}`.
+  - Writes `revenue_won` and `revenue_paid` back to the lead for attribution.
+  - Tags `stage:<stage>` and `wf:<seq>`: visit_reminders, estimate_follow_up, review_request and lost_reengage.
+- **Failed syncs** are retried by `/api/cron/retry-ghl`.

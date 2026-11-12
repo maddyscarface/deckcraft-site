@@ -63,3 +63,13 @@ Use GHL numbers (or CallRail) per source: Google Ads call asset, GBP, website de
 14. Remove `META_TEST_EVENT_CODE`. Delete the test contacts/leads.
 
 Only after every step passes: mark the pixel, CAPI, GA4, Ads and GHL as **live** in the launch checklist.
+
+## Phase 2 additions
+- **Direct Google tag:** loads only when `NEXT_PUBLIC_GTM_ID` is empty, so nothing is counted twice.
+  - GA4 sends `generate_lead`.
+  - Google Ads sends `conversion` with `send_to = AW-ID/LABEL` and `transaction_id = event_id`.
+  - Enhanced conversions (`user_data`) are set only when ad consent is granted.
+- **Click ids persisted:** gclid, gbraid, wbraid, fbclid, msclkid and ttclid. gclid is also mirrored in a first-party `dc_gclid` cookie for 90 days.
+- **Also captured:** first-touch source, medium and campaign (`ft_*`) and the GA client id.
+- **Revenue:** CRM stage webhooks store won and paid revenue. `/api/admin/attribution` summarizes it, and `?format=gads` exports Google Ads offline conversions.
+- **Intent pixel:** loads only with `NEXT_PUBLIC_INTENT_ENABLED=true` and after ad consent is granted. See `10-intent-audiences.md`.
