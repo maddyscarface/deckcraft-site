@@ -163,3 +163,11 @@ export const TOWN_NAMES = [
   ...TOWNS.map((t) => t.name),
   "Back Bay", "South End", "Jamaica Plain", "West Roxbury", "Dorchester", "Winchester", "Dedham", "Natick", "Framingham", "Weston", "Wayland", "Braintree", "Weymouth", "Hingham", "Worcester", "Other",
 ];
+
+/** Sales geography for routing / owner assignment (GHL `dc_geography`). Unknown towns → "Other". */
+export function geographyFor(town?: string | null): Town["region"] | "Other" {
+  if (!town) return "Other";
+  const t = town.trim().toLowerCase();
+  const hit = TOWNS.find((x) => x.name.toLowerCase() === t || x.slug === t || x.neighborhoods.some((n) => n.toLowerCase() === t));
+  return hit?.region ?? "Other";
+}

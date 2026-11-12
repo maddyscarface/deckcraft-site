@@ -88,6 +88,17 @@ export async function updateLead(id: string, patch: Partial<StoredLead>) {
   if (i >= 0) { rows[i] = { ...rows[i], ...patch }; await writeLocal(rows); }
 }
 
+export async function findById(id: string): Promise<StoredLead | null> {
+  if (useSupabase()) {
+    if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
+    const r = await sb(`leads?id=eq.${id}&select=*&limit=1`);
+    if (!r.ok) throw new Error(`Supabase read failed ${r.status}`);
+    return ((await r.json()) as StoredLead[])[0] ?? null;
+  }
+  assertDevFallback();
+  return (await readLocal()).find((l) => l.id === id) ?? null;
+}
+
 export async function listLeads(limit = 500): Promise<StoredLead[]> {
   if (useSupabase()) {
     const r = await sb(`leads?select=*&order=created_at.desc&limit=${limit}`);

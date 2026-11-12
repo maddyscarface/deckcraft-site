@@ -1,5 +1,6 @@
 import { site } from "@/config/site";
 import type { ServiceKey } from "./lead-schema";
+import { PRICING, pricingLabel } from "@/config/pricing";
 
 export type Faq = { q: string; a: string };
 export type PriceRow = { item: string; range: string };
@@ -23,7 +24,10 @@ export type ServicePageConfig = {
 };
 
 
-/** Owner-supplied 2025–26 Greater Boston benchmarks. Confirm before launch. */
+/**
+ * Owner-supplied 2025–26 benchmarks. INTERNAL ONLY (lead-brief planning, estimate config notes). Not rendered on the
+ * public site: Phase 2 spec allows only the new-deck assumptions in src/config/pricing.ts.
+ */
 export const PRICE_GUIDE: PriceRow[] = [
   { item: "Deck repair (average job)", range: "$1,160 to $4,161" },
   { item: "Stain a 12×12 deck", range: "$800 to $1,350" },
@@ -36,8 +40,20 @@ export const PRICE_GUIDE: PriceRow[] = [
   { item: "New wood privacy fence", range: "Quoted per linear ft" },
 ];
 
-export const PRICE_DISCLAIMER =
-  "Typical Greater Boston ranges, shown for planning only. Your exact price is confirmed in writing before any work starts.";
+export const PRICE_DISCLAIMER = `${PRICING.exclusions} ${PRICING.noGuarantee}`;
+
+/** Public rows: new-deck assumptions only. */
+export const NEW_DECK_PRICE_ROWS: PriceRow[] = [
+  { item: "New pressure-treated deck, starting assumption", range: `from $${PRICING.newDeckStartPerSqFt} / sq ft` },
+  ...PRICING.planningBands.map((b) => ({ item: `Planning band: ${b.fits.toLowerCase()}`, range: b.label })),
+];
+
+/** Public rows for repair / staining / fencing: no numbers, quoted from photos. */
+export const QUOTED_ROWS = (what: string): PriceRow[] => [
+  { item: what, range: "Quoted from your photos" },
+  { item: "New deck pricing", range: `from $${PRICING.newDeckStartPerSqFt} / sq ft*` },
+];
+export { pricingLabel };
 
 export const SERVICES: Record<string, ServicePageConfig> = {
   "services/deck-repair": {
@@ -59,14 +75,14 @@ export const SERVICES: Record<string, ServicePageConfig> = {
       { title: "Flashing", body: "Water management at the house connection so the repair lasts." },
       { title: "Honest scope", body: "If repair isn't the right call, we show you photos and explain why." },
     ],
-    prices: PRICE_GUIDE.slice(0, 1).concat(PRICE_GUIDE.slice(4, 6)),
+    prices: QUOTED_ROWS("Deck repair: boards, framing, ledger, railings"),
     faqs: [
       { q: "Repair or replace: how do you decide?", a: "If the framing, joists and ledger board are sound, we repair. If rot has reached the structure, we'll show you photos and explain why replacement is the safer path." },
       { q: "Is my deck safe?", a: "We can't tell that from a web form. Soft boards, leaning posts, or rot where the deck meets the house are reasons to stop using the area and have it looked at in person. Our photo review is a starting point, not an inspection." },
       { q: "Do you pull permits?", a: "Yes, where your town requires one. Structural repairs and rebuilds often need a permit in Massachusetts. We check with your local building department for every job." },
       { q: "How long does a repair take?", a: `Most repairs take 1 to 3 days once materials are on site.` },
       { q: "Can you repair a composite deck?", a: "Yes: board replacement, railing repair and cleaning. Composite can't be stained like wood." },
-      { q: "What does the free assessment include?", a: "Send 3 photos. We review them and reply with what we see and a price range. If it's not worth fixing, we'll say so." },
+      { q: "What does the free assessment include?", a: "Send 3 photos. We review them and reply with what we see and the likely scope. If it's not worth fixing, we'll say so. Any price is confirmed in writing after an on-site check you book with us." },
     ],
     presetService: "deck_repair",
     formKind: "assessment",
@@ -91,7 +107,7 @@ export const SERVICES: Record<string, ServicePageConfig> = {
       { title: "Sealer", body: "Water protection before freeze-thaw season." },
       { title: "Minor board swaps", body: "A few bad boards replaced before staining so the job looks finished." },
     ],
-    prices: PRICE_GUIDE.slice(1, 4),
+    prices: QUOTED_ROWS("Cleaning, staining and sealing"),
     faqs: [
       { q: "When is the best time to stain in Massachusetts?", a: "Late spring through early fall, when the wood is dry and overnight temperatures stay above roughly 50°F. Always follow the stain manufacturer's temperature and dry-time guidance; we'll tell you if your deck needs to dry out first." },
       { q: "Can you seal in October or November?", a: "Often, on dry days with suitable temperatures. Late-season slots depend on weather, so we schedule them carefully." },
@@ -123,14 +139,14 @@ export const SERVICES: Record<string, ServicePageConfig> = {
       { title: "Stringers", body: "Rotted stringers replaced, not patched." },
       { title: "Height corrections", body: "Railings brought up to current requirements where the scope calls for it." },
     ],
-    prices: [PRICE_GUIDE[5]],
+    prices: QUOTED_ROWS("Board, railing and stair repair"),
     faqs: [
       { q: "Do railings need to meet code?", a: "Repairs and replacements should meet the building code your town enforces. Requirements for height, opening size and load vary by situation, so we confirm them with the local building department for the specific job." },
       { q: "My railing wobbles. Is that urgent?", a: "A railing that moves is a reason to keep people off that section until it's looked at. Send photos and we'll prioritize it." },
       { q: "Can you fix just the stairs?", a: "Yes. Stairs-only jobs are common, especially on rear porches." },
       { q: "Do you work in winter?", a: "Structural railing and stair repairs can often be done in cold weather. Staining can't." },
       { q: "Do you handle triple-decker rear porches?", a: "Yes, for owners and property managers. See our landlord program for multi-property work." },
-      { q: "What does it cost?", a: "Railing repair commonly runs $39 to $237 per linear foot in Greater Boston depending on material and condition. Your price is confirmed in writing." },
+      { q: "What does it cost?", a: "It depends on material, height and what the posts are attached to. We quote railing and stair work from your photos, separately from new-deck pricing, and confirm it in writing after a site check." },
     ],
     presetService: "railings_stairs",
     formKind: "assessment",
@@ -155,7 +171,7 @@ export const SERVICES: Record<string, ServicePageConfig> = {
       { title: "Composite", body: "Low maintenance, higher upfront cost." },
       { title: "Railings and stairs", body: "Built with the deck, not added later." },
     ],
-    prices: [PRICE_GUIDE[6]],
+    prices: NEW_DECK_PRICE_ROWS,
     faqs: [
       { q: "Do I need a permit for a new deck?", a: "Almost always in Massachusetts. We prepare and file what your town requires." },
       { q: "How long does a new deck take?", a: `It depends on size, materials and permit timing. We give you a schedule with the written quote.` },
@@ -167,6 +183,36 @@ export const SERVICES: Record<string, ServicePageConfig> = {
     presetService: "new_deck",
     formKind: "assessment",
     related: ["repair-or-replace", "services/deck-repair", "fencing/residential"],
+  },
+  "services/deck-rebuild-resurfacing": {
+    slug: "services/deck-rebuild-resurfacing",
+    name: "Deck Rebuild and Resurfacing",
+    schemaType: "Deck Resurfacing",
+    title: "Deck Rebuilds and Resurfacing in Greater Boston | DeckCraft Boston",
+    description:
+      "New boards, railings and stairs on sound framing, or a full rebuild when the structure has failed. Greater Boston deck rebuilds and resurfacing, scoped from your photos.",
+    eyebrow: "REBUILD AND RESURFACE",
+    h1: "Keep the sound framing. Replace everything you can see.",
+    subhead:
+      "When the boards are done but the structure is good, resurfacing gives you a new deck surface for less than a rebuild. When the framing has failed, we rebuild it properly.",
+    included: [
+      { title: "Framing check first", body: "Joists, beams, posts and ledger are probed before we recommend resurfacing." },
+      { title: "New decking", body: "Pressure-treated, cedar or composite boards over sound framing." },
+      { title: "Joist protection", body: "Joist tape and hidden or face fastening matched to the board." },
+      { title: "Railings and stairs", body: "Replaced to current code at the same time, so the deck matches." },
+      { title: "Full rebuild when needed", body: "If the structure has failed, we say so and price a rebuild instead." },
+      { title: "Permits", body: "Filed where the town requires them for structural work." },
+    ],
+    prices: QUOTED_ROWS("Resurfacing or rebuild on your existing footprint"),
+    faqs: [
+      { q: "What's the difference between resurfacing and a rebuild?", a: "Resurfacing replaces decking, railings and stairs on framing that is still sound. A rebuild replaces the structure too. We confirm which one you need after checking the framing in person." },
+      { q: "Can I switch to composite when resurfacing?", a: "Often, yes. Composite may need closer joist spacing, so we check the framing layout before recommending it." },
+      { q: "How do you price resurfacing?", a: "From your photos, size and material choice, then confirmed in writing after an on-site check. Resurfacing is priced separately from new-deck construction." },
+      { q: "Do I need a permit to resurface?", a: "It depends on the town and the scope. Board-only replacement often doesn't; structural or railing changes often do. We check with your building department." },
+    ],
+    presetService: "new_deck",
+    formKind: "assessment",
+    related: ["services/deck-repair", "services/new-decks", "repair-or-replace"],
   },
   "fencing/residential": {
     slug: "fencing/residential",
@@ -186,7 +232,7 @@ export const SERVICES: Record<string, ServicePageConfig> = {
       { title: "Pool fencing and gates", body: "Self-closing, self-latching gates; barrier requirements confirmed with your town." },
       { title: "Fence staining and sealing", body: "Match the deck in one visit." },
     ],
-    prices: PRICE_GUIDE.slice(7),
+    prices: [{ item: "Fence repair and new fencing", range: "Quoted from your photos" }],
     extra: [{ title: "Deck and fence together?", body: "We'll stain both to match in one visit." }],
     faqs: [
       { q: "Do I need a permit?", a: "It depends on your town and the fence height and type. We check your town's rules for every job." },
@@ -237,13 +283,14 @@ export const SERVICES: Record<string, ServicePageConfig> = {
   },
 };
 
+/** Homepage service grid, spec §1 order: new decks, rebuild/resurface, structural repairs, railing/stair safety, stain/seal, fences. */
 export const SERVICE_CARDS = [
-  { icon: "Hammer", title: "Deck Repair", body: "Rotted boards, soft spots, loose framing. We replace what failed and keep what's sound.", href: "/services/deck-repair" },
-  { icon: "Paintbrush", title: "Staining and Sealing", body: "Clean, brighten, stain and seal so water stays out of the wood.", href: "/services/deck-staining-sealing" },
-  { icon: "Ruler", title: "Railings and Stairs", body: "Wobbly railings and loose treads are safety issues. We fix them properly, with permits where required.", href: "/services/board-railing-stairs" },
-  { icon: "LayoutGrid", title: "New Decks and Rebuilds", body: "When repair won't do, we rebuild in wood or composite.", href: "/services/new-decks" },
-  { icon: "Fence", title: "Residential Fencing", body: "Privacy, picket and pool fencing: repair, new install, staining and gates.", href: "/fencing/residential" },
-  { icon: "Building2", title: "Commercial Fencing", body: "Perimeter, pool, dumpster enclosure and common-area fencing for properties and businesses.", href: "/fencing/commercial" },
+  { icon: "LayoutGrid", title: "New Decks", body: "Designed, permitted and built in wood or composite, with railings and stairs built in from the start.", href: "/services/new-decks" },
+  { icon: "Layers", title: "Rebuild and Resurface", body: "New boards, railings and stairs on sound framing, or a full rebuild when the structure has failed.", href: "/services/deck-rebuild-resurfacing" },
+  { icon: "Hammer", title: "Structural Repairs", body: "Rotted joists, soft boards, failing ledgers and posts. We replace what failed and keep what's sound.", href: "/services/deck-repair" },
+  { icon: "Ruler", title: "Railing and Stair Safety", body: "Loose railings and treads are safety issues. Fixed properly, with permits where required.", href: "/services/board-railing-stairs" },
+  { icon: "Paintbrush", title: "Stain and Seal", body: "Clean, brighten, stain and seal so water stays out of the wood through a New England winter.", href: "/services/deck-staining-sealing" },
+  { icon: "Fence", title: "Fences", body: "Residential privacy, picket and pool fencing, and commercial and HOA perimeter fencing.", href: "/fencing" },
 ] as const;
 
 export const LINK_LABELS: Record<string, string> = {
@@ -251,6 +298,8 @@ export const LINK_LABELS: Record<string, string> = {
   "services/deck-staining-sealing": "Staining and Sealing",
   "services/board-railing-stairs": "Railings and Stairs",
   "services/new-decks": "New Decks",
+  "services/deck-rebuild-resurfacing": "Rebuild and Resurfacing",
+  "project-calculator": "Project Calculator",
   fencing: "All Fencing",
   "fencing/residential": "Residential Fencing",
   "fencing/commercial": "Commercial Fencing",

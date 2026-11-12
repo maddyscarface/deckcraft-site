@@ -1,7 +1,7 @@
 "use client";
 import { dl, getAttribution, newEventId, setGoogleUserData, track } from "./tracking";
 
-export type SubmitResponse = { ok: boolean; id?: string; error?: string; fields?: Record<string, string>; funnel?: string };
+export type SubmitResponse = { ok: boolean; id?: string; error?: string; fields?: Record<string, string>; funnel?: string; tier?: string };
 
 /** Uploads files one by one (progress-friendly, avoids body-size limits). Returns storage paths. */
 export async function uploadFiles(files: File[], kind: "assessment" | "property", onProgress?: (done: number) => void): Promise<string[]> {
@@ -41,6 +41,7 @@ export async function submitLead(payload: Record<string, unknown>, eventId: stri
     dl("user_data", { user_data: { email: payload.email, phone_number: e164 } });
     setGoogleUserData(payload.email as string | undefined, e164);
     track.generateLead({ event_id: eventId, form_type: String(payload.form_type), customer_type: payload.customer_type as string | undefined, funnel: j.funnel });
+    if (j.tier === "hot" || j.tier === "warm") track.qualifiedLead({ event_id: eventId, form_type: String(payload.form_type), tier: j.tier });
   }
   return j;
 }
