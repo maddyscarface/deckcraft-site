@@ -1,3 +1,4 @@
+import { site } from "@/config/site";
 import { ProgramPage } from "@/components/sections/ProgramPage";
 import { meta } from "@/lib/seo";
 
@@ -20,7 +21,7 @@ export default function Page() {
         { q: "Can you work outside business hours?", a: "Yes. We schedule early mornings, evenings or off-season where the work allows." },
         { q: "Do you handle access-controlled gates?", a: "We build and repair the gate structure and hardware; electronic access systems are coordinated with your access-control vendor." },
         { q: "Can you invoice per location?", a: "Yes, per location or consolidated monthly." },
-        { q: "Do you provide a certificate of insurance?", a: "Yes, on request, with additional insureds as your lease or management agreement requires." },
+        { q: "Do you provide a certificate of insurance?", a: site.credentials.licensedAndInsuredVerified ? "Yes, on request, with additional insureds as your lease or management agreement requires." : "Insurance documentation is confirmed with each client before work starts; ask during your walkthrough and we will share what applies to your property." },
       ]}
     />
   );

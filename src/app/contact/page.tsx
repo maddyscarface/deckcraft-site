@@ -3,7 +3,7 @@ import { PageHero } from "@/components/sections/Blocks";
 import { PhotoAssessmentForm } from "@/components/forms/PhotoAssessmentForm";
 import { site, phoneHref, responsePhrase } from "@/config/site";
 
-export const metadata = meta("/contact", "Contact DeckCraft Boston: Greater Boston Deck and Fence Specialists", "Call, text, or send a message. Serving Greater Boston.");
+export const metadata = meta("/contact", "Contact DeckCraft Boston: Greater Boston Deck and Fence Specialists", "Send photos or email info@deckcraftbuild.com. Serving Greater Boston.");
 
 export default function Page() {
   const tel = phoneHref();
@@ -17,7 +17,7 @@ export default function Page() {
             <a href={`mailto:${site.email}`} className="block font-semibold underline">{site.email}</a>
             {site.responseHours && <p>We reply {responsePhrase()}.</p>}
             {site.hours && <p>{site.hours.label}</p>}
-            <p>Instagram, TikTok and Facebook: @deckcraftboston</p>
+            {Object.values(site.social).some(Boolean) && <p>Follow along: {Object.entries(site.social).filter(([, u]) => u).map(([k, u]) => <a key={k} href={u!} className="mr-3 underline" rel="noopener" target="_blank">{k[0].toUpperCase() + k.slice(1)}</a>)}</p>}
             <p className="text-sm text-hunter/70">Serving Greater Boston. See the <a className="underline" href="/service-areas">service area</a>.</p>
           </div>
           <PhotoAssessmentForm condensed />
