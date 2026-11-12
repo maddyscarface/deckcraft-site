@@ -33,11 +33,11 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       </header>
       <div className="bg-cream px-5 py-14">
         <div className="mx-auto max-w-3xl">
-          <div className="rounded-lg border-l-4 border-linen bg-white p-5"><p className="text-xs font-semibold tracking-wider text-patina">SHORT ANSWER</p><p className="mt-1 text-lg">{p.answer}</p></div>
+          <div className="rounded-[2px] border-l-4 border-linen bg-white p-5"><p className="text-xs font-semibold tracking-wider text-patina">SHORT ANSWER</p><p className="mt-1 text-lg">{p.answer}</p></div>
           <div className="prose-dc mt-8">
             {p.sections.map((s) => (<section key={s.h}><h2>{s.h}</h2>{s.p.map((x, i) => <p key={i}>{x}</p>)}</section>))}
           </div>
-          <div className="mt-10 rounded-xl bg-hunter p-8 text-center text-white">
+          <div className="mt-10 rounded-[2px] bg-hunter p-8 text-center text-white">
             <p className="font-display text-2xl">Want a straight answer for your deck?</p>
             <Link href={p.cta.href} className="btn btn-linen mt-5">{p.cta.label}</Link>
           </div>

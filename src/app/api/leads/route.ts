@@ -32,6 +32,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, ...res });
   } catch (e) {
     console.error("[lead] store failure", e);
-    return NextResponse.json({ ok: false, error: "We couldn't save your request. Please try again or email hello@deckcraftboston.com." }, { status: 500 });
+    return NextResponse.json({ ok: false, error: "We couldn't save your request. Please try again or email info@deckcraftbuild.com." }, { status: 500 });
   }
 }
