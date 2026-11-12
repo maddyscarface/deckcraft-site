@@ -22,7 +22,7 @@ export const TOWNS: Town[] = [
     neighborhoods: ["Dorchester", "Jamaica Plain", "West Roxbury", "Roslindale", "South Boston", "Charlestown", "Brighton", "Hyde Park"],
     housing: "Triple-deckers and two-families dominate Dorchester, JP and Roslindale, so a lot of the work is stacked rear porches and stairs. West Roxbury and Hyde Park lean single-family with ground-level decks and fenced yards.",
     typicalJobs: ["Rear porch stair and railing repair on triple-deckers", "Roof-deck board replacement and refinishing", "Privacy fence repair on tight urban lots"],
-    propertyAngle: "Boston landlords and self-managed condo associations often own several stacked porch systems. We scope every level of every building before the first board comes off.",
+    propertyAngle: "Boston landlords and self-managed condo associations often own several stacked porch systems. We scope each level of the buildings you include before the first board comes off.",
     nearby: ["brookline", "cambridge", "quincy", "milton"],
   },
   {
@@ -49,7 +49,7 @@ export const TOWNS: Town[] = [
     neighborhoods: ["Coolidge Corner", "Brookline Village", "Washington Square", "Chestnut Hill", "Fisher Hill", "Aspinwall Hill", "South Brookline"],
     housing: "Older single-family homes often have decks added decades ago that are now due for structural attention, while condo buildings carry shared decks and balconies.",
     typicalJobs: ["Refinishing and sealing older cedar decks", "Ledger and framing assessment on decks added in past decades", "Condo balcony railing repair"],
-    propertyAngle: "Brookline condo boards get a condition report with photos for every deck and balcony, ranked by priority.",
+    propertyAngle: "Brookline condo boards get a condition report with photos for each deck and balcony in scope, ranked by priority.",
     nearby: ["newton", "boston", "needham"],
   },
   {
@@ -58,7 +58,7 @@ export const TOWNS: Town[] = [
     neighborhoods: ["Newton Centre", "Newton Highlands", "Waban", "Chestnut Hill", "West Newton", "Auburndale", "Newtonville", "Oak Hill"],
     housing: "Mostly single-family homes with mature yards, where decks back onto wooded or shaded lots that hold moisture.",
     typicalJobs: ["Mildew cleaning and restaining on shaded decks", "Repair-or-replace assessments before a sale", "Wood privacy fence replacement"],
-    propertyAngle: "Selling in Newton? A deck and fence touch-up before listing is one of the more common requests we see.",
+    propertyAngle: "Selling in Newton? A deck and fence touch-up before listing can usually be scoped from photos in one round.",
     nearby: ["wellesley", "needham", "waltham", "watertown"],
   },
   {
