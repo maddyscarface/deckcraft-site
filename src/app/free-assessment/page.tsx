@@ -7,7 +7,7 @@ import { SERVICE_KEYS, CUSTOMER_TYPES, type ServiceKey, type CustomerType } from
 import { responsePhrase } from "@/config/site";
 
 export const metadata = meta("/free-assessment", "Free Deck and Fence Photo Assessment | DeckCraft Boston",
-  "Send 3 photos of your deck or fence. We'll tell you what it needs and what it's likely to cost.");
+  "Send 3 photos of your deck or fence. We'll tell you what it needs and how we'd price it.");
 
 export default async function Page({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const sp = await searchParams;
@@ -15,7 +15,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
   const seg = CUSTOMER_TYPES.includes(sp.seg as CustomerType) ? (sp.seg as CustomerType) : undefined;
   return (
     <>
-      <ViewService name="Free Assessment Page" />
+      <ViewService name="Free Assessment Page" assessment="assessment" />
       <section className="relative isolate overflow-hidden bg-char px-5 pt-20 pb-36 text-white lg:px-8">
         <div className="photo-shade absolute inset-0 -z-10 opacity-60"><Photo k="heroModernDeck" priority sizes="100vw" position="60% 70%" /></div>
         <div className="mx-auto max-w-3xl text-center">

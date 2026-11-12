@@ -3,7 +3,7 @@ import { meta } from "@/lib/seo";
 import { PageHero, ServicesGrid, PriceGuide, Process } from "@/components/sections/Blocks";
 import { FaqSection } from "@/components/ui/Faq";
 import { PhotoAssessmentForm } from "@/components/forms/PhotoAssessmentForm";
-import { PRICE_GUIDE } from "@/lib/services";
+import { NEW_DECK_PRICE_ROWS } from "@/lib/services";
 
 export const metadata = meta("/homeowners", "Deck and Fence Repair for Greater Boston Homeowners | DeckCraft Boston",
   "Deck repair, staining, railings, and fencing for Greater Boston homes. Send 3 photos for a free assessment.");
@@ -27,7 +27,7 @@ export default function Page() {
         <Link href="/repair-or-replace" className="btn btn-ghost">Repair or replace?</Link>
       </PageHero>
       <section className="bg-hunter px-5 pb-20 text-white"><div className="mx-auto max-w-7xl"><ServicesGrid /></div></section>
-      <section className="bg-white px-5 py-20"><div className="mx-auto max-w-3xl"><PriceGuide rows={PRICE_GUIDE} title="What Greater Boston homeowners typically spend" /></div></section>
+      <section className="bg-white px-5 py-20"><div className="mx-auto max-w-3xl"><PriceGuide rows={[{ item: "Repair, staining and sealing", range: "Quoted from your photos" }, ...NEW_DECK_PRICE_ROWS]} title="How we price homeowner projects" /></div></section>
       <Process cta={false} />
       <FaqSection faqs={FAQ} />
       <section id="get-started" className="bg-linen-pale px-5 py-20">
