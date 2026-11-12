@@ -4,29 +4,26 @@ import { z } from "zod";
 import { env } from "@/lib/server/env";
 import { sendCapi, sendGa4 } from "@/lib/server/integrations";
 import { openAiStageEvent, sendOpenAiEvent } from "@/lib/openai-ads/server";
-import { updateLead } from "@/lib/server/store";
+import { findById, updateLead } from "@/lib/server/store";
 import { tagContact } from "@/lib/server/ghl-api";
 import { STAGE_SEQUENCES } from "@/lib/crm/follow-up";
+import { CRM_EVENTS, type CrmEvent } from "@/config/ghl";
+import { MEASUREMENT_EVENTS, measurementFor } from "@/config/measurement";
 
 export const runtime = "nodejs";
 
 /**
- * GHL → site webhook. A GHL workflow fires this when an opportunity changes stage so ad platforms
- * learn which leads became real jobs. Google Ads offline conversions are uploaded from GHL/Sheets
- * (see docs/08-tracking.md) using the stored gclid; this endpoint handles Meta CAPI + GA4 MP.
+ * GHL → site webhook (two-way sync). A GHL workflow fires this when an opportunity moves stage, is won/lost or
+ * is paid. It (1) writes stage + won/paid revenue back to the lead for attribution, (2) applies the stage
+ * follow-up sequence tag, (3) sends the spec measurement events (qualified_lead, appointment_booked,
+ * estimate_sent, won_job, revenue) to GA4 MP, Meta CAPI and OpenAI Ads, de-duplicated by opportunity+event.
+ * Idempotent: a repeat delivery of the same opportunity+event is acknowledged without re-sending anything.
+ * Stage names: src/config/ghl.ts (exact Phase 2 spec names). Google Ads offline revenue: /api/admin/attribution?format=gads.
  */
-const STAGE_EVENTS = {
-  qualified: { ga4: "qualified_lead", meta: "QualifiedLead" },
-  estimate_booked: { ga4: "appointment_booked", meta: "Schedule" },
-  walkthrough_booked: { ga4: "appointment_booked", meta: "Schedule" },
-  estimate_sent: { ga4: "estimate_sent", meta: "EstimateSent" },
-  won: { ga4: "contract_signed", meta: "SubmitApplication" },
-  paid: { ga4: "purchase", meta: "Purchase" },
-  lost: { ga4: "lead_lost", meta: "LeadLost" },
-} as const;
+const EVENT_KEYS = Object.keys(CRM_EVENTS) as [CrmEvent, ...CrmEvent[]];
 
 const body = z.object({
-  stage: z.enum(Object.keys(STAGE_EVENTS) as [keyof typeof STAGE_EVENTS, ...(keyof typeof STAGE_EVENTS)[]]),
+  stage: z.enum(EVENT_KEYS),
   lead_id: z.string().min(1),
   opportunity_id: z.string().min(1),
   email: z.string().email().optional(),
@@ -56,23 +53,28 @@ export async function POST(req: Request) {
   const parsed = body.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ ok: false, error: parsed.error.issues[0]?.message }, { status: 422 });
   const d = parsed.data;
-  const ev = STAGE_EVENTS[d.stage];
-  // Deterministic event_id per opportunity+stage so GHL retries never double count.
+  const map = CRM_EVENTS[d.stage] as { stage: string | null; status?: "won" | "lost" };
+  // Deterministic event_id per opportunity+event so GHL retries never double count.
   const eventId = `${d.opportunity_id}:${d.stage}`;
-  const value = d.stage === "won" || d.stage === "paid" ? d.value : undefined;
 
-  // Revenue attribution: write the stage + value back onto the lead so /api/admin/attribution and the
-  // Google Ads offline-conversion export can tie revenue to the original click / campaign.
+  // Idempotency: remember processed event ids on the lead.
+  const lead = await findById(d.lead_id).catch(() => null);
+  const seen = Array.isArray(lead?.crm_event_ids) ? (lead!.crm_event_ids as string[]) : [];
+  if (seen.includes(eventId)) return NextResponse.json({ ok: true, event_id: eventId, duplicate: true });
+
   const now = new Date().toISOString();
-  const patch: Record<string, unknown> = { stage: d.stage, stage_at: now, ghl_opportunity_id: d.opportunity_id };
+  const patch: Record<string, unknown> = { ghl_opportunity_id: d.opportunity_id, crm_event_ids: [...seen, eventId].slice(-50) };
+  if (map.stage) Object.assign(patch, { stage: map.status ?? map.stage, stage_at: now });
   if (d.stage === "won") Object.assign(patch, { revenue_won: d.value ?? null, won_at: now });
   if (d.stage === "paid") Object.assign(patch, { revenue_paid: d.value ?? null, paid_at: now });
   const stored = await updateLead(d.lead_id, patch).then(() => true).catch((e) => { console.error("[crm-webhook] lead update", String(e).slice(0, 200)); return false; });
   const seq = STAGE_SEQUENCES[d.stage];
   const followUp = seq && d.contact_id ? await tagContact(d.contact_id, [`wf:${seq.key}`, `stage:${d.stage}`]) : { skipped: true };
 
-  if (d.stage === "lost") return NextResponse.json({ ok: true, event_id: eventId, stored, followUp });
-
+  const m = measurementFor(d.stage);
+  if (!m) return NextResponse.json({ ok: true, event_id: eventId, stored, followUp, measured: false });
+  const value = m.withValue ? d.value : undefined;
+  const ev = MEASUREMENT_EVENTS[m.event];
   const oa = openAiStageEvent(d.stage);
   const [meta, ga4, openai] = await Promise.all([
     sendCapi({
@@ -82,8 +84,7 @@ export async function POST(req: Request) {
       user: { email: d.email, phone: d.phone, first_name: d.first_name, last_name: d.last_name, town: d.town, external_id: d.lead_id, fbc: d.fbc, fbp: d.fbp },
       custom_data: { value, currency: value ? "USD" : undefined, content_name: d.service, stage: d.stage },
     }),
-    sendGa4(d.ga_client_id || d.lead_id, ev.ga4, { value, currency: value ? "USD" : undefined, service: d.service, transaction_id: d.stage === "paid" ? d.opportunity_id : undefined }),
-    // OpenAI Ads: booked visits → appointment_scheduled; later stages → custom events with value.
+    sendGa4(d.ga_client_id || String(lead?.ga_client_id ?? "") || d.lead_id, m.event, { value, currency: value ? "USD" : undefined, service: d.service, transaction_id: m.event === "revenue" ? d.opportunity_id : undefined, event_id: eventId }),
     oa
       ? sendOpenAiEvent({
           id: eventId, type: oa.type, customEventName: oa.customEventName, actionSource: "offline",
@@ -92,5 +93,5 @@ export async function POST(req: Request) {
         })
       : Promise.resolve({ sent: false, skipped: "no mapping" }),
   ]);
-  return NextResponse.json({ ok: true, event_id: eventId, stored, followUp, meta, ga4, openai });
+  return NextResponse.json({ ok: true, event_id: eventId, event: m.event, stored, followUp, meta, ga4, openai });
 }

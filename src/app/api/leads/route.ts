@@ -23,8 +23,12 @@ export async function POST(req: Request) {
   if (lead.elapsed_ms !== undefined && lead.elapsed_ms < 2500 && lead.form_type !== "newsletter") {
     return NextResponse.json({ ok: true, id: "ignored" });
   }
+  // Link-spam heuristic: real customers almost never paste several URLs into a deck request.
+  if (((lead.message ?? "").match(/https?:\/\//gi)?.length ?? 0) > 2) {
+    return NextResponse.json({ ok: true, id: "ignored" });
+  }
   if (!rateLimit(`lead:${ip}`)) {
-    return NextResponse.json({ ok: false, error: "Too many submissions. Please call or try again shortly." }, { status: 429 });
+    return NextResponse.json({ ok: false, error: "Too many submissions. Please wait a minute and try again, or email info@deckcraftbuild.com." }, { status: 429 });
   }
 
   try {

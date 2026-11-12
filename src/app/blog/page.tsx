@@ -9,8 +9,8 @@ export default function Page() {
   const [featured, ...rest] = POSTS;
   return (
     <>
-      <PageHero compact eyebrow="RESOURCES" h1="Deck and fence care for Greater Boston." sub="Straight answers on cost, timing and when to repair or replace." />
-      <section className="bg-cream px-5 py-16">
+      <PageHero photo="autumnBoards" position="50% 55%" eyebrow="Resources" h1="Deck and fence care for Greater Boston." sub="Straight answers on cost, timing and when to repair or replace." />
+      <section className="bg-bone px-5 py-16">
         <div className="mx-auto max-w-6xl">
           <Link href={`/blog/${featured.slug}`} className="block rounded-[2px] bg-hunter p-8 text-white md:p-12">
             <p className="eyebrow text-linen">{featured.category}</p>

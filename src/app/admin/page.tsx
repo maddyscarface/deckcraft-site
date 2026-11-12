@@ -1,5 +1,6 @@
 import { listLeads, type StoredLead } from "@/lib/server/store";
 import { integrationStatus } from "@/lib/server/env";
+import { activeSeasonal, seasonalSchedule } from "@/config/seasonal";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Dashboard", robots: { index: false, follow: false } };
@@ -41,6 +42,13 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         </p>
         <p className="mt-1 text-xs text-hunter/60">&quot;Configured&quot; means a key is present, not that the connection was tested. Run the verification checklist in docs/08-tracking.md.</p>
         {err && <p className="err mt-4">{err}</p>}
+        <details className="mt-4 bg-white p-4 text-sm shadow-card" data-testid="admin-seasonal">
+          <summary className="cursor-pointer font-semibold">Seasonal module: {activeSeasonal()?.id ?? "off"} <span className="font-normal text-stone">(SEASONAL_FORCE={process.env.SEASONAL_FORCE || "unset"}, custom schedule: {process.env.SEASONAL_MODULES_JSON ? "yes" : "no"})</span></summary>
+          <p className="mt-2 text-stone">Active bar: {activeSeasonal()?.bar ?? "hidden"}</p>
+          <table className="mt-3 w-full text-left"><thead><tr>{["Module", "Start", "End", "Enabled", "Bar copy"].map((h) => <th key={h} className="py-1 pr-3">{h}</th>)}</tr></thead>
+            <tbody>{seasonalSchedule().map((m) => <tr key={m.id} className="border-t border-line"><td className="py-1 pr-3">{m.id}</td><td className="pr-3">{m.start}</td><td className="pr-3">{m.end}</td><td className="pr-3">{m.enabled ? "yes" : "no"}</td><td>{m.bar}</td></tr>)}</tbody></table>
+          <p className="mt-2 text-xs text-stone">Outside every window the evergreen module shows. Edit via Vercel env SEASONAL_MODULES_JSON / SEASONAL_FORCE (see src/config/seasonal.ts).</p>
+        </details>
 
         {view === "bdr" ? (
           <div className="mt-8 overflow-x-auto rounded-[2px] bg-white shadow-card">
