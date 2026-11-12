@@ -1,8 +1,9 @@
 import { meta } from "@/lib/seo";
+import { PricingTag } from "@/components/ui/PricingTag";
 import { PageHero } from "@/components/sections/Blocks";
 import { PhotoAssessmentForm } from "@/components/forms/PhotoAssessmentForm";
 import { ViewService } from "@/components/sections/ViewService";
-import { PRICING, bandFor, newDeckStartingAt, pricingLabel, usd } from "@/config/pricing";
+import { PRICING, bandFor, newDeckStartingAt, usd } from "@/config/pricing";
 import { responsePhrase } from "@/config/site";
 
 export const metadata = meta("/new-deck-estimate", "Get a New Deck Estimate | DeckCraft Greater Boston",
@@ -16,13 +17,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
   return (
     <>
       <ViewService name="New Deck Estimate Page" assessment="new_deck_estimate" />
-      <PageHero photo="compositeDeck" position="50% 55%" eyebrow="New deck estimate" h1="Plan the deck you actually want." sub={`Size, materials, HOA or permit questions and a budget band. We reply ${responsePhrase()} with a written next step. Any site visit is booked with you, never assumed.`} />
+      <PageHero photo="compositeDeck" position="50% 55%" eyebrow="New deck estimate" h1="Plan the deck you actually want." sub={`Size, materials, HOA or permit questions and a budget band. We reply with a written next step ${responsePhrase()}. Any site visit is booked with you, never assumed.`} />
       <section className="bg-bone px-5 py-16 lg:px-8">
         <div className="mx-auto grid max-w-[1200px] gap-10 lg:grid-cols-[1fr_340px]">
           <PhotoAssessmentForm presetService="new_deck" presetWorkType="new" presetSize={sqft ? `${sqft} sq ft` : undefined} submitText="Request My New Deck Estimate" />
           <aside className="space-y-6 lg:pt-2">
             <div className="bg-navy p-6 text-white">
-              <p className="eyebrow text-cedar-light">{pricingLabel()}</p>
+              <PricingTag dark />
               {start ? (
                 <>
                   <p className="mt-4 text-sm text-white/70">{sqft} sq ft × ${PRICING.newDeckStartPerSqFt}/sq ft</p>

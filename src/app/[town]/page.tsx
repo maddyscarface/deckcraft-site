@@ -40,7 +40,7 @@ export default async function Page({ params }: { params: Promise<{ town: string 
           <div>
             <h2 className="font-display text-[32px] leading-tight md:text-[42px]">Decks and fences in <span className="accent text-cedar">{t.name}</span></h2>
             <p className="mt-4 text-lg leading-relaxed text-hunter/85">{t.housing}</p>
-            <h3 className="mt-8 font-semibold">What we&apos;re most often asked to do here</h3>
+            <h3 className="mt-8 font-semibold">Typical work on decks and fences here</h3>
             <ul className="mt-3 space-y-2">{t.typicalJobs.map((j) => <li key={j} className="flex gap-2"><Icon name="CircleCheck" className="mt-0.5 shrink-0 text-linen-dark" />{j}</li>)}</ul>
             <p className="mt-8 rounded-[2px] border-l-4 border-patina bg-white p-4">{t.propertyAngle}</p>
           </div>

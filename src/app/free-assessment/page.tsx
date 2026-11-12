@@ -21,7 +21,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
         <div className="mx-auto max-w-3xl text-center">
           <p className="eyebrow text-cedar-light">Free photo assessment</p>
           <h1 className="mt-5 font-display text-[36px] leading-[1.04] md:text-[56px]">See what your deck or fence needs <span className="accent text-cedar-light">before you commit to anything.</span></h1>
-          <p className="mt-6 text-lg text-white/80">Send 3 photos. We&apos;ll reply {responsePhrase()}. No obligation, no sales pitch.</p>
+          <p className="mt-6 text-lg text-white/80">Three photos and a few quick questions. We reply {responsePhrase()}, with no obligation and no sales pitch.</p>
           <ul className="mt-8 flex flex-wrap justify-center gap-x-7 gap-y-2 text-sm text-white/85">
             <li className="flex items-center gap-2"><Icon name="Clock" size={15} className="text-cedar-light" />Fast, honest review</li>
             <li className="flex items-center gap-2"><Icon name="ShieldCheck" size={15} className="text-cedar-light" />Photos seen only by our team</li>
