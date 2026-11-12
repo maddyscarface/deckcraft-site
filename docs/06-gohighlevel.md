@@ -52,7 +52,7 @@ The signed photo links expire after 14 days. During the first review, the review
 Required opportunity fields: Service, Town, Value (estimate total), Lost Reason (Price / Timing / Went DIY / Chose other / No response / Out of area / Not a fit).
 
 ## 4. Tags (created automatically by the site)
-`src:website`, `form:{assessment|walkthrough|short|checker|newsletter}`, `funnel:{A_deck_repair|B_staining|C_repair_or_replace|D_fencing|E_property_programs}`, `seg:{homeowner|hoa_condo|landlord_pm|commercial}`, `svc:{…}`, `town:{slug}`, `timeline:{…}`, `photos:{received|requested}`, `sms:opt-in`, `paid:{google|meta}`, `cmp:{campaign}`, `checker:{result}`.
+`src:website`, `form:{assessment|walkthrough|short|checker|newsletter}`, `funnel:{A_deck_repair|B_staining|C_repair_or_replace|D_fencing|E_property_programs|F_new_deck}` (F_new_deck = new-deck builds, added in Phase 2; older new-deck leads carry A_deck_repair), `seg:{homeowner|hoa_condo|landlord_pm|commercial}`, `svc:{…}`, `town:{slug}`, `timeline:{…}`, `photos:{received|requested}`, `sms:opt-in`, `paid:{google|meta}`, `cmp:{campaign}`, `checker:{result}`.
 
 ## 5. Automations
 

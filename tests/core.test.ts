@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { leadSchema } from "@/lib/lead-schema";
-import { funnelFor, pipelineFor, scoreLead, tagsFor } from "@/lib/routing";
+import { DECK_FUNNELS, funnelFor, isFunnel, pipelineFor, scoreLead, tagsFor } from "@/lib/routing";
 import { evaluateChecker, type CheckerAnswers } from "@/lib/checker";
 import { TOWNS } from "@/lib/towns";
 import { SERVICES } from "@/lib/services";
@@ -38,6 +38,18 @@ describe("routing", () => {
     expect(funnelFor(L({ form_type: "checker", services: ["deck_repair"] }))).toBe("C_repair_or_replace");
     expect(funnelFor(L({ services: ["new_fence"] }))).toBe("D_fencing");
     expect(funnelFor(L({ customer_type: "landlord_pm", services: ["deck_repair"] }))).toBe("E_property_programs");
+  });
+  it("tags new-deck leads F_new_deck and keeps A_deck_repair for repairs (back-compat)", () => {
+    expect(funnelFor(L({ services: ["new_deck"] }))).toBe("F_new_deck");
+    expect(funnelFor(L({ services: ["deck_repair"], work_type: "new" }))).toBe("F_new_deck");
+    expect(funnelFor(L({ services: ["staining"], source_page: "/new-deck-estimate?sqft=320" }))).toBe("F_new_deck");
+    expect(funnelFor(L({ services: ["new_deck", "deck_repair"] }))).toBe("A_deck_repair");
+    expect(funnelFor(L({ services: ["new_deck"], work_type: "repair" }))).toBe("A_deck_repair");
+    expect(funnelFor(L({ services: ["new_deck"], customer_type: "hoa_condo" }))).toBe("E_property_programs");
+    expect(tagsFor(L({ services: ["new_deck"] }))).toContain("funnel:F_new_deck");
+    expect(isFunnel("A_deck_repair")).toBe(true);
+    expect(isFunnel("F_new_deck")).toBe(true);
+    expect(DECK_FUNNELS).toEqual(["A_deck_repair", "F_new_deck"]);
   });
   it("routes property customers to the commercial pipeline", () => {
     expect(pipelineFor(L({ customer_type: "hoa_condo" }))).toBe("commercial");

@@ -3,18 +3,32 @@ import { SCORING } from "@/config/lead-scoring";
 
 /** Maps a validated lead to funnel, GHL pipeline, tags and a simple priority score. Pure + unit-tested. */
 
-export type Funnel = "A_deck_repair" | "B_staining" | "C_repair_or_replace" | "D_fencing" | "E_property_programs" | "newsletter" | "general";
+/**
+ * Funnels. `F_new_deck` (Phase 2) separates new-deck builds from repair work so ads, GHL workflows and reporting
+ * can treat them differently. `A_deck_repair` remains a valid value (repairs, and every lead stored before this
+ * change); treat both as residential deck funnels when filtering.
+ */
+export const FUNNELS = ["A_deck_repair", "B_staining", "C_repair_or_replace", "D_fencing", "E_property_programs", "F_new_deck", "newsletter", "general"] as const;
+export type Funnel = (typeof FUNNELS)[number];
+export const isFunnel = (v: unknown): v is Funnel => typeof v === "string" && (FUNNELS as readonly string[]).includes(v);
+/** Residential deck funnels, including the legacy value used for new decks before F_new_deck existed. */
+export const DECK_FUNNELS: readonly Funnel[] = ["A_deck_repair", "F_new_deck"];
 
-export function funnelFor(lead: Pick<LeadInput, "form_type" | "customer_type" | "services" | "source_page">): Funnel {
+export function funnelFor(lead: Pick<LeadInput, "form_type" | "customer_type" | "services" | "source_page"> & Partial<Pick<LeadInput, "work_type">>): Funnel {
   if (lead.form_type === "newsletter") return "newsletter";
   if (lead.form_type === "walkthrough" || lead.form_type === "planner") return "E_property_programs";
   if (lead.customer_type && lead.customer_type !== "homeowner") return "E_property_programs";
   if (lead.form_type === "checker" || lead.source_page?.startsWith("/repair-or-replace")) return "C_repair_or_replace";
+  // New-deck intent stated explicitly (form answer or the new-deck estimate page) wins over service chips.
+  if (lead.work_type === "new" || lead.source_page?.startsWith("/new-deck-estimate")) return "F_new_deck";
   const s = new Set(lead.services ?? []);
   const fence = ["fence_repair", "new_fence", "fence_staining", "gate"].some((k) => s.has(k as never));
   const deck = ["deck_repair", "railings_stairs", "new_deck"].some((k) => s.has(k as never));
   if (s.has("staining") && !deck && !fence) return "B_staining";
   if (fence && !deck && !s.has("staining")) return "D_fencing";
+  // New-deck intent: an explicit "new build" answer, the new-deck estimate page, or new_deck without repair work.
+  const repairWork = s.has("deck_repair") || s.has("railings_stairs");
+  if (s.has("new_deck") && !repairWork && lead.work_type !== "repair") return "F_new_deck";
   if (deck || s.has("staining")) return "A_deck_repair";
   if (lead.source_page?.startsWith("/fencing")) return "D_fencing";
   if (lead.source_page?.includes("staining")) return "B_staining";

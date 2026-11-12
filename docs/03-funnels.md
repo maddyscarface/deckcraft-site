@@ -29,3 +29,5 @@ Each funnel has its own entry ads, landing page, qualification questions, CRM ta
 | Replacement May Be Worth Evaluating | "We'll price repair and rebuild side by side so you can compare." | Normal; offer both |
 
 Never tell a customer their deck is "safe" or "certified" based on the tool or photos.
+
+**Phase 2:** new-deck builds (new_deck without repair work, a "New build" answer, or the /new-deck-estimate page) are tagged `funnel:F_new_deck`. `A_deck_repair` stays valid for repairs and for leads stored before the change.
