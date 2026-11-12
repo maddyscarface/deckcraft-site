@@ -9,6 +9,7 @@ import { PhotoAssessmentForm } from "@/components/forms/PhotoAssessmentForm";
 import { Icon } from "@/components/ui/Icon";
 
 export const dynamicParams = false;
+const TOWN_PHOTOS = ["newEnglandHome", "townhomeDeck", "gardenDeck", "cabinDeck", "lakeDeck", "heroModernDeck"] as const;
 export function generateStaticParams() { return TOWNS.map((t) => ({ town: t.slug })); }
 
 export async function generateMetadata({ params }: { params: Promise<{ town: string }> }) {
@@ -30,30 +31,30 @@ export default async function Page({ params }: { params: Promise<{ town: string 
   return (
     <>
       <JsonLd data={[serviceSchema(`Deck and fence repair in ${t.name}, MA`, `/${t.slug}`), breadcrumbSchema([["Home", "/"], ["Service Areas", "/service-areas"], [t.name, `/${t.slug}`]])]} />
-      <PageHero eyebrow={`${t.name.toUpperCase()}, MA`} h1={`Deck and Fence Repair in ${t.name}, MA`} sub={t.intro}>
-        <Link href="#get-started" className="btn btn-linen">Send 3 Photos — Get a Free Assessment</Link>
+      <PageHero photo={TOWN_PHOTOS[TOWNS.findIndex((x) => x.slug === t.slug) % TOWN_PHOTOS.length]} eyebrow={`${t.name.toUpperCase()}, MA`} h1={`Deck and Fence Repair in ${t.name}, MA`} sub={t.intro}>
+        <Link href="#get-started" className="btn btn-cedar">Send 3 photos for a free assessment</Link>
         <Link href="/request-walkthrough" className="btn btn-ghost">Managing {t.name} properties?</Link>
       </PageHero>
-      <section className="bg-cream px-5 py-20">
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2">
+      <section className="bg-bone px-5 py-24 lg:px-8">
+        <div className="mx-auto grid max-w-[1320px] gap-14 lg:grid-cols-2">
           <div>
-            <h2 className="font-display text-3xl">Decks and fences in {t.name}</h2>
+            <h2 className="font-display text-[32px] leading-tight md:text-[42px]">Decks and fences in <span className="accent text-cedar">{t.name}</span></h2>
             <p className="mt-4 text-lg leading-relaxed text-hunter/85">{t.housing}</p>
             <h3 className="mt-8 font-semibold">What we&apos;re most often asked to do here</h3>
             <ul className="mt-3 space-y-2">{t.typicalJobs.map((j) => <li key={j} className="flex gap-2"><Icon name="CircleCheck" className="mt-0.5 shrink-0 text-linen-dark" />{j}</li>)}</ul>
-            <p className="mt-8 rounded-md border-l-4 border-patina bg-white p-4">{t.propertyAngle}</p>
+            <p className="mt-8 rounded-[2px] border-l-4 border-patina bg-white p-4">{t.propertyAngle}</p>
           </div>
-          <div className="rounded-lg bg-white p-6 shadow-card">
+          <div className="rounded-[2px] bg-white p-6 shadow-card">
             <h3 className="font-semibold">Neighborhoods we serve in {t.name}</h3>
-            <div className="mt-3 flex flex-wrap gap-2">{t.neighborhoods.map((n) => <span key={n} className="rounded-full bg-cream px-3 py-1 text-sm">{n}</span>)}</div>
+            <div className="mt-3 flex flex-wrap gap-2">{t.neighborhoods.map((n) => <span key={n} className="border border-line bg-bone px-3 py-1.5 text-sm">{n}</span>)}</div>
             <h3 className="mt-6 font-semibold">Nearby</h3>
-            <div className="mt-3 flex flex-wrap gap-2">{t.nearby.map((s) => <Link key={s} href={`/${s}`} className="rounded-full border border-hunter px-3 py-1 text-sm hover:bg-hunter hover:text-white">{TOWN_BY_SLUG[s]?.name}</Link>)}</div>
+            <div className="mt-3 flex flex-wrap gap-2">{t.nearby.map((s) => <Link key={s} href={`/${s}`} className="border border-char/30 px-3 py-1.5 text-sm hover:bg-char hover:text-white">{TOWN_BY_SLUG[s]?.name}</Link>)}</div>
           </div>
         </div>
       </section>
-      <section className="bg-hunter px-5 py-20 text-white"><div className="mx-auto max-w-7xl"><h2 className="mb-8 font-display text-3xl">Services in {t.name}</h2><ServicesGrid /></div></section>
+      <section className="bg-char px-5 py-24 text-white lg:px-8"><div className="mx-auto max-w-[1320px]"><h2 className="mb-12 font-display text-[32px] md:text-[42px]">Services in {t.name}</h2><ServicesGrid /></div></section>
       <FaqSection faqs={faqs} />
-      <section id="get-started" className="bg-linen-pale px-5 py-20">
+      <section id="get-started" className="scroll-mt-20 bg-cedar-soft px-5 py-24">
         <div className="mx-auto max-w-3xl"><h2 className="mb-8 font-display text-3xl">Free photo assessment in {t.name}</h2><PhotoAssessmentForm presetTown={t.name} /></div>
       </section>
     </>

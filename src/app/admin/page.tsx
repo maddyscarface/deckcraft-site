@@ -23,10 +23,10 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
   const bdr = [...rows].filter((r) => r.status === "new").sort((a, b) => Number(b.lead_score ?? 0) - Number(a.lead_score ?? 0)).slice(0, 25);
 
   const Tile = ({ k, v, s }: { k: string; v: string | number; s?: string }) => (
-    <div className="rounded-lg bg-white p-5 shadow-card"><p className="text-xs font-semibold tracking-wider text-patina uppercase">{k}</p><p className="mt-1 font-display text-3xl">{v}</p>{s && <p className="text-xs text-hunter/60">{s}</p>}</div>
+    <div className="rounded-[2px] bg-white p-5 shadow-card"><p className="text-xs font-semibold tracking-wider text-patina uppercase">{k}</p><p className="mt-1 font-display text-3xl">{v}</p>{s && <p className="text-xs text-hunter/60">{s}</p>}</div>
   );
   const Table = ({ title, data }: { title: string; data: [string, number][] }) => (
-    <div className="rounded-lg bg-white p-5 shadow-card"><h3 className="font-semibold">{title}</h3><table className="mt-3 w-full text-sm"><tbody>{data.slice(0, 10).map(([k, v]) => <tr key={k} className="border-t border-cream-dark"><td className="py-1.5">{k}</td><td className="text-right font-semibold">{v}</td></tr>)}</tbody></table></div>
+    <div className="rounded-[2px] bg-white p-5 shadow-card"><h3 className="font-semibold">{title}</h3><table className="mt-3 w-full text-sm"><tbody>{data.slice(0, 10).map(([k, v]) => <tr key={k} className="border-t border-cream-dark"><td className="py-1.5">{k}</td><td className="text-right font-semibold">{v}</td></tr>)}</tbody></table></div>
   );
 
   return (
@@ -43,7 +43,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         {err && <p className="err mt-4">{err}</p>}
 
         {view === "bdr" ? (
-          <div className="mt-8 overflow-x-auto rounded-lg bg-white shadow-card">
+          <div className="mt-8 overflow-x-auto rounded-[2px] bg-white shadow-card">
             <table className="w-full min-w-[900px] text-sm">
               <thead className="bg-hunter text-left text-white"><tr>{["Score", "Received", "Name", "Segment", "Funnel", "Town", "Phone", "Photos", "Timeline", "GHL"].map((h) => <th key={h} className="p-3">{h}</th>)}</tr></thead>
               <tbody>{bdr.map((r) => (
@@ -73,7 +73,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
               <Table title="By town" data={count(d30, "town")} />
               <Table title="By source" data={count(d30, "utm_source")} />
             </div>
-            <div className="mt-6 rounded-lg border border-dashed border-hunter p-5 text-sm">
+            <div className="mt-6 rounded-[2px] border border-dashed border-hunter p-5 text-sm">
               <p className="font-semibold">Spend, CAC, show rate, close rate, revenue and margin</p>
               <p className="mt-1 text-hunter/70">These need ad spend (Google Ads, Meta, LSA) and GHL opportunity stages/values. The data model and SQL views are in <code>supabase/schema.sql</code> (<code>v_kpi_channel_month</code>) and the spec is docs/12-dashboards-kpis.md. Connect the daily spend import and GHL opportunity sync to populate them.</p>
             </div>
