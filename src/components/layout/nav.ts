@@ -2,10 +2,12 @@ export const NAV = [
   {
     label: "Decks",
     items: [
-      { label: "Deck Repair", href: "/services/deck-repair" },
-      { label: "Staining and Sealing", href: "/services/deck-staining-sealing" },
-      { label: "Boards, Railings and Stairs", href: "/services/board-railing-stairs" },
       { label: "New Decks", href: "/services/new-decks" },
+      { label: "Rebuild and Resurface", href: "/services/deck-rebuild-resurfacing" },
+      { label: "Structural Deck Repair", href: "/services/deck-repair" },
+      { label: "Railing and Stair Safety", href: "/services/board-railing-stairs" },
+      { label: "Staining and Sealing", href: "/services/deck-staining-sealing" },
+      { label: "Project Calculator", href: "/project-calculator" },
       { label: "Repair-or-Replace Checker", href: "/repair-or-replace" },
       { label: "For Homeowners", href: "/homeowners" },
     ],

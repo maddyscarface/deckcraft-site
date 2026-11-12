@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Icon } from "../ui/Icon";
 import { Photo } from "../ui/Photo";
 import { SERVICE_CARDS, PRICE_DISCLAIMER, type PriceRow } from "@/lib/services";
+import { PRICING, pricingLabel } from "@/config/pricing";
 import { TOWNS } from "@/lib/towns";
 import { site } from "@/config/site";
 import type { PhotoKey } from "@/lib/photos";
@@ -15,7 +16,7 @@ export function PageHero({ eyebrow, h1, sub, children, compact = false, photo, p
       <section className="relative isolate overflow-hidden bg-char text-white">
         <div className="photo-shade-side absolute inset-0 -z-10"><Photo k={photo} priority sizes="100vw" position={position} /></div>
         <div className="mx-auto flex min-h-[460px] max-w-[1320px] flex-col justify-end px-5 pt-24 pb-16 md:min-h-[540px] lg:px-8 lg:pb-20">
-          {eyebrow && <p className="eyebrow rule rise text-cedar-light">{eyebrow}</p>}
+          {eyebrow && <p className="eyebrow rule rise text-white/85">{eyebrow}</p>}
           <h1 className="rise-2 mt-5 max-w-4xl font-display text-[38px] leading-[1.02] md:text-[60px]">{h1}</h1>
           {sub && <p className="rise-3 mt-6 max-w-2xl text-[17px] leading-relaxed text-white/85 md:text-lg">{sub}</p>}
           {children && <div className="rise-3 mt-9 flex flex-wrap gap-3">{children}</div>}
@@ -50,16 +51,16 @@ export function SectionHead({ eyebrow, title, accent, sub, dark = false, center 
 export function ServicesGrid({ dark = true }: { dark?: boolean }) {
   return (
     <div className="grid gap-px overflow-hidden border border-transparent sm:grid-cols-2 lg:grid-cols-3">
-      {SERVICE_CARDS.map((c) => {
+      {SERVICE_CARDS.map((c, i) => {
         const k = SERVICE_CARD_PHOTO[c.href];
         return (
           <Link key={c.href} href={c.href} className={`group block ${dark ? "bg-char-2 text-white" : "bg-white text-char"} transition`}>
             <div className="relative aspect-[16/10] overflow-hidden">
               {k ? <Photo k={k} sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw" className="transition duration-700 group-hover:scale-[1.04]" /> : null}
-              <span className="absolute left-4 top-4 flex h-9 w-9 items-center justify-center bg-char/80 text-cedar-light backdrop-blur"><Icon name={c.icon} size={18} /></span>
             </div>
             <div className="p-6 md:p-7">
-              <h3 className="font-display text-[21px]">{c.title}</h3>
+              <p className={`num text-[13px] tracking-[0.14em] ${dark ? "text-cedar-light" : "text-cedar-deep"}`}>{String(i + 1).padStart(2, "0")}</p>
+              <h3 className="mt-2 font-display text-[22px]">{c.title}</h3>
               <p className={`mt-2 text-[15px] leading-relaxed ${dark ? "text-white/70" : "text-stone"}`}>{c.body}</p>
               <span className={`mt-5 inline-flex items-center gap-1.5 text-sm font-semibold ${dark ? "text-cedar-light" : "text-cedar"}`}>Explore <Icon name="ArrowRight" size={14} className="transition group-hover:translate-x-1" /></span>
             </div>
@@ -70,11 +71,12 @@ export function ServicesGrid({ dark = true }: { dark?: boolean }) {
   );
 }
 
-export function PriceGuide({ rows, title = "What Greater Boston owners typically spend" }: { rows: PriceRow[]; title?: string }) {
+export function PriceGuide({ rows, title = "How pricing works" }: { rows: PriceRow[]; title?: string }) {
+  const showsNewDeck = rows.some((r) => r.range.includes("/ sq ft"));
   return (
     <div id="price-guide" className="scroll-mt-24 border border-line bg-white p-6 shadow-card md:p-10">
       <PricingViewBeacon where="price-guide" />
-      <p className="eyebrow text-cedar">Planning ranges</p>
+      <p className="eyebrow text-cedar-deep">{pricingLabel()}</p>
       <h3 className="mt-3 font-display text-2xl md:text-3xl">{title}</h3>
       <table className="mt-6 w-full text-left text-[15px]">
         <tbody>
@@ -86,14 +88,18 @@ export function PriceGuide({ rows, title = "What Greater Boston owners typically
           ))}
         </tbody>
       </table>
-      <p className="mt-5 text-sm leading-relaxed text-stone">{PRICE_DISCLAIMER}</p>
+      <div className="mt-5 space-y-2 text-sm leading-relaxed text-stone">
+        {showsNewDeck && <p>* {PRICING.assumptions.join(" ")}</p>}
+        <p>{PRICING.repairNote}</p>
+        <p>{PRICE_DISCLAIMER}</p>
+      </div>
     </div>
   );
 }
 
 export const PROCESS = [
   { icon: "Camera", title: "Send us photos", body: "Upload 3 photos: the whole deck or fence, the worst spots, and the stairs or gates. It takes about 2 minutes." },
-  { icon: "MessageCircle", title: "We assess and send a range", body: "We review your photos and tell you honestly whether it looks like a repair, a refinish or a rebuild, with a price range." },
+  { icon: "MessageCircle", title: "We assess and advise", body: "We review your photos and tell you honestly whether it looks like a repair, a refinish or a rebuild, and how we would price it." },
   { icon: "Calendar", title: "We confirm on site", body: "A short visit to confirm scope and lock your price in writing before any work starts." },
   { icon: "Sparkles", title: "We do the work and send photos", body: "We finish, clean up and walk it with you. Property clients get a photo report." },
 ];
@@ -169,7 +175,7 @@ export function RelatedLinks({ links }: { links: { href: string; label: string }
   );
 }
 
-export function CtaBand({ title, sub, href = "/free-assessment", label = "Send 3 photos for a free assessment", secondary, photo = "eveningLights" }: { title: string; sub?: string; href?: string; label?: string; secondary?: { href: string; label: string }; photo?: PhotoKey }) {
+export function CtaBand({ title, sub, href = "/free-assessment", label = "Send 3 Photos for an Assessment", secondary, photo = "eveningLights" }: { title: string; sub?: string; href?: string; label?: string; secondary?: { href: string; label: string }; photo?: PhotoKey }) {
   return (
     <section className="relative isolate overflow-hidden bg-char px-5 py-24 text-center text-white lg:px-8">
       <div className="absolute inset-0 -z-10 opacity-35"><Photo k={photo} sizes="100vw" /></div>
