@@ -2,7 +2,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChoiceGrid, Field, FileDrop, Honeypot, Progress, SmsConsent } from "./kit";
-import type { CustomerType, ServiceKey } from "@/lib/lead-schema";
+import { CONTACT_PREF_LABELS, CONTACT_PREFS, URGENCY, URGENCY_LABELS, type CustomerType, type ServiceKey } from "@/lib/lead-schema";
 import { TOWN_NAMES } from "@/lib/towns";
 import { newEventId, submitLead, uploadFiles } from "@/lib/submit";
 import { track } from "@/lib/tracking";
@@ -18,8 +18,9 @@ const NEEDS: { value: ServiceKey; label: string }[] = [
 ];
 const TIMELINES = [{ value: "asap", label: "ASAP" }, { value: "this_season", label: "This season" }, { value: "next_season", label: "Next season" }, { value: "budget_planning", label: "Budget planning" }];
 const BUDGET = ["Board vote required", "Owner approval", "Management company approves", "Pre-approved budget", "Not sure yet"];
+const PROCUREMENT = ["Certificate of insurance (COI)", "W-9 / vendor setup", "Formal bid or RFP", "Multiple quotes required", "Board or owner vote", "None that I know of"];
 const FREQ = ["One-time project", "Annual", "Twice a year", "As needed"];
-const LABELS = ["Contact", "Properties", "Needs", "Files", "Walkthrough"];
+const LABELS = ["Contact", "Properties", "Scope", "Files", "Walkthrough"];
 const CAL = process.env.NEXT_PUBLIC_GHL_CALENDAR_URL;
 
 function WalkthroughFormInner({ presetType, presetService }: { presetType?: Exclude<CustomerType, "homeowner">; presetService?: ServiceKey }) {
@@ -39,6 +40,7 @@ function WalkthroughFormInner({ presetType, presetService }: { presetType?: Excl
     customer_type: (presetType ?? "") as CustomerType | "", property_count: "", unit_count: "", structure_count: "", fence_linear_ft: "",
     towns: [] as string[], townInput: "", services: (presetService ? [presetService] : []) as ServiceKey[], timeline: "", board_meeting_date: "",
     budget_process: "", maintenance_frequency: "", message: "", preferred_window: "",
+    urgency: "", procurement: [] as string[], preferred_contact: "", walkthrough_requested: true,
   });
 
   useEffect(() => {
@@ -95,6 +97,8 @@ function WalkthroughFormInner({ presetType, presetService }: { presetType?: Excl
         towns, town: towns[0], services: v.services, timeline: v.timeline || undefined, board_meeting_date: v.board_meeting_date || undefined,
         budget_process: v.budget_process || undefined, maintenance_frequency: v.maintenance_frequency || undefined,
         message: [v.message, v.preferred_window && `Preferred walkthrough window: ${v.preferred_window}`].filter(Boolean).join("\n\n") || undefined,
+        urgency: v.urgency || undefined, procurement: v.procurement.length ? v.procurement : undefined,
+        preferred_contact: v.preferred_contact || undefined, walkthrough_requested: v.walkthrough_requested,
         file_urls, website: hp,
       }, eventId.current, started.current);
       if (!r.ok) { setBusy(false); setServerErr(r.error ?? "Something went wrong"); if (r.fields) setErrors(r.fields); return; }
@@ -126,16 +130,16 @@ function WalkthroughFormInner({ presetType, presetService }: { presetType?: Excl
           <div className="grid gap-4 sm:grid-cols-2">
             <Field id="w_props" label="Number of properties *" error={errors.property_count}><input id="w_props" type="number" min={1} className="field" value={v.property_count} onChange={(e) => set("property_count")(e.target.value)} /></Field>
             <Field id="w_units" label="Number of units (approx.)"><input id="w_units" type="number" min={0} className="field" value={v.unit_count} onChange={(e) => set("unit_count")(e.target.value)} /></Field>
-            <Field id="w_struct" label="Decks, balconies or porches (approx.)"><input id="w_struct" type="number" min={0} className="field" value={v.structure_count} onChange={(e) => set("structure_count")(e.target.value)} /></Field>
+            <Field id="w_struct" label="Sites or structures (decks, balconies, porches)"><input id="w_struct" type="number" min={0} className="field" value={v.structure_count} onChange={(e) => set("structure_count")(e.target.value)} /></Field>
             <Field id="w_fence" label="Linear feet of fencing (optional)"><input id="w_fence" type="number" min={0} className="field" value={v.fence_linear_ft} onChange={(e) => set("fence_linear_ft")(e.target.value)} /></Field>
           </div>
           <Field id="w_towns" label="Towns *" error={errors.towns} hint="Add each town your properties are in">
             <div className="flex gap-2">
               <input id="w_towns" list="wtowns" className="field" value={v.townInput} onChange={(e) => set("townInput")(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addTown(); } }} />
-              <button type="button" className="btn border border-hunter" onClick={addTown}>Add</button>
+              <button type="button" className="btn border border-navy" onClick={addTown}>Add</button>
             </div>
             <datalist id="wtowns">{TOWN_NAMES.map((t) => <option key={t} value={t} />)}</datalist>
-            {v.towns.length > 0 && <div className="mt-2 flex flex-wrap gap-2">{v.towns.map((t) => <button type="button" key={t} onClick={() => setV((x) => ({ ...x, towns: x.towns.filter((y) => y !== t) }))} className="rounded-full bg-hunter px-3 py-1 text-xs text-white">{t} ×</button>)}</div>}
+            {v.towns.length > 0 && <div className="mt-2 flex flex-wrap gap-2">{v.towns.map((t) => <button type="button" key={t} onClick={() => setV((x) => ({ ...x, towns: x.towns.filter((y) => y !== t) }))} className="rounded-full bg-navy px-3 py-1 text-xs text-white">{t} ×</button>)}</div>}
           </Field>
         </div>
       )}
@@ -143,11 +147,13 @@ function WalkthroughFormInner({ presetType, presetService }: { presetType?: Excl
         <div className="space-y-5">
           <div><p className="label">What do you need? *</p><ChoiceGrid name="Needs" multi value={v.services} onChange={set("services")} options={NEEDS} />{errors.services && <p className="err">{errors.services}</p>}</div>
           <div className="grid gap-4 sm:grid-cols-2">
+            <Field id="w_urg" label="Urgency or safety concern"><select id="w_urg" className="field" value={v.urgency} onChange={(e) => set("urgency")(e.target.value)}><option value="">Select</option>{URGENCY.map((u) => <option key={u} value={u}>{URGENCY_LABELS[u]}</option>)}</select></Field>
             <Field id="w_tl" label="Timeline"><select id="w_tl" className="field" value={v.timeline} onChange={(e) => set("timeline")(e.target.value)}><option value="">Select</option>{TIMELINES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}</select></Field>
             <Field id="w_bmd" label="Next board or owner meeting (optional)"><input id="w_bmd" type="date" className="field" value={v.board_meeting_date} onChange={(e) => set("board_meeting_date")(e.target.value)} /></Field>
             <Field id="w_budget" label="How is work approved?"><select id="w_budget" className="field" value={v.budget_process} onChange={(e) => set("budget_process")(e.target.value)}><option value="">Select</option>{BUDGET.map((b) => <option key={b}>{b}</option>)}</select></Field>
             <Field id="w_freq" label="Maintenance frequency you want"><select id="w_freq" className="field" value={v.maintenance_frequency} onChange={(e) => set("maintenance_frequency")(e.target.value)}><option value="">Select</option>{FREQ.map((b) => <option key={b}>{b}</option>)}</select></Field>
           </div>
+          <div><p className="label">Procurement or vendor requirements</p><ChoiceGrid name="Procurement" multi cols={2} value={v.procurement as any} onChange={set("procurement")} options={PROCUREMENT.map((p) => ({ value: p, label: p }))} /></div>
           <Field id="w_msg" label="Property addresses or notes (optional)"><textarea id="w_msg" rows={4} className="field" placeholder="List addresses, access notes, known problem areas…" value={v.message} onChange={(e) => set("message")(e.target.value)} /></Field>
         </div>
       )}
@@ -157,16 +163,18 @@ function WalkthroughFormInner({ presetType, presetService }: { presetType?: Excl
           {CAL ? (
             <>
               <p className="text-sm">Pick a walkthrough time below, then submit. If no time works, leave a preferred window instead.</p>
-              <iframe src={CAL} title="Book a walkthrough" className="h-[560px] w-full rounded-[2px] border border-cream-dark" />
+              <iframe src={CAL} title="Book a walkthrough" className="h-[560px] w-full rounded-[2px] border border-line" />
             </>
           ) : null}
+          <label className="flex items-start gap-3 text-[15px]"><input type="checkbox" className="mt-1 h-4 w-4 accent-[#172637]" checked={v.walkthrough_requested} onChange={(e) => set("walkthrough_requested")(e.target.checked)} data-testid="w-walkthrough" /><span>I&apos;d like a site walkthrough. <span className="text-stone">We&apos;ll confirm a date with you before anyone comes out.</span></span></label>
           <Field id="w_window" label="Preferred walkthrough window" hint="e.g. weekday mornings in the next two weeks"><input id="w_window" className="field" value={v.preferred_window} onChange={(e) => set("preferred_window")(e.target.value)} /></Field>
+          <Field id="w_pc" label="Preferred contact method"><select id="w_pc" className="field" value={v.preferred_contact} onChange={(e) => set("preferred_contact")(e.target.value)}><option value="">No preference</option>{CONTACT_PREFS.map((c) => <option key={c} value={c}>{CONTACT_PREF_LABELS[c]}</option>)}</select></Field>
         </div>
       )}
       {serverErr && <p className="err mt-4" role="alert">{serverErr}</p>}
       <div className="mt-6 flex gap-3">
-        {step > 0 && <button type="button" className="btn border border-hunter" onClick={() => setStep(step - 1)} disabled={busy}>Back</button>}
-        <button type="submit" className="btn btn-hunter h-[52px] flex-1" disabled={busy}>{step === 4 ? (busy ? "Sending…" : "Request My Walkthrough") : step === 3 && !files.length ? "Skip files" : "Continue"}</button>
+        {step > 0 && <button type="button" className="btn border border-navy" onClick={() => setStep(step - 1)} disabled={busy}>Back</button>}
+        <button type="submit" className="btn btn-char h-[52px] flex-1" disabled={busy}>{step === 4 ? (busy ? "Sending…" : "Request My Walkthrough") : step === 3 && !files.length ? "Skip files" : "Continue"}</button>
       </div>
     </form>
   );

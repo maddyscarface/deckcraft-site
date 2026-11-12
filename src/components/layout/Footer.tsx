@@ -6,7 +6,7 @@ import { TOWNS } from "@/lib/towns";
 
 const services = [
   ["Deck Repair", "/services/deck-repair"], ["Staining and Sealing", "/services/deck-staining-sealing"],
-  ["Boards, Railings and Stairs", "/services/board-railing-stairs"], ["New Decks", "/services/new-decks"],
+  ["Boards, Railings and Stairs", "/services/board-railing-stairs"], ["New Decks", "/services/new-decks"], ["Rebuild and Resurface", "/services/deck-rebuild-resurfacing"], ["Project Calculator", "/project-calculator"],
   ["Residential Fencing", "/fencing/residential"], ["Commercial Fencing", "/fencing/commercial"],
   ["Repair-or-Replace Checker", "/repair-or-replace"],
 ];

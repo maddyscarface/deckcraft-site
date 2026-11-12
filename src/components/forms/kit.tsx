@@ -117,7 +117,7 @@ export function FileDrop({ files, setFiles, allowPdf = false, max = 10, formType
 export function SmsConsent({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
     <label className="flex items-start gap-3 text-[13px] leading-snug text-hunter/80">
-      <input type="checkbox" className="mt-0.5 h-4 w-4 accent-[#1A3828]" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      <input type="checkbox" className="mt-0.5 h-4 w-4 accent-[#172637]" checked={checked} onChange={(e) => onChange(e.target.checked)} />
       <span>I agree to receive texts from DeckCraft Boston about my request. Msg frequency varies. Msg and data rates may apply. Reply STOP to opt out, HELP for help. Consent is not a condition of purchase. See <Link href="/terms#sms" className="underline">SMS Terms</Link>.</span>
     </label>
   );
