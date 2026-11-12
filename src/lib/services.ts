@@ -154,15 +154,15 @@ export const SERVICES: Record<string, ServicePageConfig> = {
   },
   "services/new-decks": {
     slug: "services/new-decks",
-    name: "New Decks and Rebuilds",
+    name: "New Decks",
     schemaType: "Deck Construction",
-    title: "New Decks and Deck Rebuilds in Greater Boston | DeckCraft Boston",
+    title: "New Deck Builders in Greater Boston | DeckCraft",
     description:
-      "Deck rebuilds and new decks in pressure-treated, cedar or composite for Greater Boston homes. Permits handled. Free assessment.",
-    eyebrow: "NEW DECKS AND REBUILDS",
-    h1: "When repair won't do, rebuild it right.",
+      "New decks in pressure-treated, cedar or composite for Greater Boston homes, planned from $39.99/sq ft starting (planning assumption). Permits handled. Get a new deck estimate.",
+    eyebrow: "NEW DECKS",
+    h1: "A new deck, designed and built for New England.",
     subhead:
-      "Design, permits and construction in pressure-treated, cedar or composite, with railings and stairs built in from the start.",
+      "Design, permits and construction in pressure-treated, cedar or composite, with railings and stairs built in from the start. Already have a deck with sound framing? Resurfacing may cost less.",
     included: [
       { title: "Design and layout", body: "Sized for how you actually use the space." },
       { title: "Permits", body: "Drawings and permit applications handled where required." },
@@ -182,7 +182,7 @@ export const SERVICES: Record<string, ServicePageConfig> = {
     ],
     presetService: "new_deck",
     formKind: "assessment",
-    related: ["repair-or-replace", "services/deck-repair", "fencing/residential"],
+    related: ["project-calculator", "services/deck-rebuild-resurfacing", "repair-or-replace"],
   },
   "services/deck-rebuild-resurfacing": {
     slug: "services/deck-rebuild-resurfacing",
