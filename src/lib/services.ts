@@ -1,3 +1,4 @@
+import { site } from "@/config/site";
 import type { ServiceKey } from "./lead-schema";
 
 export type Faq = { q: string; a: string };
@@ -21,7 +22,6 @@ export type ServicePageConfig = {
   extra?: { title: string; body: string }[];
 };
 
-const P = "[OWNER TO CONFIRM]";
 
 /** Owner-supplied 2025–26 Greater Boston benchmarks. Confirm before launch. */
 export const PRICE_GUIDE: PriceRow[] = [
@@ -32,8 +32,8 @@ export const PRICE_GUIDE: PriceRow[] = [
   { item: "Board replacement", range: "$25 to $125 per sq ft" },
   { item: "Railing repair", range: "$39 to $237 per linear ft" },
   { item: "Full resurfacing", range: "$15 to $50 per sq ft" },
-  { item: "Fence repair", range: P },
-  { item: "New wood privacy fence", range: `${P} per linear ft` },
+  { item: "Fence repair", range: "Quoted from your photos" },
+  { item: "New wood privacy fence", range: "Quoted per linear ft" },
 ];
 
 export const PRICE_DISCLAIMER =
@@ -64,7 +64,7 @@ export const SERVICES: Record<string, ServicePageConfig> = {
       { q: "Repair or replace: how do you decide?", a: "If the framing, joists and ledger board are sound, we repair. If rot has reached the structure, we'll show you photos and explain why replacement is the safer path." },
       { q: "Is my deck safe?", a: "We can't tell that from a web form. Soft boards, leaning posts, or rot where the deck meets the house are reasons to stop using the area and have it looked at in person. Our photo review is a starting point, not an inspection." },
       { q: "Do you pull permits?", a: "Yes, where your town requires one. Structural repairs and rebuilds often need a permit in Massachusetts. We check with your local building department for every job." },
-      { q: "How long does a repair take?", a: `Most repairs take 1 to 3 days once materials are on site. ${P}` },
+      { q: "How long does a repair take?", a: `Most repairs take 1 to 3 days once materials are on site.` },
       { q: "Can you repair a composite deck?", a: "Yes: board replacement, railing repair and cleaning. Composite can't be stained like wood." },
       { q: "What does the free assessment include?", a: "Send 3 photos. We review them and reply with what we see and a price range. If it's not worth fixing, we'll say so." },
     ],
@@ -97,7 +97,7 @@ export const SERVICES: Record<string, ServicePageConfig> = {
       { q: "Can you seal in October or November?", a: "Often, on dry days with suitable temperatures. Late-season slots depend on weather, so we schedule them carefully." },
       { q: "How long does stain last?", a: "It depends on sun exposure, foot traffic and the type of finish. Solid stains generally last longer on horizontal surfaces than transparent ones. We'll give you a realistic expectation for your deck." },
       { q: "Which finish should I choose?", a: "Transparent shows the most grain but needs refreshing sooner. Solid hides more wear and lasts longer. Semi-transparent is in between." },
-      { q: "How long does the job take?", a: `Most decks take 1 to 2 days plus dry time. ${P}` },
+      { q: "How long does the job take?", a: `Most decks take 1 to 2 days plus dry time.` },
       { q: "Can you stain my fence to match?", a: "Yes. Deck and fence together in one visit is common." },
     ],
     presetService: "staining",
@@ -158,7 +158,7 @@ export const SERVICES: Record<string, ServicePageConfig> = {
     prices: [PRICE_GUIDE[6]],
     faqs: [
       { q: "Do I need a permit for a new deck?", a: "Almost always in Massachusetts. We prepare and file what your town requires." },
-      { q: "How long does a new deck take?", a: `It depends on size, materials and permit timing. ${P}` },
+      { q: "How long does a new deck take?", a: `It depends on size, materials and permit timing. We give you a schedule with the written quote.` },
       { q: "Wood or composite?", a: "Wood costs less upfront and can be refinished. Composite costs more but needs less maintenance. We'll price both if you're unsure." },
       { q: "Can you reuse my existing framing?", a: "Sometimes. If the framing and ledger are sound we may resurface instead of rebuilding, which costs less." },
       { q: "Do you build in winter?", a: "Framing can often proceed in cold weather; scheduling depends on ground conditions and permits." },
@@ -217,15 +217,15 @@ export const SERVICES: Record<string, ServicePageConfig> = {
       { title: "Pool and amenity fencing", body: "Self-closing, self-latching gates." },
       { title: "Dumpster and utility enclosures", body: "Screened, durable, easy to service." },
       { title: "Common-area and courtyard", body: "Fencing residents see every day." },
-      { title: "Storm and vehicle damage", body: `Repair after storms or impacts. Response time ${P}.` },
+      { title: "Storm and vehicle damage", body: `Repair after storms or impacts, prioritised by safety.` },
       { title: "Annual condition inspections", body: "Documented fence condition across your properties." },
     ],
     extra: [
-      { title: "Why property managers choose DeckCraft", body: "One point of contact · written scope per property · work scheduled around residents and business hours · photo reports · certificate of insurance on request · consolidated invoicing" },
+      { title: "Why property managers choose DeckCraft", body: "One point of contact · written scope per property · work scheduled around residents and business hours · photo reports · consolidated invoicing" },
     ],
     faqs: [
       { q: "Can you work around business hours?", a: "Yes. Early-morning, evening and off-season scheduling is available." },
-      { q: "Can you provide a certificate of insurance?", a: "Yes, on request, naming your association or management company as required." },
+      { q: "Can you provide a certificate of insurance?", a: site.credentials.licensedAndInsuredVerified ? "Yes, on request, naming your association or management company as required." : "Insurance documentation is confirmed with each client before work starts; ask during your walkthrough and we will share what applies to your property." },
       { q: "Do you handle multiple properties under one agreement?", a: "Yes. See Property Programs for preferred-vendor and capital repair options." },
       { q: "Do you call Dig Safe?", a: "Yes, before every dig, as Massachusetts law requires." },
       { q: "Can you match existing fencing?", a: "Usually. Send photos and we'll confirm material availability." },

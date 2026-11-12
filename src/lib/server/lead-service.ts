@@ -3,6 +3,11 @@ import type { LeadInput } from "../lead-schema";
 import { funnelFor, pipelineFor, scoreLead, tagsFor } from "../routing";
 import { findByEventId, insertLead, signedUrl, updateLead, type StoredLead } from "./store";
 import { sendCapi, sendToGhl } from "./integrations";
+import { syncLeadToGhl } from "./ghl-api";
+import { ghlApiReady, ghlConfig } from "@/config/ghl";
+import { tierFor } from "@/config/lead-scoring";
+import { followUpPlan, followUpTags } from "../crm/follow-up";
+import { toLeadForGhl } from "../crm/lead-record";
 import { env } from "./env";
 import { sendOpenAiEvent } from "../openai-ads/server";
 import { budgetFit, qualifierFields, qualifierScore, sanitizeQualifiers, type Qualifiers } from "../estimate/qualifiers";
@@ -55,13 +60,14 @@ export async function ghlPayload(lead: LeadInput, stored: { id: string; score: n
     gclid: a.gclid, gbraid: a.gbraid, wbraid: a.wbraid, fbclid: a.fbclid, fbc: a.fbc, fbp: a.fbp,
     landing_page: a.landing_page, referrer: a.referrer, first_touch_at: a.first_touch_at,
     openai_obref: a.openai_obref, openai_oppref: a.openai_oppref,
+    msclkid: a.msclkid, ttclid: a.ttclid, ft_source: a.ft_source, ft_medium: a.ft_medium, ft_campaign: a.ft_campaign, ga_client_id: a.ga_client_id,
     ...qualifierFields(estimateConfig, q),
   };
 }
 
-export type SubmitResult = { id: string; duplicate: boolean; ghl: string; capi: string; openai?: string; brief?: string; funnel: string };
+export type SubmitResult = { id: string; duplicate: boolean; ghl: string; tier?: string; capi: string; openai?: string; brief?: string; funnel: string };
 
-const siteOrigin = () => (process.env.NEXT_PUBLIC_SITE_URL || "https://deckcraftboston.com").replace(/\/$/, "");
+const siteOrigin = () => (process.env.NEXT_PUBLIC_SITE_URL || "https://deckcraftbuild.com").replace(/\/$/, "");
 
 export async function submitLead(lead: LeadInput, ctx: { ip?: string; ua?: string; url?: string }): Promise<SubmitResult> {
   // Idempotency: the client generates event_id once per submission; retries return the original.
@@ -86,15 +92,24 @@ export async function submitLead(lead: LeadInput, ctx: { ip?: string; ua?: strin
     pipeline: pipelineFor(lead),
     tags: tagsFor(lead),
     lead_score: score,
+    lead_tier: tierFor(score),
     ghl_sync_status: "pending",
     ghl_attempts: 0,
     status: "new",
   } as Omit<StoredLead, "id" | "created_at">);
 
-  const payload = await ghlPayload(lead, { id: stored.id, score }, q);
+  const tier = tierFor(score);
+  const plan = followUpPlan(lead, tier);
+  const payload = { ...(await ghlPayload(lead, { id: stored.id, score }, q)), lead_tier: tier, follow_up: plan.map((p) => p.key).join(",") };
+  payload.tags = [payload.tags, ...followUpTags(plan), `tier:${tier}`].join(",");
   const isLead = lead.form_type !== "newsletter";
+  const cfg = ghlConfig();
+  // GHL: API v2 (preferred) → inbound webhook (legacy) → log mode (no credentials). Never blocks the lead.
+  const ghlCall = ghlApiReady(cfg) || !env.ghlWebhookUrl
+    ? syncLeadToGhl(toLeadForGhl(payload), plan, cfg).then((r) => ({ ok: r.ok, status: r.mode === "log" ? ("skipped" as const) : r.ok ? 200 : 0, error: r.error, contactId: r.contactId, opportunityId: r.opportunityId }))
+    : sendToGhl(payload).then((r) => ({ ...r, contactId: undefined as string | undefined, opportunityId: undefined as string | undefined }));
   const [ghl, capi, openai, brief] = await Promise.all([
-    sendToGhl(payload),
+    ghlCall,
     lead.form_type === "newsletter"
       ? Promise.resolve({ ok: false, skipped: true })
       : sendCapi({
@@ -130,10 +145,10 @@ export async function submitLead(lead: LeadInput, ctx: { ip?: string; ua?: strin
   ]);
 
   const ghlStatus = ghl.status === "skipped" ? "skipped" : ghl.ok ? "sent" : "failed";
-  await updateLead(stored.id, { ghl_sync_status: ghlStatus, ghl_attempts: 1, ghl_last_error: ghl.error ?? null });
+  await updateLead(stored.id, { ghl_sync_status: ghlStatus, ghl_attempts: 1, ghl_last_error: ghl.error ?? null, ghl_contact_id: ghl.contactId ?? null, ghl_opportunity_id: ghl.opportunityId ?? null, follow_up: plan.map((p) => p.key) });
 
   return {
-    id: stored.id, duplicate: false, ghl: ghlStatus,
+    id: stored.id, duplicate: false, ghl: ghlStatus, tier,
     capi: "skipped" in capi && capi.skipped ? "skipped" : capi.ok ? "sent" : "failed",
     openai: openai.skipped ? "skipped" : openai.sent ? "sent" : "failed",
     brief: brief.sent ? "sent" : "skipped",

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { site } from "@/config/site";
+import { site, noIndex } from "@/config/site";
 import { TOWNS } from "./towns";
 import type { Faq } from "./services";
 
@@ -9,7 +9,7 @@ export function meta(path: string, title: string, description: string, opts: { n
     title: { absolute: title },
     description,
     alternates: { canonical: url },
-    robots: opts.noindex ? { index: false, follow: false } : { index: true, follow: true },
+    robots: opts.noindex || noIndex ? { index: false, follow: false } : { index: true, follow: true },
     openGraph: { title, description, url, siteName: site.name, type: "website", locale: "en_US", images: [{ url: "/og.png", width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description, images: ["/og.png"] },
   };
@@ -28,7 +28,7 @@ export function businessSchema() {
     areaServed: TOWNS.map((t) => ({ "@type": "City", name: `${t.name}, MA` })),
     knowsAbout: ["Deck repair", "Deck staining", "Deck railings", "Fence installation", "Fence repair", "Commercial fencing"],
     ...(site.hours ? { openingHoursSpecification: [{ "@type": "OpeningHoursSpecification", dayOfWeek: site.hours.days, opens: site.hours.opens, closes: site.hours.closes }] } : {}),
-    sameAs: Object.values(site.social),
+    sameAs: Object.values(site.social).filter(Boolean),
     // aggregateRating intentionally omitted until it reflects real, first-party reviews.
   };
 }
