@@ -26,14 +26,24 @@ export function ServicePage({ id }: { id: string }) {
   const s = SERVICES[id];
   const path = `/${s.slug}`;
   const walk = s.formKind === "walkthrough";
+  const newBuild = s.slug === "services/new-decks";
   const detail = DETAIL_PHOTO[s.slug] ?? "deckShadows";
   return (
     <>
       <JsonLd data={[serviceSchema(s.schemaType, path), breadcrumbSchema([["Home", "/"], [s.name, path]])]} />
       <ViewService name={s.name} />
       <PageHero eyebrow={s.eyebrow} h1={s.h1} sub={s.subhead} photo={ROUTE_PHOTO[path] ?? "heroModernDeck"}>
-        <Link href="#get-started" className="btn btn-cedar">{walk ? "Request a property walkthrough" : "Send 3 photos for a free assessment"}</Link>
-        {s.formKind === "assessment" && <Link href="/property-programs" className="btn btn-ghost">Managing multiple properties?</Link>}
+        {newBuild ? (
+          <>
+            <Link href="/new-deck-estimate" className="btn btn-cedar">Get a New Deck Estimate</Link>
+            <Link href="/project-calculator" className="btn btn-ghost">Open the project calculator</Link>
+          </>
+        ) : (
+          <>
+            <Link href="#get-started" className="btn btn-cedar">{walk ? "Request a property walkthrough" : "Send 3 Photos for an Assessment"}</Link>
+            {s.formKind === "assessment" && <Link href="/request-walkthrough" className="btn btn-ghost">Managing multiple properties?</Link>}
+          </>
+        )}
       </PageHero>
 
       <nav aria-label="Breadcrumb" className="border-b border-line bg-ivory px-5 py-3 text-[13px] text-stone lg:px-8">
@@ -66,7 +76,7 @@ export function ServicePage({ id }: { id: string }) {
           <div className="flex flex-col justify-center px-5 py-16 lg:px-16">
             <p className="eyebrow rule text-cedar-light">Honest assessment</p>
             <h2 className="mt-4 font-display text-[30px] leading-tight md:text-[42px]">We tell you what it needs, <span className="accent text-cedar-light">and what it doesn&apos;t.</span></h2>
-            <p className="mt-6 max-w-lg text-white/75">Your photos tell us most of the story. We reply with what we see, whether it looks like a repair, a refinish or a rebuild, and a realistic range. If it isn&apos;t worth fixing, we&apos;ll say so.</p>
+            <p className="mt-6 max-w-lg text-white/75">Your photos tell us most of the story. We reply with what we see, whether it looks like a repair, a refinish or a rebuild, and how we would price it. If it isn&apos;t worth fixing, we&apos;ll say so.</p>
             <ul className="mt-8 space-y-3 text-[15px] text-white/85">
               {["Written scope and price before work starts", "Permits pulled where the work requires them", "Photos of the finished work for your records"].map((t) => (
                 <li key={t} className="flex gap-3"><Icon name="Check" size={18} className="mt-0.5 text-cedar-light" />{t}</li>
@@ -89,7 +99,7 @@ export function ServicePage({ id }: { id: string }) {
       <section id="get-started" className="scroll-mt-20 bg-cedar-soft px-5 py-24 lg:px-8">
         <div className="mx-auto grid max-w-[1320px] gap-12 lg:grid-cols-[1fr_1.4fr]">
           <div>
-            <SectionHead eyebrow={walk ? "Property walkthrough" : "Free photo assessment"} title={walk ? "Tell us about your properties." : "Start with"} accent={walk ? undefined : "three photos."} sub={walk ? "Free walkthrough for associations, landlords and commercial properties." : "Free, no obligation. We reply with what we see and a price range."} />
+            <SectionHead eyebrow={walk ? "Property walkthrough" : "Free photo assessment"} title={walk ? "Tell us about your properties." : "Start with"} accent={walk ? undefined : "three photos."} sub={walk ? "Free walkthrough for associations, landlords and commercial properties." : "Free, no obligation. We reply with what we see and how we would price it."} />
           </div>
           <div>{walk ? <WalkthroughForm presetService={s.presetService} /> : <PhotoAssessmentForm presetService={s.presetService} />}</div>
         </div>

@@ -1,9 +1,14 @@
 import type { EstimateConfig } from "@/lib/estimate/qualifiers";
 import type { BriefTheme } from "@/lib/estimate/lead-brief";
 import type { QualifierTheme } from "@/components/estimate/EstimateQualifiers";
+import { PRICING, pricingLabel } from "@/config/pricing";
 
 /**
  * DeckCraft pre-estimate qualifiers.
+ *
+ * PUBLIC PRICING (Phase 2 spec): customers only ever see the new-deck starting figure ($/sq ft from
+ * src/config/pricing.ts) and "quoted from your photos" for everything else (see `publicPricing`). The `typical`
+ * ranges below are INTERNAL: used only for the team lead brief / GHL budget-fit note.
  *
  * [OWNER TO CONFIRM] Every `typical` range below is a planning placeholder. Repair, staining and
  * resurfacing are derived from PRICE_GUIDE in src/lib/services.ts; new-deck and fence ranges are
@@ -18,7 +23,7 @@ const sq = (w: number, l: number) => `${w}×${l} (${w * l} sq ft)`;
 
 export const estimateConfig: EstimateConfig = {
   brand: "DeckCraft Boston",
-  visitLabel: "estimate visit",
+  visitLabel: "site visit",
   timezone: "America/New_York",
   tzLabel: "Eastern Time",
   projectTypes: [
@@ -99,14 +104,15 @@ export const estimateConfig: EstimateConfig = {
   ],
   budgetBands: [
     { id: "lt2_5k", label: "Under $2.5k", min: 0, max: 2500 },
-    { id: "2_5_5k", label: "$2.5–5k", min: 2500, max: 5000 },
-    { id: "5_10k", label: "$5–10k", min: 5000, max: 10000 },
-    { id: "10_25k", label: "$10–25k", min: 10000, max: 25000 },
-    { id: "25_35k", label: "$25–35k", min: 25000, max: 35000 },
-    { id: "35_50k", label: "$35–50k", min: 35000, max: 50000 },
-    { id: "50kp", label: "$50k+", min: 50000, max: null },
+    { id: "2_5_5k", label: "$2.5k–5k", min: 2500, max: 5000 },
+    { id: "5_8k", label: "$5k–8k", min: 5000, max: 8000 },
+    // Spec planning bands (owner to confirm) for new decks:
+    { id: "8_15k", label: "$8k–15k", min: 8000, max: 15000 },
+    { id: "15_25k", label: "$15k–25k", min: 15000, max: 25000 },
+    { id: "25kp", label: "$25k+", min: 25000, max: null },
     { id: "unsure", label: "Not sure yet", min: 0, max: null },
   ],
+
   startOptions: [
     { id: "asap", label: "As soon as possible" },
     { id: "within_30", label: "Within 30 days" },
@@ -136,21 +142,27 @@ export const estimateConfig: EstimateConfig = {
     ],
   },
   priceGuidePath: "/homeowners#price-guide",
-  rangeNote: "Greater Boston planning range. Your exact price is confirmed in writing after the visit.",
+  rangeNote: "Greater Boston planning range. Your exact price is confirmed in writing.",
   rangesConfirmed: false,
   addressRequired: true,
-  addressLabel: "Property address (for the estimate visit)",
+  addressLabel: "Property address (so we can check access and permits)",
+  publicPricing: {
+    projectTypes: ["new_deck_wood", "new_deck_composite"],
+    perSqFt: PRICING.newDeckStartPerSqFt,
+    label: pricingLabel(),
+    quotedNote: "Repairs, resurfacing, staining and fencing are quoted from your photos, not from a list price.",
+  },
 };
 
-export const briefTheme: BriefTheme = { dark: "#1a3828", accent: "#d4b896", accentSoft: "#f5f0e8", ink: "#1a3828", muted: "#6b7c66" };
+export const briefTheme: BriefTheme = { dark: "#172637", accent: "#ad7047", accentSoft: "#f5f2ec", ink: "#24282d", muted: "#617080" };
 
 export const qualifierTheme: QualifierTheme = {
   input: "field",
   label: "label",
   chip: "choice",
   chipOn: "choice",
-  box: "rounded-md border-2 border-hunter bg-cream p-4",
-  muted: "text-hunter/70",
+  box: "border border-line border-l-[3px] border-l-copper bg-bone p-4",
+  muted: "text-stone",
   link: "font-semibold underline",
 };
 
