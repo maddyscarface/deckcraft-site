@@ -1,5 +1,5 @@
 import type { CustomFieldKey, GhlConfig, PipelineKey, StageKey } from "@/config/ghl";
-import { DECKCRAFT_PIPELINES } from "@/config/ghl";
+import { DECKCRAFT_PIPELINES, ownerFor } from "@/config/ghl";
 
 /** Pure mapping from a DeckCraft lead record to GHL API v2 request bodies (unit-tested, no I/O). */
 export type LeadForGhl = {
@@ -12,6 +12,8 @@ export type LeadForGhl = {
   fields: Partial<Record<CustomFieldKey, string | number | null | undefined>>;
   opportunity_name: string;
   value?: number;
+  status?: "open" | "won" | "lost";
+  geography?: string;
 };
 
 export function contactBody(l: LeadForGhl, c: GhlConfig) {
@@ -29,7 +31,8 @@ export function contactBody(l: LeadForGhl, c: GhlConfig) {
     state: "MA",
     country: "US",
     source: "deckcraftbuild.com",
-    tags: [...new Set([...l.tags, `score:${l.score}`, `tier:${l.tier}`, "brand:deckcraft"])],
+    tags: [...new Set([...l.tags, `score:${l.score}`, `tier:${l.tier}`, "brand:deckcraft", ...(l.geography ? [`geo:${l.geography.toLowerCase().replace(/\s+/g, "-")}`] : [])])],
+    ...(ownerFor(c, l.pipeline, l.geography) ? { assignedTo: ownerFor(c, l.pipeline, l.geography) } : {}),
     ...(customFields.length ? { customFields } : {}),
   };
 }
@@ -37,7 +40,7 @@ export function contactBody(l: LeadForGhl, c: GhlConfig) {
 export function opportunityBody(l: LeadForGhl, c: GhlConfig, contactId: string) {
   if (l.pipeline === "none") return null;
   const pipelineId = c.pipelines[l.pipeline];
-  const stageId = c.stages[l.pipeline]?.[l.stage ?? "new_lead"];
+  const stageId = c.stages[l.pipeline]?.[l.stage ?? (l.pipeline === "commercial" ? "inquiry" : "new")];
   if (!pipelineId || !stageId) return null;
   return {
     locationId: c.locationId,
@@ -45,7 +48,8 @@ export function opportunityBody(l: LeadForGhl, c: GhlConfig, contactId: string) 
     pipelineStageId: stageId,
     contactId,
     name: l.opportunity_name,
-    status: l.stage === "won" || l.stage === "paid" ? "won" : l.stage === "lost" ? "lost" : "open",
+    status: l.status ?? "open",
+    ...(ownerFor(c, l.pipeline, l.geography) ? { assignedTo: ownerFor(c, l.pipeline, l.geography) } : {}),
     source: "deckcraftbuild.com",
     ...(l.value ? { monetaryValue: l.value } : {}),
   };

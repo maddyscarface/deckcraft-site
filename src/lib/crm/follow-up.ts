@@ -26,9 +26,15 @@ export const followUpTags = (plan: Sequence[]) => plan.map((s) => `wf:${s.key}`)
 
 /** Stage-driven sequences fired from the CRM stage webhook (opportunity moves in GHL). */
 export const STAGE_SEQUENCES: Partial<Record<string, Sequence>> = {
-  estimate_booked: { key: "visit_reminders", channel: "email+sms", why: "Reminders 24h and 2h before the site visit" },
-  walkthrough_booked: { key: "visit_reminders", channel: "email+sms", why: "Reminders before the walkthrough" },
-  estimate_sent: { key: "estimate_follow_up", channel: "email", why: "Day 2 / 5 / 10 follow-up on the written estimate" },
-  paid: { key: "review_request", channel: "email", why: "Ask for a Google review after payment" },
-  lost: { key: "lost_reengage", channel: "email", why: "Seasonal re-engagement in 6 months" },
+  contact_attempted: { key: "no_response_recovery", channel: "email+sms", why: "Couldn't reach them: recovery touches, stop on reply" },
+  inspection_booked: { key: "visit_reminders", channel: "email+sms", why: "Reminders 24h and 2h before the inspection (SMS only with consent)" },
+  estimate_booked: { key: "visit_reminders", channel: "email+sms", why: "Legacy name for inspection_booked" },
+  walkthrough: { key: "visit_reminders", channel: "email+sms", why: "Reminders before the walkthrough" },
+  walkthrough_booked: { key: "visit_reminders", channel: "email+sms", why: "Legacy name for walkthrough" },
+  no_show: { key: "no_show_recovery", channel: "email+sms", why: "Missed appointment: reschedule prompt" },
+  estimate_sent: { key: "estimate_follow_up", channel: "email", why: "Post-proposal follow-up on day 2 / 5 / 10" },
+  bid_rfp: { key: "estimate_follow_up", channel: "email", why: "Post-bid follow-up" },
+  follow_up: { key: "estimate_follow_up", channel: "email", why: "Post-proposal follow-up" },
+  paid: { key: "review_request", channel: "email", why: "Ask for a Google review after the job is paid" },
+  lost: { key: "seasonal_reactivation", channel: "email", why: "Seasonal re-engagement next season" },
 };

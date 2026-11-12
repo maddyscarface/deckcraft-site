@@ -9,7 +9,7 @@ export const site = {
   name: "DeckCraft Boston",
   domain: "deckcraftbuild.com",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://deckcraftbuild.com",
-  tagline: "Deck Repair. Done Right. Built for Boston.",
+  tagline: "Decks Built for New England. Work You Can See.",
   secondaryTagline: "Repair. Restore. Protect. Build.",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@deckcraftbuild.com",
 

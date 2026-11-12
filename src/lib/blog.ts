@@ -17,17 +17,17 @@ export const POSTS: Post[] = [
   {
     slug: "deck-repair-cost-boston",
     title: "How Much Does Deck Repair Cost in Boston?",
-    description: "Typical Greater Boston deck repair, staining and railing price ranges, what drives the number up or down, and how to get a real quote fast.",
+    description: "What actually drives deck repair, staining and railing costs in Greater Boston, how repair pricing differs from new-deck pricing, and how to get a real number fast.",
     category: "Decks",
     published: "2026-11-02",
-    answer: "Most Greater Boston deck repair jobs fall roughly between $1,160 and $4,161. Staining a 12×12 deck typically runs $800 to $1,350, board replacement $25 to $125 per square foot, and railing repair $39 to $237 per linear foot. Framing damage, access and permits move the number most.",
+    answer: "Deck repair is priced by what has failed, not by deck size: a few split boards and a loose railing is a small job; water damage in the joists or ledger is a bigger one. Framing condition, height and access, material matching and permits move the number most. Send three photos for a scoped range.",
     sections: [
       { h: "The short version", p: [
         "Deck repair in Boston is priced by what has failed, not by the size of the deck alone. A sound deck with a handful of split boards and a wobbly railing is a small job. A deck where water has reached the joists or the ledger board, the board that ties the deck to the house, is a different conversation.",
-        "The ranges below are typical Greater Boston figures we use for planning. They are not quotes. Your price depends on what we find and is confirmed in writing before any work starts.",
+        "We don't publish repair price lists, because two decks of the same size can need very different work. Repair, staining and sealing are quoted from your photos and confirmed in writing after an on-site check, separately from new-deck pricing.",
       ] },
-      { h: "Typical Greater Boston ranges", p: [
-        "Average deck repair job: about $1,160 to $4,161. Cleaning and sealing: about $300 to $1,500. Staining a 12×12 deck: about $800 to $1,350. Refinishing: about $3 to $7 per square foot. Board replacement: about $25 to $125 per square foot. Railing repair: about $39 to $237 per linear foot. Full resurfacing on sound framing: about $15 to $50 per square foot.",
+      { h: "Repair pricing versus new-deck pricing", p: [
+        "Repairs are scoped item by item: boards, joists, ledger, flashing, railings and stairs. New decks are planned per square foot: our current planning assumption starts at $39.99 per square foot for a straightforward pressure-treated deck (to be confirmed, before permits, demolition and upgrades). Most new-deck projects fall into planning bands of $8k–15k, $15k–25k or $25k+. None of these figures is a quote; your price is set in a written estimate.",
       ] },
       { h: "What pushes the price up", p: [
         "Framing and ledger damage. Replacing deck boards is straightforward. Sistering joists, replacing a section of ledger or adding flashing takes more labor and sometimes a permit.",
