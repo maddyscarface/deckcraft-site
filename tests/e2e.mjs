@@ -36,7 +36,7 @@ async function newPage(ctx) {
 }
 
 try {
-  // 1. Homeowner photo assessment, 4 steps, with UTM + gclid attribution
+  // 1. Homeowner photo assessment, 5 steps, with UTM + gclid attribution
   {
     const ctx = await browser.newContext();
     const page = await newPage(ctx);
@@ -51,7 +51,13 @@ try {
     await page.waitForTimeout(2600); // human-speed (bot guard is 2.5s)
     await f.getByRole("button", { name: "Continue" }).click();
     await f.locator("#town").fill("Newton");
-    await f.locator("#timeline").selectOption("this_season");
+    await f.getByRole("button", { name: "Continue" }).click();
+    // Step 3: pre-estimate qualifiers (project type → size → budget → start)
+    await f.getByRole("button", { name: "Deck repair", exact: true }).click();
+    await f.getByRole("button", { name: /^Small fix/ }).click();
+    await f.getByRole("button", { name: "Under $2.5k", exact: true }).click();
+    await f.getByRole("button", { name: "As soon as possible", exact: true }).click();
+    if (await f.getByTestId("q-address").count()) await f.getByTestId("q-address").fill("12 Test St, Newton, MA");
     await f.getByRole("button", { name: "Continue" }).click();
     await f.getByTestId("file-input").setInputFiles(["tests/fixtures/deck.jpg", "tests/fixtures/deck.jpg"]);
     await f.getByRole("button", { name: "Continue" }).click();
