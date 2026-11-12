@@ -1,5 +1,5 @@
 "use client";
-import { dl, getAttribution, newEventId, track } from "./tracking";
+import { dl, getAttribution, newEventId, setGoogleUserData, track } from "./tracking";
 
 export type SubmitResponse = { ok: boolean; id?: string; error?: string; fields?: Record<string, string>; funnel?: string };
 
@@ -37,7 +37,9 @@ export async function submitLead(payload: Record<string, unknown>, eventId: stri
   if (j.ok && j.id !== "ignored") {
     // Enhanced conversions for leads: GTM's Google tag hashes this before sending.
     const digits = String(payload.phone ?? "").replace(/\D/g, "");
-    dl("user_data", { user_data: { email: payload.email, phone_number: digits.length === 10 ? `+1${digits}` : digits ? `+${digits}` : undefined } });
+    const e164 = digits.length === 10 ? `+1${digits}` : digits ? `+${digits}` : undefined;
+    dl("user_data", { user_data: { email: payload.email, phone_number: e164 } });
+    setGoogleUserData(payload.email as string | undefined, e164);
     track.generateLead({ event_id: eventId, form_type: String(payload.form_type), customer_type: payload.customer_type as string | undefined, funnel: j.funnel });
   }
   return j;

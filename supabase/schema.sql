@@ -115,3 +115,22 @@ alter table leads add column if not exists qualifiers jsonb;
 alter table leads add column if not exists budget_fit text;
 alter table leads add column if not exists openai_obref text;
 alter table leads add column if not exists openai_oppref text;
+
+-- Phase 2 (GHL API v2, follow-up, revenue attribution). Safe to run repeatedly.
+alter table leads add column if not exists lead_tier text;
+alter table leads add column if not exists follow_up text[];
+alter table leads add column if not exists ghl_contact_id text;
+alter table leads add column if not exists ghl_opportunity_id text;
+alter table leads add column if not exists msclkid text;
+alter table leads add column if not exists stage text;
+alter table leads add column if not exists stage_at timestamptz;
+alter table leads add column if not exists revenue_won numeric(12,2);
+alter table leads add column if not exists won_at timestamptz;
+alter table leads add column if not exists revenue_paid numeric(12,2);
+alter table leads add column if not exists paid_at timestamptz;
+create index if not exists leads_gclid_idx on leads (gclid) where gclid is not null;
+alter table leads add column if not exists ttclid text;
+alter table leads add column if not exists ft_source text;
+alter table leads add column if not exists ft_medium text;
+alter table leads add column if not exists ft_campaign text;
+alter table leads add column if not exists ga_client_id text;
