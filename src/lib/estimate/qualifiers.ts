@@ -37,7 +37,18 @@ export type EstimateConfig = {
   rangesConfirmed: boolean;
   addressRequired: boolean;
   addressLabel: string;
+  /**
+   * Public pricing policy. When set, internal `typical` ranges are NOT shown to the customer; only project types
+   * listed here show a starting figure (sq ft parsed from the size label × perSqFt). Others say "quoted from photos".
+   */
+  publicPricing?: { projectTypes: string[]; perSqFt: number; label: string; quotedNote: string };
 };
+
+/** Sq ft from a size label like "12×16 (192 sq ft)". */
+export function sqftFromLabel(label: string): number | undefined {
+  const m = /\((\d+) sq ft\)/.exec(label);
+  return m ? Number(m[1]) : undefined;
+}
 
 export type Qualifiers = {
   project_type?: string;

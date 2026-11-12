@@ -62,6 +62,15 @@ export const attributionSchema = z.object({
   ga_client_id: z.string().max(100).optional(),
 }).partial();
 
+export const WORK_TYPES = ["repair", "replace", "new", "not_sure"] as const;
+export const MATERIAL_PREFS = ["wood", "composite", "unsure"] as const;
+export const URGENCY = ["safety_now", "this_season", "planned", "budgeting"] as const;
+export const CONTACT_PREFS = ["phone", "email", "text"] as const;
+export const WORK_TYPE_LABELS: Record<(typeof WORK_TYPES)[number], string> = { repair: "Repair", replace: "Replace", new: "New build", not_sure: "Not sure" };
+export const MATERIAL_PREF_LABELS: Record<(typeof MATERIAL_PREFS)[number], string> = { wood: "Wood", composite: "Composite", unsure: "Unsure" };
+export const URGENCY_LABELS: Record<(typeof URGENCY)[number], string> = { safety_now: "Safety issue now", this_season: "This season", planned: "Planned / capital project", budgeting: "Budgeting for next year" };
+export const CONTACT_PREF_LABELS: Record<(typeof CONTACT_PREFS)[number], string> = { phone: "Phone call", email: "Email", text: "Text" };
+
 export const leadSchema = z
   .object({
     form_type: z.enum(FORM_TYPES),
@@ -88,6 +97,19 @@ export const leadSchema = z
     budget_process: opt(z.string().max(120)),
     maintenance_frequency: opt(z.string().max(60)),
     message: opt(z.string().trim().max(3000)),
+    // Phase 2 homeowner project fields (all optional for schema compatibility)
+    zip: opt(z.string().trim().regex(/^\d{5}$/, "Enter a 5-digit ZIP")),
+    work_type: z.enum(WORK_TYPES).optional(),
+    current_structure: opt(z.string().max(80)),
+    material_preference: z.enum(MATERIAL_PREFS).optional(),
+    access: opt(z.string().max(80)),
+    hoa_permit: opt(z.string().max(80)),
+    availability: opt(z.string().trim().max(200)),
+    // Phase 2 property / HOA / commercial fields
+    urgency: z.enum(URGENCY).optional(),
+    procurement: z.array(z.string().max(60)).max(10).optional(),
+    preferred_contact: z.enum(CONTACT_PREFS).optional(),
+    walkthrough_requested: z.boolean().optional(),
     photo_urls: z.array(z.string().max(600)).max(10).optional(),
     file_urls: z.array(z.string().max(600)).max(10).optional(),
     checker_result: opt(z.string().max(60)),

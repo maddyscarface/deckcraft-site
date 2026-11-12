@@ -17,7 +17,7 @@ export function toLeadForGhl(r: Rec, extraTags: string[] = []): LeadForGhl {
   const fields: Partial<Record<CustomFieldKey, string | number | undefined>> = {};
   for (const k of CUSTOM_FIELDS) {
     const src = k.startsWith("dc_") ? k.slice(3) : k;
-    const v = k === "dc_lead_id" ? (r.lead_id ?? r.id) : k === "dc_lead_score" ? score : k === "dc_lead_tier" ? tier : k === "dc_services" ? services : r[src];
+    const v = k === "dc_lead_id" ? (r.lead_id ?? r.id) : k === "dc_lead_score" ? score : k === "dc_lead_tier" ? tier : k === "dc_services" ? services : k === "dc_procurement" ? str(r.procurement) : r[src];
     const s = str(v);
     if (s !== undefined) fields[k] = s;
   }
@@ -27,7 +27,8 @@ export function toLeadForGhl(r: Rec, extraTags: string[] = []): LeadForGhl {
     first_name: str(r.first_name), last_name: str(r.last_name), email: String(r.email), phone: str(r.phone),
     company_name: str(r.company_name), town: str(r.town),
     pipeline,
-    stage: (hasPhotos ? "photos_received" : "new_lead") as StageKey,
+    stage: (pipeline === "commercial" ? "inquiry" : hasPhotos ? "photos_received" : "new") as StageKey,
+    geography: str(r.geography),
     score, tier, tags: [...new Set([...tags, ...extraTags])], fields,
     opportunity_name: `${who}${services ? ` · ${services}` : ""}${r.town ? ` · ${r.town}` : ""}`.slice(0, 120),
   };
