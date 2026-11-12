@@ -35,14 +35,14 @@ export function PortfolioPlanner({ compact = false }: { compact?: boolean }) {
 
   const href = `/request-walkthrough?properties=${n}&type=${type}`;
   return (
-    <div className="rounded-xl bg-hunter p-6 text-white shadow-premium md:p-8" data-testid="planner">
+    <div className="rounded-[2px] bg-hunter p-6 text-white shadow-premium md:p-8" data-testid="planner">
       <h3 className="font-display text-2xl">Plan Your Inspection Round</h3>
       <div className="mt-6 space-y-5">
         <div>
           <p className="label text-white">Number of properties</p>
           <div className="flex items-center gap-4">
             <button type="button" aria-label="Fewer properties" onClick={() => setN(Math.max(1, n - 1))} className="flex h-10 w-10 items-center justify-center rounded-full bg-linen text-hunter"><Minus size={18} /></button>
-            <input aria-label="Number of properties" type="number" min={1} max={200} value={n} onChange={(e) => setN(Math.min(200, Math.max(1, Number(e.target.value) || 1)))} className="w-20 rounded-md bg-hunter-mid px-2 py-2 text-center text-2xl font-semibold" />
+            <input aria-label="Number of properties" type="number" min={1} max={200} value={n} onChange={(e) => setN(Math.min(200, Math.max(1, Number(e.target.value) || 1)))} className="w-20 rounded-[2px] bg-hunter-mid px-2 py-2 text-center text-2xl font-semibold" />
             <button type="button" aria-label="More properties" onClick={() => setN(Math.min(200, n + 1))} className="flex h-10 w-10 items-center justify-center rounded-full bg-linen text-hunter"><Plus size={18} /></button>
           </div>
         </div>
@@ -63,7 +63,7 @@ export function PortfolioPlanner({ compact = false }: { compact?: boolean }) {
           </>
         )}
       </div>
-      <div className="mt-6 rounded-lg border border-hunter-light bg-hunter-mid p-5" aria-live="polite" data-testid="planner-output">
+      <div className="mt-6 rounded-[2px] border border-hunter-light bg-hunter-mid p-5" aria-live="polite" data-testid="planner-output">
         <p className="text-sm text-sage">Estimated inspection days</p>
         <p className="font-display text-4xl text-linen">{plan.days}</p>
         <p className="mt-2 text-sm">Suggested timing: complete {nextDeadline()}.</p>

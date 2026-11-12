@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { PageHero, Checklist } from "./Blocks";
+import { PageHero, Checklist, SectionHead } from "./Blocks";
+import { Photo } from "../ui/Photo";
+import { ROUTE_PHOTO } from "@/lib/page-photos";
 import { FaqSection } from "../ui/Faq";
 import { JsonLd } from "../ui/JsonLd";
 import { WalkthroughForm } from "../forms/WalkthroughForm";
@@ -28,9 +30,9 @@ export type ProgramPageProps = {
 
 export function ProgramTable() {
   return (
-    <div className="overflow-x-auto rounded-lg border border-cream-dark bg-white">
+    <div className="overflow-x-auto border border-line bg-white">
       <table className="w-full min-w-[640px] text-left text-[15px]">
-        <thead className="bg-hunter text-white"><tr><th className="p-4">Program</th><th className="p-4">What you get</th><th className="p-4">Best for</th></tr></thead>
+        <thead className="bg-char text-white"><tr><th className="p-4">Program</th><th className="p-4">What you get</th><th className="p-4">Best for</th></tr></thead>
         <tbody>
           {PROGRAMS.map((p) => (
             <tr key={p.name} className="border-t border-cream-dark align-top">
@@ -47,45 +49,46 @@ export function ProgramPage(p: ProgramPageProps) {
   return (
     <>
       <JsonLd data={serviceSchema("Deck and Fence Property Maintenance Program", p.path)} />
-      <PageHero eyebrow={p.eyebrow} h1={p.h1} sub={p.sub}>
-        <Link href="#get-started" className="btn btn-linen">{p.cta ?? "Request a Property Walkthrough"}</Link>
+      <PageHero eyebrow={p.eyebrow} h1={p.h1} sub={p.sub} photo={ROUTE_PHOTO[p.path] ?? "townhomeDeck"}>
+        <Link href="#get-started" className="btn btn-cedar">{p.cta ?? "Request a Property Walkthrough"}</Link>
         <Link href="/portfolio-inspection-planner" className="btn btn-ghost">Plan an inspection round</Link>
       </PageHero>
       {p.pills && (
-        <div className="bg-linen px-5 py-4"><div className="mx-auto flex max-w-6xl flex-wrap gap-2">{p.pills.map((x) => <span key={x} className="rounded-full bg-white/70 px-3 py-1 text-sm font-medium">{x}</span>)}</div></div>
+        <div className="border-b border-line bg-ivory px-5 py-4 lg:px-8"><div className="mx-auto flex max-w-[1320px] flex-wrap gap-2">{p.pills.map((x) => <span key={x} className="border border-line bg-white px-3 py-1.5 text-[13px] font-medium">{x}</span>)}</div></div>
       )}
-      <section className="bg-cream px-5 py-20">
-        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2">
+      <section className="bg-bone px-5 py-24 lg:px-8">
+        <div className="mx-auto grid max-w-[1320px] gap-14 lg:grid-cols-2 lg:gap-20">
           <div>
             {p.body && <p className="text-lg leading-relaxed text-hunter/85">{p.body}</p>}
             {p.list && (<><h2 className="mt-8 font-display text-2xl">{p.listTitle}</h2><div className="mt-4"><Checklist items={p.list} /></div></>)}
-            {p.note && <p className="mt-6 rounded-md border-l-4 border-patina bg-white p-4 text-[15px]">{p.note}</p>}
+            {p.note && <p className="mt-6 rounded-[2px] border-l-4 border-patina bg-white p-4 text-[15px]">{p.note}</p>}
           </div>
           <div>
+            <div className="relative mb-10 aspect-[16/10] overflow-hidden"><Photo k="townhomeDeck" sizes="(min-width:1024px) 45vw, 100vw" /></div>
             <h2 className="font-display text-2xl">Our service promise</h2>
-            <div className="mt-4"><Checklist items={SERVICE_PROMISE} /></div>
+            <div className="mt-5"><Checklist items={SERVICE_PROMISE} /></div>
           </div>
         </div>
         {p.cards && (
-          <div className="mx-auto mt-14 grid max-w-6xl gap-5 md:grid-cols-3">
-            {p.cards.map((c) => <div key={c.title} className="rounded-lg bg-white p-6 shadow-card"><h3 className="font-display text-xl">{c.title}</h3><p className="mt-2 text-hunter/75">{c.body}</p></div>)}
+          <div className="mx-auto mt-16 grid max-w-[1320px] gap-px bg-line md:grid-cols-3">
+            {p.cards.map((c) => <div key={c.title} className="bg-bone p-8"><h3 className="font-display text-xl">{c.title}</h3><p className="mt-3 text-stone">{c.body}</p></div>)}
           </div>
         )}
       </section>
-      <section className="bg-white px-5 py-20">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="font-display text-3xl">Programs</h2>
+      <section className="bg-ivory px-5 py-24 lg:px-8">
+        <div className="mx-auto max-w-[1320px]">
+          <SectionHead eyebrow="Programs" title="Four ways to work with us," accent="one standard." />
           <div className="mt-8"><ProgramTable /></div>
         </div>
       </section>
       {p.planner && (
-        <section className="bg-linen-pale px-5 py-20"><div className="mx-auto max-w-xl"><PortfolioPlanner /></div></section>
+        <section className="bg-cedar-soft px-5 py-24"><div className="mx-auto max-w-xl"><PortfolioPlanner /></div></section>
       )}
       {p.faqs && <FaqSection faqs={p.faqs} />}
-      <section id="get-started" className="bg-hunter px-5 py-20">
+      <section id="get-started" className="scroll-mt-20 bg-char px-5 py-24 lg:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="font-display text-3xl text-white">Tell us about your properties. We&apos;ll come walk them.</h2>
-          <p className="mt-2 mb-8 text-sage">Free walkthrough for associations, landlords and commercial properties.</p>
+          <h2 className="font-display text-[32px] leading-tight text-white md:text-[42px]">Tell us about your properties. <span className="accent text-cedar-light">We&apos;ll come walk them.</span></h2>
+          <p className="mt-3 mb-10 text-white/70">Free walkthrough for associations, landlords and commercial properties.</p>
           <WalkthroughForm presetType={p.presetType} />
         </div>
       </section>

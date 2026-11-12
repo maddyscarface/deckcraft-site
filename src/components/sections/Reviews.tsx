@@ -5,29 +5,33 @@ import { site } from "@/config/site";
 export function Reviews() {
   const { live, items, googleProfileUrl } = site.reviews;
   return (
-    <section className="bg-hunter px-5 py-20 text-white">
-      <div className="mx-auto max-w-6xl">
-        <p className="eyebrow text-patina">WHAT OUR CLIENTS SAY</p>
-        <h2 className="mt-2 font-display text-3xl md:text-[40px]">Real decks. Real neighbors.</h2>
+    <section className="bg-char px-5 py-24 text-white lg:px-8">
+      <div className="mx-auto max-w-[1320px]">
+        <p className="eyebrow rule text-cedar-light">What clients say</p>
         {live && items.length >= 3 ? (
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {items.map((r) => (
-              <figure key={r.name + r.town} className="card-dark p-6">
-                <p className="text-linen" aria-label="5 stars">★★★★★</p>
-                <blockquote className="mt-3 text-[15px] leading-relaxed">{r.text}</blockquote>
-                <figcaption className="mt-4 text-sm text-sage">{r.name} · {r.town} · {r.source}</figcaption>
-              </figure>
-            ))}
-          </div>
+          <>
+            <h2 className="mt-4 font-display text-[32px] md:text-[46px]">Real decks. <span className="accent text-cedar-light">Real neighbors.</span></h2>
+            <div className="mt-12 grid gap-px bg-white/10 md:grid-cols-3">
+              {items.map((r) => (
+                <figure key={r.name + r.town} className="bg-char p-8">
+                  <p className="text-cedar-light" aria-label="5 stars">★★★★★</p>
+                  <blockquote className="mt-4 text-[16px] leading-relaxed">{r.text}</blockquote>
+                  <figcaption className="mt-5 text-sm text-white/60">{r.name} · {r.town} · {r.source}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </>
         ) : (
-          <div className="mt-8 max-w-2xl space-y-4 text-sage">
-            <p className="text-lg text-white">New to the web, not to the work.</p>
-            <p>We publish only real reviews from verified customers, and only with their permission. As projects finish, you&apos;ll see them here alongside the job photos and town.</p>
-            {googleProfileUrl ? (
-              <Link href={googleProfileUrl} className="inline-block font-semibold text-linen underline">Read our Google reviews →</Link>
-            ) : (
-              <Link href="/gallery" className="inline-block font-semibold text-linen underline">See how we document every job →</Link>
-            )}
+          <div className="mt-4 grid gap-10 lg:grid-cols-2 lg:items-end">
+            <h2 className="font-display text-[32px] leading-tight md:text-[46px]">New to the web. <span className="accent text-cedar-light">Not to the work.</span></h2>
+            <div className="space-y-4 text-white/75">
+              <p>We publish only real reviews from verified customers, and only with their permission. As projects finish, you&apos;ll see them here alongside the job photos and town.</p>
+              {googleProfileUrl ? (
+                <Link href={googleProfileUrl} className="link-arrow text-cedar-light">Read our Google reviews →</Link>
+              ) : (
+                <Link href="/gallery" className="link-arrow text-cedar-light">See how we document every job →</Link>
+              )}
+            </div>
           </div>
         )}
       </div>
