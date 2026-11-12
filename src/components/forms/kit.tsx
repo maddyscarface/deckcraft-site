@@ -89,7 +89,7 @@ export function FileDrop({ files, setFiles, allowPdf = false, max = 10, formType
         onClick={() => input.current?.click()}
         onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && input.current?.click()}
         role="button" tabIndex={0}
-        className={`flex cursor-pointer flex-col items-center rounded-lg border-2 border-dashed px-5 py-10 text-center transition ${drag ? "border-linen-dark bg-linen-pale" : "border-hunter bg-cream"}`}
+        className={`flex cursor-pointer flex-col items-center rounded-[2px] border-2 border-dashed px-5 py-10 text-center transition ${drag ? "border-linen-dark bg-linen-pale" : "border-hunter bg-cream"}`}
       >
         <Camera size={40} className="text-linen-dark" />
         <p className="mt-3 font-semibold">Drop photos here or tap to browse</p>
@@ -103,7 +103,7 @@ export function FileDrop({ files, setFiles, allowPdf = false, max = 10, formType
       {files.length > 0 && (
         <ul className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-5">
           {files.map((f, i) => (
-            <li key={i} className="relative aspect-square overflow-hidden rounded-md border border-cream-dark bg-white">
+            <li key={i} className="relative aspect-square overflow-hidden rounded-[2px] border border-cream-dark bg-white">
               {previews[i] ? <img src={previews[i]} alt={f.name} className="h-full w-full object-cover" /> : <div className="flex h-full flex-col items-center justify-center p-1 text-center text-[10px]"><FileText size={20} />{f.name.slice(0, 18)}</div>}
               <button type="button" aria-label={`Remove ${f.name}`} onClick={() => setFiles(files.filter((_, j) => j !== i))} className="absolute top-1 right-1 rounded-full bg-hunter p-0.5 text-white"><X size={14} /></button>
             </li>
@@ -142,7 +142,7 @@ export function Honeypot({ value, onChange }: { value: string; onChange: (v: str
 export function SuccessState({ title, body, children }: { title: string; body: string; children?: React.ReactNode }) {
   return (
     <div className="py-6 text-center" role="status" data-testid="lead-success">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-linen text-3xl text-hunter">✓</div>
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-cedar text-3xl text-white">✓</div>
       <h2 className="mt-4 font-display text-3xl">{title}</h2>
       <p className="mx-auto mt-3 max-w-md text-hunter/80">{body}</p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">{children}</div>
