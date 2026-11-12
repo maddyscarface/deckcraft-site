@@ -1,3 +1,4 @@
+import { site } from "@/config/site";
 import { meta } from "@/lib/seo";
 import { PageHero } from "@/components/sections/Blocks";
 
@@ -19,7 +20,7 @@ export default function Page() {
           <h2 id="sms">SMS Terms</h2>
           <p>Program: DeckCraft Boston project updates. By checking the consent box on our forms you agree to receive texts about your request, such as confirmations, scheduling and follow-ups. Message frequency varies. Message and data rates may apply. Reply STOP to cancel, HELP for help. Consent is not a condition of purchase. Carriers are not liable for delayed or undelivered messages. We do not share mobile numbers or SMS opt-in data with third parties for their marketing. See our Privacy Policy.</p>
           <h2 id="accessibility">Accessibility</h2>
-          <p>We aim to meet WCAG 2.1 AA. If anything on this site is hard to use, email hello@deckcraftboston.com and we&apos;ll help and fix it.</p>
+          <p>We aim to meet WCAG 2.1 AA. If anything on this site is hard to use, email {site.email} and we&apos;ll help and fix it.</p>
         </div>
       </section>
     </>

@@ -18,13 +18,13 @@ const PATHS = [
 export default function Page() {
   return (
     <>
-      <PageHero eyebrow="PROPERTY PROGRAMS" h1="Every deck and fence on your properties, handled by one team." sub="Inspections, repairs, staining and fencing for associations, landlords and commercial properties across Greater Boston.">
+      <PageHero photo="townhomeDeck" eyebrow="PROPERTY PROGRAMS" h1="Every deck and fence on your properties, handled by one team." sub="Inspections, repairs, staining and fencing for associations, landlords and commercial properties across Greater Boston.">
         <Link href="#get-started" className="btn btn-linen">Request a Property Walkthrough</Link>
       </PageHero>
       <section className="bg-cream px-5 py-20">
         <div className="mx-auto grid max-w-6xl gap-5 md:grid-cols-3">
           {PATHS.map((p) => (
-            <Link key={p.href} href={p.href} className="rounded-lg border border-cream-dark bg-white p-8 shadow-card transition hover:-translate-y-0.5 hover:border-hunter">
+            <Link key={p.href} href={p.href} className="rounded-[2px] border border-cream-dark bg-white p-8 shadow-card transition hover:-translate-y-0.5 hover:border-hunter">
               <h2 className="font-display text-2xl">{p.t}</h2><p className="mt-2 text-hunter/75">{p.b}</p><span className="mt-4 inline-block font-semibold text-linen-dark">Explore →</span>
             </Link>
           ))}

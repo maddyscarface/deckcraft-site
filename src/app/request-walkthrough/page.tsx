@@ -21,7 +21,7 @@ export default function Page() {
       <section className="-mt-16 px-5 pb-20">
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1fr_340px]">
           <WalkthroughForm />
-          <aside className="rounded-xl bg-cream-dark/50 p-6 lg:mt-16">
+          <aside className="rounded-[2px] bg-cream-dark/50 p-6 lg:mt-16">
             <h2 className="font-display text-xl">What happens next</h2>
             <ol className="mt-3 list-decimal space-y-2 pl-5 text-[15px]">
               <li>A project lead calls to confirm the property list and a walkthrough date.</li>
