@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PricingTag } from "@/components/ui/PricingTag";
 import { meta, businessSchema } from "@/lib/seo";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Icon } from "@/components/ui/Icon";
@@ -11,7 +12,7 @@ import { Reviews } from "@/components/sections/Reviews";
 import { SERVICE_PROMISE } from "@/lib/programs";
 import { site, responsePhrase, phoneHref } from "@/config/site";
 import { TOWNS } from "@/lib/towns";
-import { PRICING, pricingLabel } from "@/config/pricing";
+import { PRICING } from "@/config/pricing";
 import { activeSeasonal, seasonalSchedule } from "@/config/seasonal";
 
 export const metadata = meta("/", "Decks Built for New England | Deck Building, Repair and Fencing in Greater Boston | DeckCraft",
@@ -98,8 +99,8 @@ export default function Home() {
             </ol>
             <div className="mt-10 flex flex-col gap-6 bg-navy p-7 text-white md:flex-row md:items-center md:justify-between md:p-8">
               <div>
-                <p className="eyebrow text-cedar-light">How we price · {pricingLabel()}</p>
-                <p className="mt-3 text-[15px] leading-relaxed text-white/80">Repairs, staining and sealing are <b className="text-white">quoted from your photos</b>. New decks are planned from <b className="text-white">${PRICING.newDeckStartPerSqFt} / sq ft</b> starting, in bands of {PRICING.planningBands.map((b) => b.label).join(" · ")}. Your price is confirmed in writing.</p>
+                <PricingTag dark prefix="How we price" />
+                <p className="mt-3 text-[15px] leading-relaxed text-white/80">Repairs, staining and sealing are <b className="text-white">quoted from your photos</b>. New decks are planned from <b className="text-white">${PRICING.newDeckStartPerSqFt} / sq ft</b> starting, in bands of {PRICING.planningBands.map((b, i) => <span key={b.id} className="whitespace-nowrap">{i ? " · " : ""}{b.label}</span>)}. Your price is confirmed in writing.</p>
               </div>
               <Link href="/free-assessment" className="btn btn-cedar shrink-0">Find out what you have</Link>
             </div>
@@ -122,7 +123,7 @@ export default function Home() {
       <section className="relative isolate overflow-hidden bg-char text-white">
         <div className="photo-shade absolute inset-0 -z-10"><Photo k="crewFraming" sizes="100vw" position="50% 40%" /></div>
         <div className="mx-auto flex min-h-[520px] max-w-[1320px] flex-col justify-end px-5 py-16 lg:px-8">
-          <p className="eyebrow rule text-cedar-light">How we work</p>
+          <p className="eyebrow rule text-white/85">How we work</p>
           <p className="mt-5 max-w-4xl font-display text-[30px] leading-[1.1] md:text-[50px]">We replace what failed, keep what&apos;s sound, and <span className="accent text-cedar-light">tell you which is which</span> before you spend a dollar.</p>
         </div>
       </section>

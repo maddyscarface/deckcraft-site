@@ -23,6 +23,9 @@ export const PRICING = {
   repairNote: "Repair, staining and sealing are priced separately from new decks: we quote them from your photos and confirm on site.",
 } as const;
 
+/** Short eyebrow + separate flag so the "owner to confirm" status never wraps a heading line. */
+export const pricingEyebrow = () => (PRICING.confirmed ? "Planning pricing" : "Planning assumption");
+export const pricingFlag = () => (PRICING.confirmed ? null : "Owner to confirm");
 export const pricingLabel = () => (PRICING.confirmed ? "Planning pricing" : "Planning assumption (owner to confirm)");
 
 /** Starting figure for a deck of `sqft` (never shown as a final price). */

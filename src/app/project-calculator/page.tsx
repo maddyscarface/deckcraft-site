@@ -17,7 +17,7 @@ const FAQ = [
 export default function Page() {
   return (
     <>
-      <PageHero photo="gardenDeck" position="50% 60%" eyebrow="Project calculator" h1="What might a new deck cost? Start with the size." sub={`A planning figure in seconds, clearly labelled: ${pricingLabel().toLowerCase()}. No contact details needed.`} />
+      <PageHero photo="gardenDeck" position="50% 60%" eyebrow="Project calculator" h1="What might a new deck cost? Start with the size." sub="A planning figure in seconds from our starting rate per square foot. No contact details needed." />
       <section className="bg-bone px-5 py-20 lg:px-8">
         <div className="mx-auto max-w-[1200px]">
           <ProjectCalculator />
@@ -29,7 +29,7 @@ export default function Page() {
               </div>
             ))}
           </div>
-          <p className="mt-6 text-sm text-stone">Planning bands are {pricingLabel().toLowerCase()}. Have an existing deck? <Link href="/free-assessment" className="font-semibold text-char underline decoration-copper underline-offset-4">Send 3 photos for an assessment</Link>.</p>
+          <p className="mt-6 text-sm text-stone">These bands are planning assumptions ({pricingLabel().toLowerCase()}), not quotes. Have an existing deck? <Link href="/free-assessment" className="font-semibold text-char underline decoration-copper underline-offset-4">Send 3 photos for an assessment</Link>.</p>
         </div>
       </section>
       <FaqSection faqs={FAQ} />
