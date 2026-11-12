@@ -54,6 +54,12 @@ export const attributionSchema = z.object({
   first_touch_at: z.string().max(40).optional(),
   openai_obref: z.string().max(300).optional(),
   openai_oppref: z.string().max(300).optional(),
+  msclkid: z.string().max(300).optional(),
+  ttclid: z.string().max(300).optional(),
+  ft_source: z.string().max(200).optional(), // first-touch UTM source / medium / campaign
+  ft_medium: z.string().max(200).optional(),
+  ft_campaign: z.string().max(200).optional(),
+  ga_client_id: z.string().max(100).optional(),
 }).partial();
 
 export const leadSchema = z
