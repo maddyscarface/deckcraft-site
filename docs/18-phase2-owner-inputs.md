@@ -37,6 +37,8 @@ Branch `phase2-dev` → staging `https://deckcraft-staging.vercel.app` (noindex)
 | Emails | `RESEND_API_KEY`, `OWNER_ALERT_EMAIL`, `LEAD_BRIEF_*` | No owner alert or lead-brief emails. |
 | Intent | `INTENT_*` | Disabled, and the webhook returns 404. |
 | Phone | `NEXT_PUBLIC_PHONE` + `NEXT_PUBLIC_PHONE_E164` | Hidden everywhere. |
+| Sales owner routing | `GHL_OWNER_IDS` | Contacts/opportunities unassigned (geography is still tagged). |
+| Seasonal admin | `SEASONAL_MODULES_JSON`, `SEASONAL_FORCE` | Built-in dated schedule + evergreen fallback. |
 
 ## Open owner inputs
 1. **Phone number.** Nothing shows until you give us one.
@@ -44,6 +46,9 @@ Branch `phase2-dev` → staging `https://deckcraft-staging.vercel.app` (noindex)
 3. **GHL DeckCraft sub-account:** the two pipelines with the stage names in `src/config/ghl.ts`, the custom fields, a Private Integration token and the workflow IDs.
 4. **Ad account IDs:** GTM, GA4, Google Ads with a conversion label, Meta pixel and CAPI token, and OpenAI Ads.
 5. **Real job photos** (before, during and after) to replace the stock, plus **real reviews**, **licence and insurance details** and **warranty terms** before any of them are shown.
-6. **Price confirmation** for the repair, staining and replacement ranges in `src/lib/services.ts`.
-7. **The five Phase 2 spec files never reached the build box.** Phase 2 was built from the brief and the scoping page. Please re-send the specs so we can reconcile any gaps.
-8. **Intent data:** a privacy review, then the provider choice and its secret.
+6. **Price confirmation:** the public new-deck assumption ($39.99/sq ft starting; bands $8k–15k / $15k–25k / $25k+) in `src/config/pricing.ts`, then set `confirmed: true`. Repair/stain/seal stay "quoted from photos" publicly; the internal planning ranges in `src/config/estimate.ts` also need confirming.
+7. **Seasonal windows and copy** in `src/config/seasonal.ts` (dates, and any real capacity/deadline you want stated).
+8. **GHL users** for sales-owner assignment by geography.
+9. **Creative approvals:** owned job photography and sign-off per `docs/19-creative-briefs-approval-library.md`.
+10. **Turnstile** (optional extra spam protection) site/secret keys if spam gets through the honeypot, timing and link checks.
+11. **Intent data (DataMoon / AudienceLab pilot):** a privacy review, then the provider choice and its secret.

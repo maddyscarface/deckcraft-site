@@ -26,13 +26,13 @@ export default async function Page({ params }: { params: Promise<{ town: string 
     { q: `Do you serve all of ${t.name}?`, a: `Yes, including ${t.neighborhoods.slice(0, 4).join(", ")} and the rest of ${t.name}. Send your address and we'll confirm scheduling.` },
     { q: `Does ${t.name} require a permit for deck or fence work?`, a: `It depends on the scope. Structural deck work and some fences need a permit. We check ${t.name}'s rules for every job and pull permits where required.` },
     { q: `What deck work is most common in ${t.name}?`, a: `${t.typicalJobs.join("; ")}.` },
-    { q: "How does the free assessment work?", a: "Send 3 photos. We review them and reply with what we see and a price range before anyone visits." },
+    { q: "How does the free assessment work?", a: "Send 3 photos. We review them and reply with what we see and how we would price it. Any visit is booked with you first." },
   ];
   return (
     <>
       <JsonLd data={[serviceSchema(`Deck and fence repair in ${t.name}, MA`, `/${t.slug}`), breadcrumbSchema([["Home", "/"], ["Service Areas", "/service-areas"], [t.name, `/${t.slug}`]])]} />
       <PageHero photo={TOWN_PHOTOS[TOWNS.findIndex((x) => x.slug === t.slug) % TOWN_PHOTOS.length]} eyebrow={`${t.name.toUpperCase()}, MA`} h1={`Deck and Fence Repair in ${t.name}, MA`} sub={t.intro}>
-        <Link href="#get-started" className="btn btn-cedar">Send 3 photos for a free assessment</Link>
+        <Link href="#get-started" className="btn btn-cedar">Send 3 Photos for an Assessment</Link>
         <Link href="/request-walkthrough" className="btn btn-ghost">Managing {t.name} properties?</Link>
       </PageHero>
       <section className="bg-bone px-5 py-24 lg:px-8">
