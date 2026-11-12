@@ -9,8 +9,8 @@ export const metadata = meta("/portfolio-inspection-planner", "Portfolio Deck an
 export default function Page() {
   return (
     <>
-      <PageHero compact eyebrow="PORTFOLIO INSPECTION PLANNER" h1="Plan your inspection round in a minute." sub="Tell us how many properties and structures you manage. We'll estimate the inspection days and suggested timing, then confirm everything at a walkthrough." />
-      <section className="bg-cream px-5 py-16">
+      <PageHero photo="townhomeDeck" position="50% 50%" eyebrow="Portfolio inspection planner" h1="Plan your inspection round in a minute." sub="Tell us how many properties and structures you manage. We'll estimate the inspection days and suggested timing, then confirm everything at a walkthrough." />
+      <section className="bg-bone px-5 py-16">
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2">
           <PortfolioPlanner />
           <div>

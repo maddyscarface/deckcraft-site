@@ -11,43 +11,65 @@ import { Reviews } from "@/components/sections/Reviews";
 import { SERVICE_PROMISE } from "@/lib/programs";
 import { site, responsePhrase, phoneHref } from "@/config/site";
 import { TOWNS } from "@/lib/towns";
+import { PRICING, pricingLabel } from "@/config/pricing";
+import { activeSeasonal, seasonalSchedule } from "@/config/seasonal";
 
-export const metadata = meta("/", "Deck Repair, Staining and Fencing in Greater Boston | DeckCraft Boston",
-  "Deck repair, staining, railings, and fencing for Greater Boston homes, associations, landlords, and businesses. Send 3 photos for a free assessment.");
+export const metadata = meta("/", "Decks Built for New England | Deck Building, Repair and Fencing in Greater Boston | DeckCraft",
+  "New decks, rebuilds, structural repairs, railings, staining and fencing for Greater Boston homes, HOAs and commercial properties. Get a new deck estimate or send 3 photos for an assessment.");
 
 const HOME_FAQ = [
-  { q: "How much does deck repair cost in Boston?", a: "Typical Greater Boston deck repair jobs run roughly $1,160 to $4,161, depending on how many boards, how much framing and whether railings or stairs are involved. Send 3 photos and we'll give you a range for your deck. Your exact price is confirmed in writing before work starts." },
+  { q: "How much does deck repair cost in Boston?", a: "Repair is priced by what has failed (boards, framing, ledger, railings or stairs), so we quote it from your photos rather than publishing a list. It is priced separately from new decks, which we plan from a starting assumption of $39.99 per sq ft (to be confirmed). Your exact price is confirmed in writing after an on-site check." },
   { q: "Is it better to repair or replace a deck?", a: "If the framing, joists, posts and ledger are sound, repair is usually the better value. If rot has reached the structure, replacement is often safer. Try our Repair-or-Replace Checker, then send photos so we can confirm." },
   { q: "When should you seal a deck in Massachusetts?", a: "Late spring through early fall, when the wood is dry and overnight temperatures stay above roughly 50°F. Sealing before the first freeze helps keep water out of the wood through winter." },
   { q: "Does an older deck need a structural inspection?", a: "Not automatically, but soft boards, rot at the joists or ledger, or posts that move are reasons to have it looked at in person before using it heavily. Our photo review is a starting point, not an inspection." },
   { q: "Do you work with condo associations and landlords?", a: "Yes. We offer annual inspections, preferred vendor agreements and phased capital repair programs, with written scopes and photo reports for every property." },
-  { q: "What's the free assessment?", a: "Send 3 photos. We review them and reply with what we see and a price range. If it's not worth fixing, we'll say so." },
+  { q: "What's the free assessment?", a: "Send 3 photos. We review them and reply with what we see and the sensible next step. If it's not worth fixing, we'll say so. Any on-site visit is booked with you first, never assumed." },
 ];
 
 export default function Home() {
   const tel = phoneHref();
+  const season = activeSeasonal();
   return (
     <>
       <JsonLd data={businessSchema()} />
 
-      {/* Hero: full-bleed photography */}
-      <section className="relative isolate overflow-hidden bg-char text-white">
-        <div className="photo-shade-side absolute inset-0 -z-10"><Photo k="heroModernDeck" priority sizes="100vw" position="60% 60%" /></div>
-        <div className="mx-auto grid min-h-[calc(100svh-110px)] max-w-[1320px] content-end px-5 pt-28 pb-14 md:min-h-[720px] lg:px-8 lg:pb-20">
-          <p className="eyebrow rule rise text-cedar-light">Greater Boston deck &amp; fence specialists</p>
-          <h1 className="rise-2 mt-6 max-w-[15ch] font-display text-[44px] leading-[0.98] md:text-[84px]">
-            Decks done right. <span className="accent text-cedar-light">Built for Boston.</span>
-          </h1>
-          <p className="rise-3 mt-7 max-w-[540px] text-[17px] leading-relaxed text-white/85 md:text-lg">Repair, refinishing, railings and fencing for homeowners, associations, landlords and commercial properties. Start with three photos and get an honest read on what your deck actually needs.</p>
-          <div className="rise-3 mt-10 flex flex-col gap-3 sm:flex-row">
-            <Link href="/free-assessment" className="btn btn-cedar !min-h-[56px] !px-7 !text-base">Send 3 photos for a free assessment</Link>
-            <Link href="/property-programs" className="btn btn-ghost !min-h-[56px]">Managing multiple properties?</Link>
+      {/* Hero: split editorial layout, navy text panel + photograph (no scrim over the photo) */}
+      <section className="bg-navy text-white">
+        <div className="mx-auto grid max-w-[1440px] lg:min-h-[720px] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)]">
+          <div className="flex flex-col justify-center px-5 pt-14 pb-12 sm:px-8 lg:py-20 lg:pl-12 lg:pr-14 xl:pl-[max(2rem,calc((100vw-1320px)/2))]">
+            <p className="eyebrow rule rise text-cedar-light">Greater Boston deck &amp; fence specialists</p>
+            <h1 className="rise-2 mt-6 font-display text-[42px] leading-[1.0] md:text-[64px] xl:text-[72px]">
+              Decks Built for New England. <span className="accent text-cedar-light">Work You Can See.</span>
+            </h1>
+            <p className="rise-3 mt-7 max-w-[520px] text-[17px] leading-relaxed text-white/80 md:text-lg">New decks, rebuilds, structural repairs, railings, staining and fences for homeowners, associations and commercial properties. Every job is scoped from photos and written down before work starts.</p>
+            <div className="rise-3 mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Link href="/new-deck-estimate" className="btn btn-cedar !min-h-[56px] !px-7 !text-base">Get a New Deck Estimate</Link>
+              <Link href="/free-assessment" className="btn btn-ghost !min-h-[56px] !px-7 !text-base">Send 3 Photos for an Assessment</Link>
+            </div>
+            <p className="rise-3 mt-6 text-[14px] text-white/65">Managing an HOA, rental portfolio or commercial site? <Link href="/request-walkthrough" className="font-semibold text-white underline decoration-cedar-light underline-offset-4">Request a property walkthrough</Link></p>
           </div>
-          <dl className="mt-14 grid max-w-3xl grid-cols-1 gap-6 border-t border-white/20 pt-6 text-sm sm:grid-cols-3">
-            <div><dt className="eyebrow text-white/60">Step one</dt><dd className="mt-1.5 text-white">Free photo assessment</dd></div>
-            <div><dt className="eyebrow text-white/60">Before any work</dt><dd className="mt-1.5 text-white">Written scope and price</dd></div>
-            <div><dt className="eyebrow text-white/60">Who we serve</dt><dd className="mt-1.5 text-white">Homes, HOAs, landlords, businesses</dd></div>
-          </dl>
+          <div className="relative min-h-[360px] sm:min-h-[460px] lg:min-h-0">
+            <Photo k="heroModernDeck" priority sizes="(min-width:1024px) 55vw, 100vw" position="55% 60%" />
+            <span className="absolute bottom-3 right-3 bg-navy/80 px-2.5 py-1 text-[11px] tracking-wide text-white/80">Illustrative photo</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Two paths */}
+      <section className="border-b border-line bg-ivory px-5 lg:px-8">
+        <div className="mx-auto grid max-w-[1320px] divide-y divide-line md:grid-cols-2 md:divide-x md:divide-y-0">
+          <Link href="/free-assessment" className="group flex flex-col gap-2 py-9 md:pr-10">
+            <p className="eyebrow text-cedar">Have a deck that needs work?</p>
+            <p className="font-display text-[26px] leading-tight text-char">Repair, refinish or replace. Start with three photos.</p>
+            <p className="text-[15px] text-stone">We tell you what failed, what&apos;s sound and what it&apos;s worth fixing. Repairs and sealing are quoted from your photos.</p>
+            <span className="mt-2 text-sm font-semibold text-cedar-deep">Send 3 Photos for an Assessment <span aria-hidden className="inline-block transition group-hover:translate-x-1">→</span></span>
+          </Link>
+          <Link href="/project-calculator" className="group flex flex-col gap-2 py-9 md:pl-10">
+            <p className="eyebrow text-cedar">Planning a new deck?</p>
+            <p className="font-display text-[26px] leading-tight text-char">See a planning figure before anyone visits.</p>
+            <p className="text-[15px] text-stone">Enter a size and get a starting figure and budget band, clearly labelled as planning assumptions.</p>
+            <span className="mt-2 text-sm font-semibold text-cedar-deep">Open the project calculator <span aria-hidden className="inline-block transition group-hover:translate-x-1">→</span></span>
+          </Link>
         </div>
       </section>
 
@@ -74,10 +96,10 @@ export default function Home() {
                 </li>
               ))}
             </ol>
-            <div className="mt-10 flex flex-col gap-6 bg-char p-7 text-white md:flex-row md:items-center md:justify-between md:p-8">
+            <div className="mt-10 flex flex-col gap-6 bg-navy p-7 text-white md:flex-row md:items-center md:justify-between md:p-8">
               <div>
-                <p className="eyebrow text-cedar-light">The cost of waiting, in Greater Boston terms</p>
-                <p className="mt-3 text-[15px] leading-relaxed text-white/80">Clean and seal <b className="text-white">$300–$1,500</b> · Typical repair <b className="text-white">$1,160–$4,161</b> · Full resurfacing <b className="text-white">$15–$50 / sq ft</b>. Planning ranges only; your price is confirmed in writing.</p>
+                <p className="eyebrow text-cedar-light">How we price · {pricingLabel()}</p>
+                <p className="mt-3 text-[15px] leading-relaxed text-white/80">Repairs, staining and sealing are <b className="text-white">quoted from your photos</b>. New decks are planned from <b className="text-white">${PRICING.newDeckStartPerSqFt} / sq ft</b> starting, in bands of {PRICING.planningBands.map((b) => b.label).join(" · ")}. Your price is confirmed in writing.</p>
               </div>
               <Link href="/free-assessment" className="btn btn-cedar shrink-0">Find out what you have</Link>
             </div>
@@ -170,13 +192,13 @@ export default function Home() {
         <div className="mx-auto max-w-[1320px]">
           <SectionHead dark eyebrow="Seasonal protection" title="The right work at" accent="the right time of year." />
           <div className="mt-14 grid gap-px bg-white/10 md:grid-cols-4">
-            {[
-              ["Mar–May", "Winter was hard on your deck.", "Spring safety checks, board and railing repairs before the season starts."],
-              ["Jun–Sep", "Make your deck ready for summer.", "Prime staining and sealing season, when wood is dry and nights are warm."],
-              ["Oct–Nov", "Seal before the freeze.", "Last dry windows to keep water out of the wood through winter."],
-              ["Dec–Feb", "Reserve your spring project.", "Design, permit and book rebuilds and fences before calendars fill."],
-            ].map(([m, h, b]) => (
-              <div key={m} className="bg-char p-7"><p className="num text-xl text-cedar-light">{m}</p><h3 className="mt-4 text-lg font-semibold">{h}</h3><p className="mt-2 text-[15px] leading-relaxed text-white/65">{b}</p></div>
+            {seasonalSchedule().filter((m) => m.enabled).map((m) => (
+              <div key={m.id} className={`bg-char p-7 ${m.id === season?.id ? "outline outline-1 -outline-offset-1 outline-cedar" : ""}`}>
+                <p className="num text-xl text-cedar-light">{m.label}</p>
+                <h3 className="mt-4 text-lg font-semibold">{m.headline}</h3>
+                <p className="mt-2 text-[15px] leading-relaxed text-white/65">{m.body}</p>
+                {m.id === season?.id && <Link href={m.cta.href} className="mt-5 inline-block text-sm font-semibold text-cedar-light underline-offset-4 hover:underline">Now: {m.cta.label} →</Link>}
+              </div>
             ))}
           </div>
         </div>
@@ -204,7 +226,7 @@ export default function Home() {
       {/* Final conversion */}
       <section className="relative isolate overflow-hidden bg-char px-5 py-24 text-white lg:px-8" id="get-started">
         <div className="absolute inset-0 -z-10 opacity-30"><Photo k="lakeDeck" sizes="100vw" /></div>
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-char/80 to-char" />
+        <div className="absolute inset-0 -z-10 bg-char/85" />
         <div className="mx-auto max-w-[680px]">
           <p className="eyebrow text-center text-cedar-light">Free photo assessment</p>
           <h2 className="mt-4 text-center font-display text-[34px] leading-tight md:text-[48px]">Ready to see what your deck or fence <span className="accent text-cedar-light">really needs?</span></h2>

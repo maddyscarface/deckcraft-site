@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.svg" },
   ...(noIndex ? { robots: { index: false, follow: false } } : {}),
 };
-export const viewport: Viewport = { themeColor: "#1b1a17", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#172637", width: "device-width", initialScale: 1 };
 
 const GTM = process.env.NEXT_PUBLIC_GTM_ID;
 
