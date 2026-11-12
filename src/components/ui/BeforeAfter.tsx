@@ -13,7 +13,7 @@ export function BeforeAfter({
   const [pos, setPos] = useState(50);
   const id = useId();
   return (
-    <figure className={`relative aspect-[4/3] overflow-hidden rounded-xl shadow-premium select-none ${className}`}>
+    <figure className={`relative aspect-[4/3] overflow-hidden rounded-[2px] shadow-premium select-none ${className}`}>
       <div className="absolute inset-0">{after ? <img src={after} alt={`${alt}: after`} className="h-full w-full object-cover" loading="lazy" /> : <Boards state="after" variant={variant} />}</div>
       <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
         {before ? <img src={before} alt={`${alt}: before`} className="h-full w-full object-cover" loading="lazy" /> : <Boards state="before" variant={variant} />}

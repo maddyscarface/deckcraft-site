@@ -33,7 +33,7 @@ export function RepairOrReplaceChecker({ withForm = true }: { withForm?: boolean
 
   return (
     <div className="space-y-8">
-      <div className="rounded-xl bg-hunter p-6 text-white shadow-premium md:p-8" data-testid="checker">
+      <div className="rounded-[2px] bg-hunter p-6 text-white shadow-premium md:p-8" data-testid="checker">
         <h2 className="font-display text-2xl">Repair or Replace?</h2>
         <p className="mt-1 text-sm text-sage">{Q.length} quick questions. About a minute.</p>
         {!r && (
@@ -44,7 +44,7 @@ export function RepairOrReplaceChecker({ withForm = true }: { withForm?: boolean
             <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
               {(Q[i].opts ?? YNO.map((o) => ({ v: o.v, l: o.l }))).map((o) => (
                 <button key={o.v} type="button" onClick={() => answer(Q[i].key, o.v)} aria-pressed={a[Q[i].key] === o.v}
-                  className={`rounded-md border px-3 py-3 text-sm font-semibold transition ${a[Q[i].key] === o.v ? "border-linen bg-linen text-hunter" : "border-hunter-light hover:border-linen"}`}>{o.l}</button>
+                  className={`rounded-[2px] border px-3 py-3 text-sm font-semibold transition ${a[Q[i].key] === o.v ? "border-linen bg-linen text-hunter" : "border-hunter-light hover:border-linen"}`}>{o.l}</button>
               ))}
             </div>
             {i > 0 && <button type="button" onClick={() => setI(i - 1)} className="mt-4 text-sm text-sage underline">Back</button>}
@@ -52,7 +52,7 @@ export function RepairOrReplaceChecker({ withForm = true }: { withForm?: boolean
         )}
         {r && result && (
           <div className="mt-6" role="status" data-testid="checker-result">
-            <div className={`rounded-lg border-2 p-5 ${TONE[r.tone]}`}>
+            <div className={`rounded-[2px] border-2 p-5 ${TONE[r.tone]}`}>
               <p className="text-xs font-semibold tracking-wider text-linen">PRELIMINARY RESULT</p>
               <p className="mt-1 font-display text-2xl">{r.label}</p>
               <p className="mt-3 text-[15px] leading-relaxed text-white/90">{r.body}</p>
