@@ -7,9 +7,9 @@ export const metadata = meta("/gallery", "Before and After Gallery: Decks and Fe
 export default function Page() {
   return (
     <>
-      <PageHero compact eyebrow="GALLERY" h1="The work speaks for itself." sub="Greater Boston decks and fences, labelled by town and service." />
+      <PageHero compact eyebrow="GALLERY" h1="Real jobs only. Labelled by town and service." sub="Every project in this gallery will be a real DeckCraft job, shared with the owner’s permission. Nothing staged, nothing borrowed." />
       <GalleryGrid />
-      <CtaBand title="Want results like these?" />
+      <CtaBand title="Start with three photos of your own deck." sub="We reply with what we see and a realistic range." />
     </>
   );
 }

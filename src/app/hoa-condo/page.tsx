@@ -1,3 +1,4 @@
+import { site } from "@/config/site";
 import { ProgramPage } from "@/components/sections/ProgramPage";
 import { meta } from "@/lib/seo";
 
@@ -27,7 +28,7 @@ export default function Page() {
         { q: "Do you work with our management company?", a: "Yes. We can work through your manager for access, approvals and invoicing, and copy the board on reports." },
         { q: "How do you handle residents during work?", a: "We provide notice templates, schedule around access needs, keep work areas clear at day's end and post photo updates." },
         { q: "Can you phase the work over two seasons?", a: "Yes. Phasing by priority is common, with safety items first and cosmetic work later." },
-        { q: "Do you provide a certificate of insurance naming the association?", a: "Yes, on request, naming the association and management company as required." },
+        { q: "Do you provide a certificate of insurance naming the association?", a: site.credentials.licensedAndInsuredVerified ? "Yes, on request, naming the association and management company as required." : "Insurance documentation is confirmed with each client before work starts; ask during your walkthrough and we will share what applies to your property." },
         { q: "Can you work from our reserve study?", a: "Yes. Upload it with your walkthrough request and we'll align our scope and schedule to it." },
       ]}
     />
