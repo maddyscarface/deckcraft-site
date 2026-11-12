@@ -12,7 +12,7 @@ import { syncLeadToGhl } from "@/lib/server/ghl-api";
 const cfg = ghlConfig({
   GHL_API_TOKEN: "t", GHL_LOCATION_ID: "loc1",
   GHL_PIPELINE_RESIDENTIAL_ID: "pipeR", GHL_PIPELINE_COMMERCIAL_ID: "pipeC",
-  GHL_STAGE_IDS: JSON.stringify({ residential: { new_lead: "sR1", photos_received: "sR2" }, commercial: { new_lead: "sC1" } }),
+  GHL_STAGE_IDS: JSON.stringify({ residential: { new: "sR1", photos_received: "sR2" }, commercial: { inquiry: "sC1" } }),
   GHL_CUSTOM_FIELD_IDS: JSON.stringify({ dc_lead_score: "cf_score", dc_lead_tier: "cf_tier" }),
   GHL_WORKFLOW_IDS: JSON.stringify({ speed_to_lead: "wf1" }),
 } as unknown as NodeJS.ProcessEnv);
