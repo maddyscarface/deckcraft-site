@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo } from "react";
-import { budgetFit, dateBounds, rangeText, typicalRange, type EstimateConfig, type Option, type Qualifiers } from "@/lib/estimate/qualifiers";
+import { budgetFit, dateBounds, rangeText, sqftFromLabel, typicalRange, type EstimateConfig, type Option, type Qualifiers } from "@/lib/estimate/qualifiers";
 import { pricingViews, recordPricingView } from "@/lib/estimate/pricing-views";
 
 export type QualifierTheme = {
@@ -45,12 +45,16 @@ export function validateQualifiers(cfg: EstimateConfig, q: Qualifiers, hide: Pro
 export function EstimateQualifiers({ cfg, value: q, onChange, theme: t, errors = {}, hide = [], showRange = true }: Props) {
   const set = (patch: Partial<Qualifiers>) => onChange({ ...q, ...patch });
   const pt = cfg.projectTypes.find((p) => p.id === q.project_type);
-  const range = showRange ? typicalRange(cfg, q) : undefined;
+  const pp = cfg.publicPricing;
+  const range = showRange && !pp ? typicalRange(cfg, q) : undefined;
+  const ppSize = pp && pt && pp.projectTypes.includes(pt.id) ? pt.sizes.find((x) => x.id === q.size) : undefined;
+  const ppSqft = ppSize ? sqftFromLabel(ppSize.label) : undefined;
+  const ppStart = pp && ppSqft ? Math.round((ppSqft * pp.perSqFt) / 100) * 100 : undefined;
   const fit = budgetFit(cfg, q);
   const bounds = useMemo(() => dateBounds(cfg), [cfg]);
 
   // Seeing the typical range in the form counts as seeing pricing.
-  useEffect(() => { if (range) recordPricingView("form-range"); }, [range?.[0], range?.[1]]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (range || ppStart) recordPricingView("form-range"); }, [range?.[0], range?.[1], ppStart]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const chips = (name: keyof Qualifiers, opts: Option[], multi = false) => (
     <div className="flex flex-wrap gap-2" role="group" aria-label={String(name)}>
@@ -98,6 +102,18 @@ export function EstimateQualifiers({ cfg, value: q, onChange, theme: t, errors =
         </div>
       ) : null}
 
+      {pp && pt && (
+        <div className={t.box} data-testid="typical-range" aria-live="polite">
+          {ppStart ? (
+            <p className="text-sm">Starting figure for this size: <strong className="text-lg">from ${ppStart.toLocaleString("en-US")}</strong> <span className={t.muted}>({ppSqft} sq ft × ${pp.perSqFt}/sq ft)</span></p>
+          ) : pp.projectTypes.includes(pt.id) ? (
+            <p className="text-sm">Pick a size to see a starting figure.</p>
+          ) : (
+            <p className="text-sm">{pp.quotedNote}</p>
+          )}
+          <p className={`mt-1 text-xs ${t.muted}`}>{pp.label}. Excludes permits, demolition, stairs, upgraded railings and site conditions. Confirmed in writing after review.</p>
+        </div>
+      )}
       {range && (
         <div className={t.box} data-testid="typical-range" aria-live="polite">
           <p className="text-sm">Typical for this project: <strong className="text-lg">{rangeText(range)}</strong></p>
@@ -134,7 +150,7 @@ export function EstimateQualifiers({ cfg, value: q, onChange, theme: t, errors =
               {cfg.timeWindows.map((w) => <option key={w.id} value={w.id}>{w.label}</option>)}
             </select>
           </label>
-          <p className={`text-xs sm:col-span-2 ${t.muted}`}>{"We'll confirm the exact time with you. This just helps us hold a slot."}</p>
+          <p className={`text-xs sm:col-span-2 ${t.muted}`}>{"Optional. A visit only happens if, after reviewing your photos, one is needed, and we confirm the date with you first."}</p>
         </div>
       )}
 

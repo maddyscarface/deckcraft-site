@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChoiceGrid, Field, FileDrop, Honeypot, PrivacyNote, Progress, SmsConsent } from "./kit";
-import { CUSTOMER_LABELS, type CustomerType, type ServiceKey } from "@/lib/lead-schema";
+import { CUSTOMER_LABELS, MATERIAL_PREFS, MATERIAL_PREF_LABELS, WORK_TYPES, WORK_TYPE_LABELS, type CustomerType, type ServiceKey } from "@/lib/lead-schema";
 import { TOWN_NAMES } from "@/lib/towns";
 import { newEventId, submitLead, uploadFiles } from "@/lib/submit";
 import { track } from "@/lib/tracking";
@@ -18,6 +18,9 @@ const SERVICES: { value: ServiceKey; label: string }[] = [
   { value: "fence_staining", label: "Fence staining" }, { value: "gate", label: "Gate" }, { value: "not_sure", label: "Not sure" },
 ];
 const MATERIALS = ["Pressure-treated wood", "Cedar", "Composite", "Vinyl", "Aluminum or metal", "Not sure"];
+const STRUCTURES = ["Ground-level deck", "Raised deck with stairs", "Second-story or stacked porch", "Roof deck", "Fence", "Nothing yet (new build)", "Not sure"];
+const ACCESS = ["Easy: side yard or gate", "Through the house only", "Tight lot or shared driveway", "Not sure"];
+const HOA_PERMIT = ["HOA approval needed", "Building permit likely", "Both HOA and permit", "Neither", "Not sure"];
 const LABELS = ["About you", "Your project", "Budget & visit", "Photos", "Anything else?"];
 const LAST = LABELS.length - 1;
 /** Condensed forms keep budget/size/start but skip visit time, styles and address (asked on the call). */
@@ -32,9 +35,9 @@ function projectFromServices(services: ServiceKey[], material: string): string |
   return undefined;
 }
 
-type Props = { presetService?: ServiceKey; presetTown?: string; presetCustomerType?: CustomerType; condensed?: boolean; checker?: { result: string; answers: Record<string, string> } };
+type Props = { presetService?: ServiceKey; presetTown?: string; presetCustomerType?: CustomerType; condensed?: boolean; checker?: { result: string; answers: Record<string, string> }; presetSize?: string; presetWorkType?: (typeof WORK_TYPES)[number]; submitText?: string };
 
-export function PhotoAssessmentForm({ presetService, presetTown, presetCustomerType, condensed = false, checker }: Props) {
+export function PhotoAssessmentForm({ presetService, presetTown, presetCustomerType, condensed = false, checker, presetSize, presetWorkType, submitText }: Props) {
   const router = useRouter();
   const eventId = useRef(newEventId());
   const started = useRef(Date.now());
@@ -52,7 +55,9 @@ export function PhotoAssessmentForm({ presetService, presetTown, presetCustomerT
     first_name: "", last_name: "", email: "", phone: "", sms_consent: false,
     customer_type: (presetCustomerType ?? "homeowner") as CustomerType,
     town: presetTown ?? "", services: (presetService ? [presetService] : []) as ServiceKey[],
-    material: "", size_estimate: "", timeline: "" as string, property_count: "", message: "",
+    material: "", size_estimate: presetSize ?? "", timeline: "" as string, property_count: "", message: "",
+    zip: "", work_type: (presetWorkType ?? "") as string, current_structure: "", material_preference: "" as string,
+    access: "", hoa_permit: "", availability: "",
   });
   const set = (k: keyof typeof v) => (val: any) => {
     if (!touched) { setTouched(true); track.formStart(condensed ? "short" : "assessment"); }
@@ -70,6 +75,7 @@ export function PhotoAssessmentForm({ presetService, presetTown, presetCustomerT
     if (s === 1 || condensed) {
       if (!v.town.trim()) e.town = "Town is required";
       if (!v.services.length) e.services = "Choose at least one";
+      if (v.zip && !/^\d{5}$/.test(v.zip.trim())) e.zip = "Enter a 5-digit ZIP";
     }
     let qe: Partial<Record<keyof Qualifiers, string>> = {};
     if (s === 2 || condensed) qe = validateQualifiers(estimateConfig, q, condensed ? [...CONDENSED_HIDE] : []);
@@ -95,6 +101,9 @@ export function PhotoAssessmentForm({ presetService, presetTown, presetCustomerT
         property_count: v.property_count ? Number(v.property_count) : undefined,
         timeline: (q.start ? START_TO_TIMELINE[q.start] : undefined) ?? (v.timeline || undefined),
         material: v.material || undefined,
+        zip: v.zip.trim() || undefined, work_type: v.work_type || undefined, current_structure: v.current_structure || undefined,
+        material_preference: v.material_preference || undefined, access: v.access || undefined, hoa_permit: v.hoa_permit || undefined,
+        availability: v.availability.trim() || undefined,
         photo_urls,
         qualifiers: withPricingSeen(q),
         website: hp,
@@ -131,40 +140,59 @@ export function PhotoAssessmentForm({ presetService, presetTown, presetCustomerT
         <ChoiceGrid name="Customer type" value={v.customer_type} onChange={set("customer_type")} options={(Object.keys(CUSTOMER_LABELS) as CustomerType[]).map((k) => ({ value: k, label: CUSTOMER_LABELS[k] }))} />
       </div>
       {isProperty && (
-        <div className="rounded-[2px] bg-linen-pale p-4 text-sm">
+        <div className="rounded-[2px] bg-cedar-soft p-4 text-sm">
           <Field id="property_count" label="How many properties?"><input id="property_count" type="number" min={1} className="field max-w-[160px]" value={v.property_count} onChange={(e) => set("property_count")(e.target.value)} /></Field>
           <p className="mt-2">Multiple properties? <Link href="/request-walkthrough" className="font-semibold underline">Request a walkthrough instead →</Link></p>
         </div>
       )}
-      <Field id="town" label="Town *" error={errors.town}>
-        <input id="town" list="towns" className="field" value={v.town} onChange={(e) => set("town")(e.target.value)} autoComplete="address-level2" />
-        <datalist id="towns">{TOWN_NAMES.map((t) => <option key={t} value={t} />)}</datalist>
-      </Field>
+      <div className={condensed ? "" : "grid gap-4 sm:grid-cols-[1fr_160px]"}>
+        <Field id="town" label="Town *" error={errors.town}>
+          <input id="town" list="towns" className="field" value={v.town} onChange={(e) => set("town")(e.target.value)} autoComplete="address-level2" />
+          <datalist id="towns">{TOWN_NAMES.map((t) => <option key={t} value={t} />)}</datalist>
+        </Field>
+        {!condensed && <Field id="zip" label="ZIP" error={errors.zip}><input id="zip" inputMode="numeric" maxLength={5} className="field" autoComplete="postal-code" value={v.zip} onChange={(e) => set("zip")(e.target.value.replace(/\D/g, ""))} /></Field>}
+      </div>
       <div>
         <p className="label">What needs attention? *</p>
         <ChoiceGrid name="Services" multi cols={3} value={v.services} onChange={set("services")} options={SERVICES} />
         {errors.services && <p className="err">{errors.services}</p>}
       </div>
       {!condensed && (
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field id="material" label="Material"><select id="material" className="field" value={v.material} onChange={(e) => set("material")(e.target.value)}><option value="">Select</option>{MATERIALS.map((m) => <option key={m}>{m}</option>)}</select></Field>
-          <Field id="size_estimate" label="Approx. size" hint="Deck sq ft or fence linear ft"><input id="size_estimate" className="field" value={v.size_estimate} onChange={(e) => set("size_estimate")(e.target.value)} /></Field>
-        </div>
+        <>
+          <div>
+            <p className="label">Repair, replace or new?</p>
+            <ChoiceGrid name="Work type" cols={2} value={v.work_type as any} onChange={set("work_type")} options={WORK_TYPES.map((w) => ({ value: w, label: WORK_TYPE_LABELS[w] }))} />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field id="size_estimate" label="Approx. size" hint="Deck sq ft or fence linear ft"><input id="size_estimate" className="field" value={v.size_estimate} onChange={(e) => set("size_estimate")(e.target.value)} /></Field>
+            <Field id="current_structure" label="Current structure"><select id="current_structure" className="field" value={v.current_structure} onChange={(e) => set("current_structure")(e.target.value)}><option value="">Select</option>{STRUCTURES.map((m) => <option key={m}>{m}</option>)}</select></Field>
+            <Field id="material" label="Current surface"><select id="material" className="field" value={v.material} onChange={(e) => set("material")(e.target.value)}><option value="">Select</option>{MATERIALS.map((m) => <option key={m}>{m}</option>)}</select></Field>
+            <Field id="access" label="Access for the crew"><select id="access" className="field" value={v.access} onChange={(e) => set("access")(e.target.value)}><option value="">Select</option>{ACCESS.map((m) => <option key={m}>{m}</option>)}</select></Field>
+          </div>
+          <div>
+            <p className="label">Preferred material for new work</p>
+            <ChoiceGrid name="Preferred material" cols={3} value={v.material_preference as any} onChange={set("material_preference")} options={MATERIAL_PREFS.map((m) => ({ value: m, label: MATERIAL_PREF_LABELS[m] }))} />
+          </div>
+          <Field id="hoa_permit" label="HOA or permit"><select id="hoa_permit" className="field" value={v.hoa_permit} onChange={(e) => set("hoa_permit")(e.target.value)}><option value="">Select</option>{HOA_PERMIT.map((m) => <option key={m}>{m}</option>)}</select></Field>
+        </>
       )}
     </div>
   );
   const qualifiers = (
     <div>
-      <p className="mb-4 text-sm text-hunter/80">A few quick answers so your estimate comes with no surprises.</p>
+      <p className="mb-4 text-sm text-stone">A few quick answers so your estimate comes with no surprises.</p>
       <EstimateQualifiers cfg={estimateConfig} value={q} onChange={(n) => { if (!touched) { setTouched(true); track.formStart("assessment"); } setQ(n); setQErrors({}); }}
         theme={qualifierTheme} errors={qErrors} hide={condensed ? [...CONDENSED_HIDE] : []} />
     </div>
   );
   const photos = <FileDrop files={files} setFiles={setFiles} formType="assessment" />;
   const extra = (
-    <Field id="message" label="Anything we should know? (optional)">
-      <textarea id="message" rows={4} className="field" placeholder="Soft spots, a deadline, HOA rules, pets…" value={v.message} onChange={(e) => set("message")(e.target.value)} />
-    </Field>
+    <div className="space-y-4">
+      <Field id="availability" label="When are you usually available? (optional)" hint="For a call or, if needed, a visit we confirm with you first"><input id="availability" className="field" placeholder="e.g. weekday evenings, Saturday mornings" value={v.availability} onChange={(e) => set("availability")(e.target.value)} /></Field>
+      <Field id="message" label="Anything we should know? (optional)">
+        <textarea id="message" rows={4} className="field" placeholder="Soft spots, a deadline, HOA rules, pets…" value={v.message} onChange={(e) => set("message")(e.target.value)} />
+      </Field>
+    </div>
   );
 
   const goTo = (n: number) => {
@@ -174,7 +202,7 @@ export function PhotoAssessmentForm({ presetService, presetTown, presetCustomerT
     }
     setStep(n);
   };
-  const submitLabel = busy === "uploading" ? `Uploading photos ${uploaded}/${files.length}…` : busy === "sending" ? "Sending…" : "Send My Photos — Get Free Assessment";
+  const submitLabel = busy === "uploading" ? `Uploading photos ${uploaded}/${files.length}…` : busy === "sending" ? "Sending…" : (submitText ?? "Send My Photos — Get Free Assessment");
 
   return (
     <form className="relative rounded-[2px] border border-line bg-white p-6 shadow-premium md:p-10" onSubmit={(e) => { e.preventDefault(); if (condensed || step === LAST) onSubmit(); else if (validate(step)) goTo(step + 1); }} noValidate data-testid="assessment-form">
@@ -193,8 +221,8 @@ export function PhotoAssessmentForm({ presetService, presetTown, presetCustomerT
       )}
       {serverErr && <p className="err mt-4" role="alert">{serverErr}</p>}
       <div className="mt-6 flex gap-3">
-        {!condensed && step > 0 && <button type="button" className="btn border border-hunter" onClick={() => setStep(step - 1)} disabled={!!busy}>Back</button>}
-        <button type="submit" disabled={!!busy} className="btn btn-hunter h-[52px] flex-1">
+        {!condensed && step > 0 && <button type="button" className="btn border border-navy" onClick={() => setStep(step - 1)} disabled={!!busy}>Back</button>}
+        <button type="submit" disabled={!!busy} className="btn btn-char h-[52px] flex-1">
           {condensed || step === LAST ? submitLabel : step === 3 && !files.length ? "Skip photos for now" : "Continue"}
         </button>
       </div>
