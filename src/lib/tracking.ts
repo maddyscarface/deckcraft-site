@@ -109,7 +109,12 @@ export function fb(kind: "track" | "trackCustom", name: string, params: DL = {},
 export const track = {
   viewService(service: string) { dl("view_service", { service }); fb("track", "ViewContent", { content_name: service }); },
   formStart(form_type: string) { dl("form_start", { form_type }); },
-  photoUploadSuccess(count: number, form_type: string) { dl("photo_upload_success", { count, form_type }); fb("trackCustom", "PhotosUploaded", { count }); },
+  /** Spec §4: assessment / estimate form viewed. */
+  assessmentView(form_type: string) { dl("assessment_view", { form_type }); },
+  /** Spec §4 photos_uploaded (+ legacy photo_upload_success). A photo upload is NOT a conversion or a sale. */
+  photoUploadSuccess(count: number, form_type: string) { dl("photo_upload_success", { count, form_type }); dl("photos_uploaded", { count, form_type }); fb("trackCustom", "PhotosUploaded", { count }); },
+  /** Spec §4 qualified_lead (browser side): only hot/warm tiers. The CRM "Qualified" stage sends the server-side one. */
+  qualifiedLead(p: { event_id: string; form_type: string; tier: string }) { dl("qualified_lead", p); },
   generateLead(p: { event_id: string; form_type: string; customer_type?: string; funnel?: string; value?: number }) {
     dl("generate_lead", { ...p, currency: "USD" });
     if (p.form_type === "walkthrough") dl("walkthrough_request", { event_id: p.event_id, customer_type: p.customer_type });

@@ -41,6 +41,7 @@ try {
     const ctx = await browser.newContext();
     const page = await newPage(ctx);
     await page.goto(`${BASE}/services/deck-repair?utm_source=google&utm_medium=cpc&utm_campaign=deck-repair-newton&gclid=TEST-GCLID-1`);
+    await page.waitForLoadState("networkidle"); await page.waitForTimeout(600); // let client attribution capture run
     await page.goto(`${BASE}/free-assessment?service=deck_repair`);
     const f = page.getByTestId("assessment-form");
     await f.locator("#first_name").fill("Test");

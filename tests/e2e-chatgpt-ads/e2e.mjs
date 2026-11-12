@@ -83,10 +83,10 @@ const flow_deckcraft = async (page, base, ok) => {
   ok("project type pre-selected from services", (await page.getByTestId("q-project_type-new_deck_composite").getAttribute("aria-pressed")) === "true");
   await page.getByTestId("q-size-16x20").click(); await page.getByTestId("q-add_ons-stairs").click();
   const range = await page.getByTestId("typical-range").innerText();
-  ok("typical range shown before budget", range.includes("$21k–$40k"), range);
+  ok("new-deck starting figure shown before budget (labelled assumption)", range.includes("from $12,800") && /owner to confirm/i.test(range), range);
   await page.getByRole("button", { name: "Continue" }).click(); await slow(page);
   ok("budget required", await page.getByText("Choose a budget range").isVisible());
-  await page.getByTestId("q-budget-25_35k").click(); await page.getByTestId("q-start-within_30").click();
+  await page.getByTestId("q-budget-15_25k").click(); await page.getByTestId("q-start-within_30").click();
   await page.fill('[data-testid="q-preferred_date"]', date); await page.selectOption('[data-testid="q-preferred_window"]', "1200");
   await page.getByTestId("q-favorites-modern_gray").click(); await page.getByTestId("q-favorites-cable_rail").click();
   await page.fill('[data-testid="q-address"]', "12 Maple Ave, Newton MA 02458");

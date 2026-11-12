@@ -134,3 +134,17 @@ alter table leads add column if not exists ft_source text;
 alter table leads add column if not exists ft_medium text;
 alter table leads add column if not exists ft_campaign text;
 alter table leads add column if not exists ga_client_id text;
+-- Phase 2 spec alignment: homeowner + property form fields, geography routing.
+alter table leads add column if not exists zip text;
+alter table leads add column if not exists work_type text;
+alter table leads add column if not exists current_structure text;
+alter table leads add column if not exists material_preference text;
+alter table leads add column if not exists access text;
+alter table leads add column if not exists hoa_permit text;
+alter table leads add column if not exists availability text;
+alter table leads add column if not exists urgency text;
+alter table leads add column if not exists procurement text[];
+alter table leads add column if not exists preferred_contact text;
+alter table leads add column if not exists walkthrough_requested boolean;
+alter table leads add column if not exists geography text;
+alter table leads add column if not exists crm_event_ids text[];
