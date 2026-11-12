@@ -1,7 +1,8 @@
 "use client";
+import { PricingTag } from "@/components/ui/PricingTag";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { PRICING, bandFor, newDeckStartingAt, pricingLabel, usd } from "@/config/pricing";
+import { PRICING, bandFor, newDeckStartingAt, usd } from "@/config/pricing";
 import { track } from "@/lib/tracking";
 
 const PRESETS = [[12, 12], [12, 16], [16, 20], [20, 24]] as const;
@@ -51,7 +52,7 @@ export function ProjectCalculator({ compact = false }: { compact?: boolean }) {
         )}
       </div>
       <div className="flex flex-col bg-navy p-6 text-white md:p-8" aria-live="polite">
-        <p className="eyebrow text-cedar-light">{pricingLabel()}</p>
+        <PricingTag dark />
         <p className="mt-5 text-sm text-white/70">{sqft.toLocaleString("en-US")} sq ft × ${PRICING.newDeckStartPerSqFt} / sq ft starting</p>
         <p className="mt-1 font-display text-[46px] leading-none" data-testid="calc-start">{sqft ? `from ${usd(start)}` : "—"}</p>
         {band && <p className="mt-4 text-[15px]"><span className="text-white/65">Planning band:</span> <b>{band.label}</b> <span className="text-white/65">· {band.fits}</span></p>}

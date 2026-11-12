@@ -1,7 +1,7 @@
 import { site } from "@/config/site";
 
 export const PROGRAMS = [
-  { name: "Annual Deck and Fence Safety Inspection", gets: "Every deck, balcony, porch, stair, railing and fence run inspected; written condition report with photos, priority ratings (safety now / repair this year / monitor) and repair pricing.", bestFor: "Condo boards, HOAs and landlords who want documentation for insurers and residents" },
+  { name: "Annual Deck and Fence Safety Inspection", gets: "Each deck, balcony, porch, stair, railing and fence run in the agreed scope inspected; written condition report with photos, priority ratings (safety now / repair this year / monitor) and repair pricing.", bestFor: "Condo boards, HOAs and landlords who want documentation for insurers and residents" },
   { name: "Preferred Vendor Agreement", gets: "Set rates, priority scheduling, one project lead, consolidated monthly invoicing, COI on file.", bestFor: "Property managers with ongoing repairs" },
   { name: "Capital Repair Program", gets: "Multi-property or multi-building project scoped from the inspection, with a phased schedule aligned to the budget or reserve plan.", bestFor: "Associations planning large projects; landlords doing portfolio upgrades" },
   { name: "Turnover and Make-Ready (Exterior)", gets: "Deck, porch and fence repairs and staining between tenants, on a committed timeline.", bestFor: "Landlords and rental property managers" },

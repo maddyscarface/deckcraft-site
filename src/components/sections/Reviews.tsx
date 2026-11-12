@@ -29,7 +29,7 @@ export function Reviews() {
               {googleProfileUrl ? (
                 <Link href={googleProfileUrl} className="link-arrow text-cedar-light">Read our Google reviews →</Link>
               ) : (
-                <Link href="/gallery" className="link-arrow text-cedar-light">See how we document every job →</Link>
+                <Link href="/gallery" className="link-arrow text-cedar-light">See how we document our work →</Link>
               )}
             </div>
           </div>

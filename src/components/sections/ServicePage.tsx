@@ -52,7 +52,7 @@ export function ServicePage({ id }: { id: string }) {
 
       <section className="bg-bone px-5 py-24 lg:px-8">
         <div className="mx-auto max-w-[1320px]">
-          <SectionHead eyebrow="What's included" title={s.name} accent="done properly." />
+          <SectionHead eyebrow={s.name} title="What's included" accent="in every written scope." />
           <div className="mt-14 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
             {s.included.map((i, n) => (
               <div key={i.title} className="bg-bone p-7 md:p-8">
@@ -74,9 +74,9 @@ export function ServicePage({ id }: { id: string }) {
         <div className="mx-auto grid max-w-[1440px] lg:grid-cols-2">
           <div className="relative min-h-[360px] lg:min-h-[560px]"><Photo k={detail} sizes="(min-width:1024px) 50vw, 100vw" /></div>
           <div className="flex flex-col justify-center px-5 py-16 lg:px-16">
-            <p className="eyebrow rule text-cedar-light">Honest assessment</p>
-            <h2 className="mt-4 font-display text-[30px] leading-tight md:text-[42px]">We tell you what it needs, <span className="accent text-cedar-light">and what it doesn&apos;t.</span></h2>
-            <p className="mt-6 max-w-lg text-white/75">Your photos tell us most of the story. We reply with what we see, whether it looks like a repair, a refinish or a rebuild, and how we would price it. If it isn&apos;t worth fixing, we&apos;ll say so.</p>
+            <p className="eyebrow rule text-cedar-light">{newBuild ? "Planning first" : "Honest assessment"}</p>
+            <h2 className="mt-4 font-display text-[30px] leading-tight md:text-[42px]">{newBuild ? <>Planned around how you&apos;ll <span className="accent text-cedar-light">actually use it.</span></> : <>We tell you what it needs, <span className="accent text-cedar-light">and what it doesn&apos;t.</span></>}</h2>
+            <p className="mt-6 max-w-lg text-white/75">{newBuild ? "Tell us the size, materials and any HOA or permit questions. We reply with a planning range and the details that move the price, then confirm the site with you before anything is written up." : "Your photos tell us most of the story. We reply with what we see, whether it looks like a repair, a refinish or a rebuild, and how we would price it. If it isn’t worth fixing, we’ll say so."}</p>
             <ul className="mt-8 space-y-3 text-[15px] text-white/85">
               {["Written scope and price before work starts", "Permits pulled where the work requires them", "Photos of the finished work for your records"].map((t) => (
                 <li key={t} className="flex gap-3"><Icon name="Check" size={18} className="mt-0.5 text-cedar-light" />{t}</li>
