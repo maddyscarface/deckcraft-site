@@ -3,7 +3,7 @@ import { PortfolioPlanner } from "@/components/tools/PortfolioPlanner";
 import { PageHero, Checklist } from "@/components/sections/Blocks";
 import { PROGRAMS } from "@/lib/programs";
 
-export const metadata = meta("/portfolio-inspection-planner", "Portfolio Deck and Fence Inspection Planner | DeckCraft Boston",
+export const metadata = meta("/portfolio-inspection-planner", "Portfolio Deck and Fence Inspection Planner | DeckCraft",
   "Plan an inspection round for your condo association, HOA, rental portfolio or commercial properties. Get a preliminary schedule and book a walkthrough.");
 
 export default function Page() {

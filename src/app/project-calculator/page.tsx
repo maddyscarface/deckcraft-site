@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { meta } from "@/lib/seo";
+import { meta, faqSchema, webPageSchema, breadcrumbSchema, pageGraph } from "@/lib/seo";
+import { JsonLd } from "@/components/ui/JsonLd";
 import { PageHero } from "@/components/sections/Blocks";
 import { ProjectCalculator } from "@/components/tools/ProjectCalculator";
 import { PRICING, pricingLabel } from "@/config/pricing";
@@ -17,6 +18,7 @@ const FAQ = [
 export default function Page() {
   return (
     <>
+      <JsonLd data={pageGraph([webPageSchema("/project-calculator", "New deck project calculator"), breadcrumbSchema([["Home", "/"], ["Project Calculator", "/project-calculator"]]), faqSchema(FAQ, "/project-calculator")])} />
       <PageHero photo="gardenDeck" position="50% 60%" eyebrow="Project calculator" h1="What might a new deck cost? Start with the size." sub="A planning figure in seconds from our starting rate per square foot. No contact details needed." />
       <section className="bg-bone px-5 py-20 lg:px-8">
         <div className="mx-auto max-w-[1200px]">

@@ -44,16 +44,16 @@ export function Footer() {
           </div>
           <div>
             <p className="eyebrow text-fog">Services</p>
-            <ul className="mt-4 space-y-2.5 text-[14.5px]">{services.map(([l, h]) => <li key={h}><Link className="text-white/85 hover:text-cedar-light" href={h}>{l}</Link></li>)}</ul>
+            <ul className="mt-4 text-[14.5px]">{services.map(([l, h]) => <li key={h}><Link className="inline-flex min-h-11 items-center text-white/85 hover:text-cedar-light" href={h}>{l}</Link></li>)}</ul>
           </div>
           <div>
             <p className="eyebrow text-fog">Programs and company</p>
-            <ul className="mt-4 space-y-2.5 text-[14.5px]">{company.map(([l, h]) => <li key={h}><Link className="text-white/85 hover:text-cedar-light" href={h}>{l}</Link></li>)}</ul>
+            <ul className="mt-4 text-[14.5px]">{company.map(([l, h]) => <li key={h}><Link className="inline-flex min-h-11 items-center text-white/85 hover:text-cedar-light" href={h}>{l}</Link></li>)}</ul>
           </div>
           <div className="text-[14.5px]">
             <p className="eyebrow text-fog">Get in touch</p>
             {site.phone && site.phoneE164 && <p className="mt-4"><a href={`tel:${site.phoneE164}`} className="text-white hover:text-cedar-light">{site.phone}</a></p>}
-            <p className="mt-4"><a href={`mailto:${site.email}`} className="text-white hover:text-cedar-light">{site.email}</a></p>
+            <p className="mt-4"><a href={`mailto:${site.email}`} className="inline-flex min-h-11 items-center text-white hover:text-cedar-light">{site.email}</a></p>
             {site.hours && <p className="mt-2 text-fog">{site.hours.label}</p>}
             <p className="mt-2 text-fog">Serving {TOWNS.length}+ Greater Boston communities</p>
             <Link href="/free-assessment" className="btn btn-cedar mt-6">Free Photo Assessment</Link>
@@ -61,11 +61,11 @@ export function Footer() {
         </div>
         <div className="mx-auto mt-14 flex max-w-[1320px] flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/10 pt-6 text-xs text-fog">
           <span>© {new Date().getFullYear()} DeckCraft Boston. All rights reserved.</span>
-          <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
-          <Link href="/terms" className="hover:text-white">Terms</Link>
-          <Link href="/terms#sms" className="hover:text-white">SMS Terms</Link>
-          <Link href="/terms#accessibility" className="hover:text-white">Accessibility</Link>
-          <Link href="/photo-credits" className="hover:text-white">Photo credits</Link>
+          <Link href="/privacy" className="inline-flex min-h-11 items-center hover:text-white">Privacy Policy</Link>
+          <Link href="/terms" className="inline-flex min-h-11 items-center hover:text-white">Terms</Link>
+          <Link href="/terms#sms" className="inline-flex min-h-11 items-center hover:text-white">SMS Terms</Link>
+          <Link href="/terms#accessibility" className="inline-flex min-h-11 items-center hover:text-white">Accessibility</Link>
+          <Link href="/photo-credits" className="inline-flex min-h-11 items-center hover:text-white">Photo credits</Link>
           <span className="basis-full text-[11px] text-white/45 lg:basis-auto lg:ml-auto">Photography on this site is licensed stock used to illustrate our services, not DeckCraft project work.</span>
         </div>
       </div>

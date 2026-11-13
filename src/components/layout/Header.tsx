@@ -46,7 +46,7 @@ export function Header() {
             )}
             <Link href="/free-assessment" className="btn btn-cedar !min-h-[44px] !px-5 !text-[14px]">Free Photo Assessment</Link>
           </div>
-          <button className="-mr-1 grid h-11 w-11 place-items-center text-white lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu"><Menu size={26} /></button>
+          <button className="grid h-11 w-11 min-h-11 min-w-11 place-items-center text-white lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu"><Menu size={26} /></button>
         </div>
       </header>
 
