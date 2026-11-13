@@ -2,7 +2,7 @@ import { site } from "@/config/site";
 import { ProgramPage } from "@/components/sections/ProgramPage";
 import { meta } from "@/lib/seo";
 
-export const metadata = meta("/commercial", "Commercial Deck and Fence Contractor in Greater Boston | DeckCraft Boston",
+export const metadata = meta("/commercial", "Commercial Deck and Fence Contractor in Greater Boston | DeckCraft",
   "Decks, patios, and fencing for restaurants, hotels, offices, schools, and retail across Greater Boston. Scheduled around your hours.");
 
 export default function Page() {

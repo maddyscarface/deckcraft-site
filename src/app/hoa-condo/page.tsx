@@ -2,7 +2,7 @@ import { site } from "@/config/site";
 import { ProgramPage } from "@/components/sections/ProgramPage";
 import { meta } from "@/lib/seo";
 
-export const metadata = meta("/hoa-condo", "Deck, Balcony and Fence Contractor for Condo Associations | DeckCraft Boston",
+export const metadata = meta("/hoa-condo", "Deck, Balcony and Fence Contractor for Condo Associations | DeckCraft",
   "Annual deck and balcony safety inspections, board-ready proposals, and phased repair programs for Greater Boston condo associations and HOAs.");
 
 export default function Page() {

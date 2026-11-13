@@ -1,16 +1,16 @@
 import Link from "next/link";
-import { meta, serviceSchema } from "@/lib/seo";
+import { meta, serviceSchema, webPageSchema, breadcrumbSchema, pageGraph } from "@/lib/seo";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Icon } from "@/components/ui/Icon";
 import { PageHero, CtaBand } from "@/components/sections/Blocks";
 
-export const metadata = meta("/fencing", "Fence Repair and Installation in Greater Boston | DeckCraft Boston",
-  "Residential and commercial fencing across Greater Boston: repair, new installation, staining, gates, pool and perimeter fencing. Free assessment.");
+export const metadata = meta("/fencing", "Fence Installation in Boston | DeckCraft",
+  "Residential and commercial fencing services in Greater Boston. Explore materials and request a project assessment.");
 
 export default function Page() {
   return (
     <>
-      <JsonLd data={serviceSchema("Fence Installation and Repair", "/fencing")} />
+      <JsonLd data={pageGraph([webPageSchema("/fencing", "Fence Installation in Boston"), serviceSchema("Fence Installation and Repair", "/fencing"), breadcrumbSchema([["Home", "/"], ["Fencing", "/fencing"]])])} />
       <PageHero photo="fenceGarden" eyebrow="FENCING" h1="Fences built for New England winters." sub="Repair, replacement and new fencing for homes, associations and commercial properties." />
       <section className="bg-cream px-5 py-20">
         <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-2">
