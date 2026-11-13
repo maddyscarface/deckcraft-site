@@ -1,0 +1,14 @@
+{
+  "name": "DeckCraft Boston",
+  "short_name": "DeckCraft",
+  "description": "Deck building, repair and fencing for Greater Boston homeowners and property managers.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#F5F2EC",
+  "theme_color": "#172637",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
