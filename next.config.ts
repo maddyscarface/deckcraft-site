@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { isIndexableSite } from "./src/config/indexing";
 
 /**
  * Content-Security-Policy. Allows the OpenAI Ads pixel (script bzrcdn.openai.com, beacons
@@ -33,8 +34,9 @@ const securityHeaders = [
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
 ];
 
-// Staging/preview builds send noindex on every response (production is unaffected).
-const noIndex = process.env.SITE_NOINDEX === "1" || process.env.VERCEL_ENV === "preview";
+// Staging/preview and unapproved production hosts send noindex on every response.
+// Production is indexed only when NEXT_PUBLIC_INDEXABLE_SITE=true (owner launch flag).
+const noIndex = !isIndexableSite();
 
 const config: NextConfig = {
   // Opt-in standalone Node bundle for generic hosting. Vercel builds must stay on the default
@@ -43,7 +45,13 @@ const config: NextConfig = {
   poweredByHeader: false,
   images: { formats: ["image/avif", "image/webp"], deviceSizes: [640, 828, 1080, 1280, 1600, 1920] },
   async headers() {
-    return [{ source: "/(.*)", headers: noIndex ? [...securityHeaders, { key: "X-Robots-Tag", value: "noindex, nofollow" }] : securityHeaders }];
+    const robots = { key: "X-Robots-Tag", value: "noindex, nofollow" };
+    const privateSources = ["/admin/:path*", "/api/:path*", "/thank-you", "/photo-credits"];
+    return [
+      { source: "/(.*)", headers: noIndex ? [...securityHeaders, robots] : securityHeaders },
+      ...privateSources.map((source) => ({ source, headers: [robots] })),
+      { source: "/site.webmanifest", headers: [{ key: "Content-Type", value: "application/manifest+json; charset=utf-8" }] },
+    ];
   },
   async redirects() {
     // Old brand domain → deckcraftbuild.com (only fires if deckcraftboston.com is ever pointed at this project).
