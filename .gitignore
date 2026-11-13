@@ -10,3 +10,10 @@ next-env.d.ts
 /public/images/**/*.webp
 tests/screens/
 /tests/fixtures/*.jpg
+
+# restored from *.b64 at build time (brand icons)
+/public/favicon.ico
+/public/icon-32.png
+/public/icon-192.png
+/public/icon-512.png
+/public/apple-touch-icon.png
