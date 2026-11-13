@@ -2,6 +2,14 @@
 
 A Next.js 15 + TypeScript + Tailwind site for deckcraftboston.com, built from the 54-page *Lovable Landing Page Build Spec* (Oct 22, 2026) and the master build brief. It includes the lead engine, CRM handoff, tracking and the full marketing operating docs.
 
+
+## Preview and hosting package
+
+- **Staging / review:** https://deckcraft-staging.vercel.app (noindex; production is unchanged at https://deckcraft-site.vercel.app)
+- **Run locally:** `npm ci --include=dev && cp .env.example .env.local && npm run dev`
+- **Quality check:** `npm run typecheck && npm test && npm run build`
+- **Host this build:** see [HOSTING.md](HOSTING.md) for Vercel upload, Netlify, a generic Node/pm2 VPS, and cPanel. A static HTML export is not supported — the site has API routes.
+
 ## What's built
 - **Website:** 24 core routes, 15 unique town pages, 3 AEO launch posts, a 16-section homepage, 6 service pages, 4 property-program pages, gallery, about, contact, legal drafts, sitemap/robots/schema.
 - **Five funnels** with distinct pages, forms, tags and pipelines (docs/03).
