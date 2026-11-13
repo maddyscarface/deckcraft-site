@@ -3,7 +3,7 @@ import { meta } from "@/lib/seo";
 import { PageHero, CtaBand } from "@/components/sections/Blocks";
 import { TOWNS } from "@/lib/towns";
 
-export const metadata = meta("/service-areas", "Deck and Fence Service Areas: Greater Boston | DeckCraft Boston", "Serving Boston, Cambridge, Newton, Brookline, Wellesley, Lexington, Quincy and more across Greater Boston.");
+export const metadata = meta("/service-areas", "Deck and Fence Service Areas: Greater Boston | DeckCraft", "Town-by-town deck and fence coverage across Greater Boston. Send your address and we will confirm scheduling.");
 
 const REGIONS = ["Boston", "Inner suburbs", "MetroWest", "North", "South"] as const;
 

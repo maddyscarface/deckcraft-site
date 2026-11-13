@@ -1,7 +1,7 @@
 import { ProgramPage } from "@/components/sections/ProgramPage";
 import { meta } from "@/lib/seo";
 
-export const metadata = meta("/landlords", "Deck, Porch and Fence Repair for Boston Landlords and Property Managers | DeckCraft Boston",
+export const metadata = meta("/landlords", "Deck and Fence Repair for Boston Landlords | DeckCraft",
   "Rental property deck, rear porch, and fence repair across Greater Boston. Portfolio pricing, turnover scheduling, and photo reports.");
 
 export default function Page() {

@@ -6,7 +6,7 @@ import { PortfolioPlanner } from "@/components/tools/PortfolioPlanner";
 import { WalkthroughForm } from "@/components/forms/WalkthroughForm";
 import { SERVICE_PROMISE } from "@/lib/programs";
 
-export const metadata = meta("/property-programs", "Deck and Fence Programs for HOAs, Landlords and Property Managers | DeckCraft Boston",
+export const metadata = meta("/property-programs", "Deck and Fence Programs for HOAs and Landlords | DeckCraft",
   "Annual inspections, preferred vendor programs, and capital repair projects for Greater Boston associations, landlords, and commercial properties.");
 
 const PATHS = [

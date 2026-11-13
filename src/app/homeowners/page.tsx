@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { meta } from "@/lib/seo";
+import { JsonLd } from "@/components/ui/JsonLd";
+import { meta, faqSchema, webPageSchema, breadcrumbSchema, pageGraph } from "@/lib/seo";
 import { PageHero, ServicesGrid, PriceGuide, Process } from "@/components/sections/Blocks";
 import { FaqSection } from "@/components/ui/Faq";
 import { PhotoAssessmentForm } from "@/components/forms/PhotoAssessmentForm";
 import { NEW_DECK_PRICE_ROWS } from "@/lib/services";
 
-export const metadata = meta("/homeowners", "Deck and Fence Repair for Greater Boston Homeowners | DeckCraft Boston",
+export const metadata = meta("/homeowners", "Deck and Fence Repair for Greater Boston Homeowners | DeckCraft",
   "Deck repair, staining, railings, and fencing for Greater Boston homes. Send 3 photos for a free assessment.");
 
 const FAQ = [
@@ -22,6 +23,7 @@ const FAQ = [
 export default function Page() {
   return (
     <>
+      <JsonLd data={pageGraph([webPageSchema("/homeowners", "Deck and fence work for Greater Boston homeowners"), breadcrumbSchema([["Home", "/"], ["Homeowners", "/homeowners"]]), faqSchema(FAQ, "/homeowners")])} />
       <PageHero photo="gardenDeck" eyebrow="FOR HOMEOWNERS" h1="Your deck should be the best room in the house." sub="Repair, restore and fence your Greater Boston home without guessing what it will cost.">
         <Link href="#get-started" className="btn btn-linen">Get My Free Photo Assessment</Link>
         <Link href="/repair-or-replace" className="btn btn-ghost">Repair or replace?</Link>
