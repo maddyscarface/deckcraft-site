@@ -5,9 +5,10 @@ import { Icon } from "../ui/Icon";
 import { Photo } from "../ui/Photo";
 import { FaqSection } from "../ui/Faq";
 import { PageHero, PriceGuide, Process, RelatedLinks, SectionHead } from "./Blocks";
+import { MaterialsCompare, PermitNote } from "./Editorial";
 import { PhotoAssessmentForm } from "../forms/PhotoAssessmentForm";
 import { WalkthroughForm } from "../forms/WalkthroughForm";
-import { serviceSchema, breadcrumbSchema } from "@/lib/seo";
+import { serviceSchema, breadcrumbSchema, webPageSchema, faqSchema, pageGraph } from "@/lib/seo";
 import { ViewService } from "./ViewService";
 import { ROUTE_PHOTO } from "@/lib/page-photos";
 import type { PhotoKey } from "@/lib/photos";
@@ -30,7 +31,7 @@ export function ServicePage({ id }: { id: string }) {
   const detail = DETAIL_PHOTO[s.slug] ?? "deckShadows";
   return (
     <>
-      <JsonLd data={[serviceSchema(s.schemaType, path), breadcrumbSchema([["Home", "/"], [s.name, path]])]} />
+      <JsonLd data={pageGraph([webPageSchema(path, s.h1, s.description), serviceSchema(s.schemaType, path), breadcrumbSchema([["Home", "/"], [s.name, path]]), ...(s.faqs?.length ? [faqSchema(s.faqs, path)] : [])])} />
       <ViewService name={s.name} />
       <PageHero eyebrow={s.eyebrow} h1={s.h1} sub={s.subhead} photo={ROUTE_PHOTO[path] ?? "heroModernDeck"}>
         {newBuild ? (
@@ -69,6 +70,12 @@ export function ServicePage({ id }: { id: string }) {
           ))}
         </div>
       </section>
+
+      <section className="bg-ivory px-5 py-10 lg:px-8">
+        <div className="mx-auto max-w-[1320px]"><PermitNote /></div>
+      </section>
+
+      {newBuild && <MaterialsCompare />}
 
       <section className="bg-char text-white">
         <div className="mx-auto grid max-w-[1440px] lg:grid-cols-2">

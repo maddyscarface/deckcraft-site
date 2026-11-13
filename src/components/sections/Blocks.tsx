@@ -139,7 +139,7 @@ export function TownPills() {
   return (
     <div className="flex flex-wrap gap-2">
       {TOWNS.map((t) => (
-        <Link key={t.slug} href={`/${t.slug}`} className="border border-char/25 px-4 py-2 text-sm font-medium transition hover:border-char hover:bg-char hover:text-white">{t.name}</Link>
+        <Link key={t.slug} href={`/${t.slug}`} className="inline-flex min-h-11 items-center border border-char/25 px-4 text-sm font-medium transition hover:border-char hover:bg-char hover:text-white">{t.name}</Link>
       ))}
     </div>
   );
@@ -169,7 +169,7 @@ export function RelatedLinks({ links }: { links: { href: string; label: string }
       <div className="mx-auto max-w-[1320px] border-t border-line pt-10">
         <p className="eyebrow text-stone">Related</p>
         <div className="mt-5 flex flex-wrap gap-3">
-          {links.map((l) => <Link key={l.href} href={l.href} className="border border-char/25 px-4 py-2.5 text-sm font-semibold transition hover:bg-char hover:text-white">{l.label} →</Link>)}
+          {links.map((l) => <Link key={l.href} href={l.href} className="inline-flex min-h-11 items-center border border-char/25 px-4 text-sm font-semibold transition hover:bg-char hover:text-white">{l.label} →</Link>)}
         </div>
       </div>
     </section>

@@ -14,14 +14,14 @@ export function GalleryGrid() {
     <>
       <div className="sticky top-[68px] z-30 border-b border-line bg-bone/95 px-5 py-3 backdrop-blur lg:top-[76px]">
         <div className="mx-auto flex max-w-[1320px] items-center gap-3">
-          <div className="flex flex-1 gap-2 overflow-x-auto" role="group" aria-label="Category">
+          <div className="flex min-w-0 flex-1 flex-wrap gap-2" role="group" aria-label="Category">
             {["All", ...GALLERY_CATEGORIES].map((x) => (
               <button key={x} onClick={() => setCat(x)} aria-pressed={cat === x} className={`shrink-0 border px-4 py-2.5 text-sm font-medium min-h-11 ${cat === x ? "border-navy bg-navy text-white" : "border-navy/25 text-char"}`}>{x}</button>
             ))}
           </div>
           <label className="hidden shrink-0 items-center gap-2 text-sm md:flex">
             <span className="text-stone">Location</span>
-            <select className="border border-navy/25 bg-white px-3 py-1.5 text-sm" value={town} onChange={(e) => setTown(e.target.value)} disabled={!towns.length} title={towns.length ? "" : "Location tags appear with real, permissioned jobs"}>
+            <select className="min-h-11 border border-navy/25 bg-white px-3 text-sm" value={town} onChange={(e) => setTown(e.target.value)} disabled={!towns.length} title={towns.length ? "" : "Location tags appear with real, permissioned jobs"}>
               <option>All towns</option>{towns.map((t) => <option key={t}>{t}</option>)}
             </select>
           </label>

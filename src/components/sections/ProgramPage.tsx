@@ -7,7 +7,7 @@ import { JsonLd } from "../ui/JsonLd";
 import { WalkthroughForm } from "../forms/WalkthroughForm";
 import { PortfolioPlanner } from "../tools/PortfolioPlanner";
 import { PROGRAMS, SERVICE_PROMISE } from "@/lib/programs";
-import { serviceSchema } from "@/lib/seo";
+import { serviceSchema, faqSchema, pageGraph, webPageSchema, breadcrumbSchema } from "@/lib/seo";
 import type { Faq } from "@/lib/services";
 import type { CustomerType } from "@/lib/lead-schema";
 
@@ -59,7 +59,7 @@ export function ProgramTable() {
 export function ProgramPage(p: ProgramPageProps) {
   return (
     <>
-      <JsonLd data={serviceSchema("Deck and Fence Property Maintenance Program", p.path)} />
+      <JsonLd data={pageGraph([webPageSchema(p.path, p.h1, p.sub), serviceSchema("Deck and Fence Property Maintenance Program", p.path), breadcrumbSchema([["Home", "/"], [p.eyebrow, p.path]]), ...(p.faqs?.length ? [faqSchema(p.faqs, p.path)] : [])])} />
       <PageHero eyebrow={p.eyebrow} h1={p.h1} sub={p.sub} photo={ROUTE_PHOTO[p.path] ?? "townhomeDeck"}>
         <Link href="#get-started" className="btn btn-cedar">{p.cta ?? "Request a Property Walkthrough"}</Link>
         <Link href="/portfolio-inspection-planner" className="btn btn-ghost">Plan an inspection round</Link>
