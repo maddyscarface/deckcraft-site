@@ -41,9 +41,9 @@ export function PortfolioPlanner({ compact = false }: { compact?: boolean }) {
         <div>
           <p className="label text-white">Number of properties</p>
           <div className="flex items-center gap-4">
-            <button type="button" aria-label="Fewer properties" onClick={() => setN(Math.max(1, n - 1))} className="flex h-10 w-10 items-center justify-center rounded-full bg-linen text-hunter"><Minus size={18} /></button>
+            <button type="button" aria-label="Fewer properties" onClick={() => setN(Math.max(1, n - 1))} className="flex h-11 w-11 items-center justify-center rounded-full bg-linen text-hunter"><Minus size={18} /></button>
             <input aria-label="Number of properties" type="number" min={1} max={200} value={n} onChange={(e) => setN(Math.min(200, Math.max(1, Number(e.target.value) || 1)))} className="w-20 rounded-[2px] bg-hunter-mid px-2 py-2 text-center text-2xl font-semibold" />
-            <button type="button" aria-label="More properties" onClick={() => setN(Math.min(200, n + 1))} className="flex h-10 w-10 items-center justify-center rounded-full bg-linen text-hunter"><Plus size={18} /></button>
+            <button type="button" aria-label="More properties" onClick={() => setN(Math.min(200, n + 1))} className="flex h-11 w-11 items-center justify-center rounded-full bg-linen text-hunter"><Plus size={18} /></button>
           </div>
         </div>
         <label className="block">

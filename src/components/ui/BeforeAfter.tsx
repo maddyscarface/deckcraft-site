@@ -19,7 +19,7 @@ export function BeforeAfter({
         {before ? <img src={before} alt={`${alt}: before`} className="h-full w-full object-cover" loading="lazy" /> : <Boards state="before" variant={variant} />}
       </div>
       <div className="pointer-events-none absolute inset-y-0 w-0.5 bg-linen" style={{ left: `${pos}%` }}>
-        <div className="absolute top-1/2 left-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-linen text-xs font-bold text-hunter shadow">⇆</div>
+        <div className="absolute top-1/2 left-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-linen text-xs font-bold text-hunter shadow">⇆</div>
       </div>
       <label htmlFor={id} className="sr-only">Drag to compare before and after</label>
       <input id={id} type="range" min={0} max={100} value={pos} onChange={(e) => setPos(Number(e.target.value))} className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0" />

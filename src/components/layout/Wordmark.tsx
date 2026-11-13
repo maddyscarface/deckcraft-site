@@ -16,14 +16,14 @@ export function PlankMark({ size = 26, className = "" }: { size?: number; classN
 
 export function Wordmark({ dark = true, sub = true }: { dark?: boolean; sub?: boolean }) {
   return (
-    <Link href="/" className="group flex items-center gap-3" aria-label="DeckCraft Boston home">
+    <Link href="/" className="group flex min-h-11 items-center gap-3" aria-label="DeckCraft Boston home">
       <PlankMark />
       <span className="flex flex-col leading-none">
         <span className={`text-[19px] font-extrabold tracking-[0.06em] ${dark ? "text-white" : "text-char"}`} style={{ fontStretch: "125%" }}>
           DECKCRAFT
         </span>
         {sub && (
-          <span className={`mt-1 text-[9.5px] font-semibold tracking-[0.32em] ${dark ? "text-fog" : "text-stone"}`} style={{ fontStretch: "112%" }}>
+          <span className={`mt-1 text-[11px] font-semibold tracking-[0.28em] ${dark ? "text-fog" : "text-stone"}`} style={{ fontStretch: "112%" }}>
             DECKS · FENCES · BOSTON
           </span>
         )}
