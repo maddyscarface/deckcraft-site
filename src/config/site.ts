@@ -1,3 +1,5 @@
+import { canonicalOrigin, isIndexableSite } from "./indexing";
+
 /**
  * Single source of truth for business facts.
  * Anything marked OWNER_TO_CONFIRM renders as a visible placeholder or is hidden
@@ -8,7 +10,8 @@ export const OWNER_TO_CONFIRM = "[OWNER TO CONFIRM]";
 export const site = {
   name: "DeckCraft Boston",
   domain: "deckcraftbuild.com",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://deckcraftbuild.com",
+  /** Canonical production origin. Never a Vercel preview/staging host. Domain is owner-to-confirm. */
+  url: canonicalOrigin(),
   tagline: "Decks Built for New England. Work You Can See.",
   secondaryTagline: "Repair. Restore. Protect. Build.",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@deckcraftbuild.com",
@@ -54,8 +57,11 @@ export const site = {
   inspectionsPerDay: 8, // OWNER TO CONFIRM — Portfolio Inspection Planner rate
 } as const;
 
-/** Staging / preview builds must never be indexed. Production on Vercel has VERCEL_ENV=production. */
-export const noIndex = process.env.SITE_NOINDEX === "1" || process.env.VERCEL_ENV === "preview";
+/**
+ * Staging, preview and unapproved production hosts stay noindex.
+ * Production is indexed only when NEXT_PUBLIC_INDEXABLE_SITE=true and the canonical host is confirmed.
+ */
+export const noIndex = !isIndexableSite();
 
 export function responsePhrase() {
   return site.responseHours
