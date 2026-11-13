@@ -99,6 +99,57 @@ try {
     ok("idempotent replay: duplicate=true, no second GHL post");
   }
 
+  // 1b. Second homepage path: new-deck estimate preserves service, project timing, attribution and dedup
+  {
+    const ctx = await browser.newContext();
+    const page = await newPage(ctx);
+    await page.goto(`${BASE}/services/new-decks?utm_source=google&utm_medium=cpc&utm_campaign=new-deck-brookline&gclid=TEST-GCLID-2`);
+    await page.waitForLoadState("networkidle"); await page.waitForTimeout(600);
+    await page.goto(`${BASE}/new-deck-estimate`);
+    const f = page.getByTestId("assessment-form");
+    await f.locator("#first_name").fill("Test");
+    await f.locator("#last_name").fill("Newdeck");
+    await f.locator("#email").fill("test.newdeck@example.com");
+    await f.locator("#phone").fill("(617) 555-0188");
+    await f.getByRole("checkbox").check();
+    await page.waitForTimeout(2600);
+    await f.getByRole("button", { name: "Continue" }).click();
+    await f.locator("#town").fill("Brookline");
+    await f.getByRole("button", { name: "Continue" }).click();
+    await f.getByRole("button", { name: "New deck: pressure-treated wood", exact: true }).click();
+    await f.getByRole("button", { name: "12×16 (192 sq ft)", exact: true }).click();
+    await f.getByRole("button", { name: "$8k–15k", exact: true }).click();
+    await f.getByRole("button", { name: "Next spring", exact: true }).click();
+    if (await f.getByTestId("q-address").count()) await f.getByTestId("q-address").fill("8 Test Rd, Brookline, MA");
+    await f.getByRole("button", { name: "Continue" }).click();
+    await f.getByTestId("file-input").setInputFiles(["tests/fixtures/deck.jpg", "tests/fixtures/deck.jpg"]);
+    await f.getByRole("button", { name: "Continue" }).click();
+    await f.locator("#message").fill("Planning a new 12x16 deck for spring.");
+    await f.getByRole("button", { name: /Request My New Deck Estimate/ }).click();
+    await page.waitForURL(/thank-you\?type=assessment/, { timeout: 20000 });
+    await page.getByTestId("lead-success").waitFor();
+    const leads = await dlEvents(page, "generate_lead");
+    assert.equal(leads.length, 1, "exactly one generate_lead on new-deck path");
+    assert.match(leads[0].event_id, /^lead_/);
+    await page.waitForTimeout(500);
+    const p = received.find((r) => r.event_id === leads[0].event_id);
+    assert.ok(p, "GHL received new-deck payload with same event_id");
+    assert.equal(p.gclid, "TEST-GCLID-2");
+    assert.equal(p.utm_campaign, "new-deck-brookline");
+    assert.equal(p.landing_page, "/services/new-decks");
+    assert.equal(p.funnel, "F_new_deck");
+    assert.equal(p.pipeline, "residential");
+    assert.equal(p.work_type, "new");
+    assert.ok(String(p.source_page || "").startsWith("/new-deck-estimate"), `source_page ${p.source_page}`);
+    assert.equal(p.est_start, "Next spring");
+    assert.equal(p.photo_count, 2);
+    assert.ok(p.tags.includes("photos:received") && p.tags.includes("paid:google"));
+    await page.reload();
+    assert.equal((await dlEvents(page, "generate_lead")).length, 1, "no duplicate on reload");
+    ok("new-deck estimate → thank-you, F_new_deck, timing + attribution preserved, no dup on reload");
+    await ctx.close();
+  }
+
   // 3. Property walkthrough with URL prefill from the planner
   {
     const ctx = await browser.newContext();

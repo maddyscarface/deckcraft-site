@@ -1,5 +1,6 @@
 PASS homeowner assessment → thank-you, 1 generate_lead, GHL payload with attribution + photos, no dup on reload
 PASS idempotent replay: duplicate=true, no second GHL post
+PASS new-deck estimate → thank-you, F_new_deck, timing + attribution preserved, no dup on reload
 PASS planner → walkthrough prefill → commercial pipeline, walkthrough_request fired
 PASS checker: structural flag → Professional Inspection Recommended + disclaimer
 PASS 422 on bad input, honeypot silently ignored, spoofed upload rejected (415), sitemap/schema OK, CRM webhook requires secret

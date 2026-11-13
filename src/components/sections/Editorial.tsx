@@ -107,9 +107,11 @@ export function PermitNote({ compact = false }: { compact?: boolean }) {
   );
 }
 
-const MATERIALS: { name: string; points: [string, string][] }[] = [
+const MATERIALS: { name: string; photo: PhotoKey; caption: string; points: [string, string][] }[] = [
   {
     name: "Pressure-treated wood",
+    photo: "weatheredBoards",
+    caption: "Weathered wood boards that need cleaning or replacement — licensed, illustrative, not a DeckCraft job.",
     points: [
       ["Upfront cost", "Usually the lowest material cost of the three common options."],
       ["Look and feel", "Traditional wood grain; color and surface change as it weathers."],
@@ -120,6 +122,8 @@ const MATERIALS: { name: string; points: [string, string][] }[] = [
   },
   {
     name: "Cedar",
+    photo: "gardenDeck",
+    caption: "Natural wood deck boards in an outdoor setting — licensed, illustrative, not a specific cedar product or a DeckCraft job.",
     points: [
       ["Upfront cost", "Typically higher than pressure-treated; lower than many composite systems."],
       ["Look and feel", "Natural color and aroma; often chosen where the wood itself is part of the design."],
@@ -130,6 +134,8 @@ const MATERIALS: { name: string; points: [string, string][] }[] = [
   },
   {
     name: "Composite",
+    photo: "compositeDeck",
+    caption: "Low-maintenance grey composite-style decking — licensed, illustrative, not a DeckCraft job.",
     points: [
       ["Upfront cost", "Usually the highest material and fastening cost; less annual refinishing."],
       ["Look and feel", "Manufactured boards in a range of colors; appearance depends on the product line."],
@@ -145,6 +151,20 @@ export function MaterialsCompare() {
     <section className="bg-ivory px-5 py-24 lg:px-8" aria-labelledby="materials-title">
       <div className="mx-auto max-w-[1320px]">
         <SectionHead eyebrow="Materials" title="Composite, cedar or" accent="pressure-treated." sub="Tradeoffs below are typical, not quotes. Installed prices depend on size, height, access, railings, demolition and permits, and are confirmed in a written estimate." />
+        <div className="mt-12 grid gap-6 sm:grid-cols-3">
+          {MATERIALS.map((m) => (
+            <figure key={m.name} className="min-w-0">
+              <div className="relative aspect-[4/5] overflow-hidden sm:aspect-[16/9] lg:aspect-[4/5]">
+                <Photo k={m.photo} sizes="(min-width:1024px) 30vw, (min-width:640px) 33vw, 100vw" />
+                <IllustrativeLabel />
+              </div>
+              <figcaption className="mt-3 text-[13px] leading-relaxed text-stone">
+                <span className="font-semibold text-char">{m.name}. </span>
+                {m.caption}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
         <div className="mt-12 grid gap-6 lg:hidden">
           {MATERIALS.map((m) => (
             <article key={m.name} className="border border-line bg-white p-5">
