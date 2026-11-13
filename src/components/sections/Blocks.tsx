@@ -79,12 +79,12 @@ export function PriceGuide({ rows, title = "How pricing works" }: { rows: PriceR
       <PricingViewBeacon where="price-guide" />
       <PricingTag />
       <h3 className="mt-3 font-display text-2xl md:text-3xl">{title}</h3>
-      <table className="mt-6 w-full text-left text-[15px]">
+      <table className="mt-6 w-full table-fixed text-left text-[15px] sm:table-auto">
         <tbody>
           {rows.map((r) => (
             <tr key={r.item} className="border-b border-line last:border-0">
-              <th className="py-4 pr-4 font-medium">{r.item}</th>
-              <td className="num py-4 text-right text-[17px] whitespace-nowrap">{r.range}</td>
+              <th className="py-4 pr-3 font-medium align-top">{r.item}</th>
+              <td className="num py-4 text-right text-[15px] leading-snug sm:text-[17px] sm:whitespace-nowrap">{r.range}</td>
             </tr>
           ))}
         </tbody>

@@ -90,8 +90,8 @@ function PrivacyChoices() {
     <div role="dialog" aria-label="Privacy choices" className="fixed bottom-16 left-4 right-4 z-50 rounded-[2px] border border-char-3 bg-char p-5 text-sm text-white shadow-premium md:bottom-4 md:left-auto md:w-96">
       <p>We use cookies for analytics and to measure our ads. You can change this anytime.</p>
       <div className="mt-3 flex gap-2">
-        <button className="btn btn-cedar !min-h-9 !px-3 !text-sm" onClick={() => set("granted")}>Allow</button>
-        <button className="btn btn-ghost !min-h-9 !px-3 !text-sm" onClick={() => set("denied")}>Decline</button>
+        <button className="btn btn-cedar !min-h-11 !px-3 !text-sm" onClick={() => set("granted")}>Allow</button>
+        <button className="btn btn-ghost !min-h-11 !px-3 !text-sm" onClick={() => set("denied")}>Decline</button>
       </div>
     </div>
   );

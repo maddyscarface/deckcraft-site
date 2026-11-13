@@ -46,7 +46,7 @@ export function Header() {
             )}
             <Link href="/free-assessment" className="btn btn-cedar !min-h-[44px] !px-5 !text-[14px]">Free Photo Assessment</Link>
           </div>
-          <button className="-mr-1 p-1 text-white lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu"><Menu size={26} /></button>
+          <button className="-mr-1 grid h-11 w-11 place-items-center text-white lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu"><Menu size={26} /></button>
         </div>
       </header>
 
@@ -54,7 +54,7 @@ export function Header() {
         <div className="fixed inset-0 z-50 overflow-y-auto bg-char px-6 pb-28 pt-5 text-white lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
           <div className="flex items-center justify-between">
             <Wordmark />
-            <button onClick={() => setOpen(false)} aria-label="Close menu" className="text-white"><X size={28} /></button>
+            <button onClick={() => setOpen(false)} aria-label="Close menu" className="grid h-11 w-11 place-items-center text-white"><X size={28} /></button>
           </div>
           {tel && site.phone && (
             <a href={tel} onClick={() => track.phoneClick("mobile_menu")} className="mt-8 block text-2xl font-semibold text-cedar-light">{site.phone}</a>
