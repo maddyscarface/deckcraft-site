@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { PricingTag } from "@/components/ui/PricingTag";
-import { meta, businessSchema } from "@/lib/seo";
+import { meta, businessSchema, faqSchema, webPageSchema, pageGraph } from "@/lib/seo";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { Icon } from "@/components/ui/Icon";
 import { Photo } from "@/components/ui/Photo";
 import { FaqSection } from "@/components/ui/Faq";
-import { Checklist, Process, SectionHead, ServicesGrid, TownPills, TrustBar } from "@/components/sections/Blocks";
+import { Checklist, SectionHead, ServicesGrid, TownPills, TrustBar } from "@/components/sections/Blocks";
+import { HomeGallery, IllustrativeLabel, RepairMatrix, ScopingSteps } from "@/components/sections/Editorial";
 import { PhotoAssessmentForm } from "@/components/forms/PhotoAssessmentForm";
 import { PortfolioPlanner } from "@/components/tools/PortfolioPlanner";
 import { Reviews } from "@/components/sections/Reviews";
@@ -15,8 +15,8 @@ import { TOWNS } from "@/lib/towns";
 import { PRICING } from "@/config/pricing";
 import { activeSeasonal, seasonalSchedule } from "@/config/seasonal";
 
-export const metadata = meta("/", "Decks Built for New England | Deck Building, Repair and Fencing in Greater Boston | DeckCraft",
-  "New decks, rebuilds, structural repairs, railings, staining and fencing for Greater Boston homes, HOAs and commercial properties. Get a new deck estimate or send 3 photos for an assessment.");
+export const metadata = meta("/", "Deck Builders & Repairs in Boston | DeckCraft",
+  "Deck building, replacement, repair, staining and fencing across Greater Boston. Request a scoped estimate from DeckCraft.");
 
 const HOME_FAQ = [
   { q: "How much does deck repair cost in Boston?", a: "Repair is priced by what has failed (boards, framing, ledger, railings or stairs), so we quote it from your photos rather than publishing a list. It is priced separately from new decks, which we plan from a starting assumption of $39.99 per sq ft (to be confirmed). Your exact price is confirmed in writing after an on-site check." },
@@ -33,19 +33,20 @@ export default function Home() {
   return (
     <>
       <JsonLd data={businessSchema()} />
+      <JsonLd data={pageGraph([webPageSchema("/", "Deck Building and Repairs in Greater Boston", "Deck building, replacement, repair, staining and fencing across Greater Boston."), faqSchema(HOME_FAQ, "/")])} />
 
       {/* Hero: split editorial layout, navy text panel + photograph (no scrim over the photo) */}
       <section className="bg-navy text-white">
         <div className="mx-auto grid max-w-[1440px] lg:min-h-[720px] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)]">
           <div className="flex flex-col justify-center px-5 pt-14 pb-12 sm:px-8 lg:py-20 lg:pl-12 lg:pr-14 xl:pl-[max(2rem,calc((100vw-1320px)/2))]">
-            <p className="eyebrow rule rise text-cedar-light">Greater Boston deck &amp; fence specialists</p>
-            <h1 className="rise-2 mt-6 font-display text-[42px] leading-[1.0] md:text-[64px] xl:text-[72px]">
-              Decks Built for New England. <span className="accent text-cedar-light">Work You Can See.</span>
+            <p className="eyebrow rule rise text-cedar-light">DeckCraft · Decks, repairs, fencing &amp; property programs</p>
+            <h1 className="rise-2 mt-6 font-display text-[42px] leading-[1.0] md:text-[58px] xl:text-[68px]">
+              Deck Building and Repairs in <span className="accent text-cedar-light">Greater Boston</span>
             </h1>
-            <p className="rise-3 mt-7 max-w-[520px] text-[17px] leading-relaxed text-white/80 md:text-lg">New decks, rebuilds, structural repairs, railings, staining and fences for homeowners, associations and commercial properties. Every job is scoped from photos and written down before work starts.</p>
+            <p className="rise-3 mt-7 max-w-[540px] text-[17px] leading-relaxed text-white/80 md:text-lg">DeckCraft builds, repairs and restores decks for homeowners and managed properties across Greater Boston. Start with a photo assessment for repairs or request a written estimate for a new deck.</p>
             <div className="rise-3 mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link href="/new-deck-estimate" className="btn btn-cedar !min-h-[56px] !px-7 !text-base">Get a New Deck Estimate</Link>
-              <Link href="/free-assessment" className="btn btn-ghost !min-h-[56px] !px-7 !text-base">Send 3 Photos for an Assessment</Link>
+              <Link href="/new-deck-estimate" className="btn btn-cedar !min-h-[56px] !px-7 !text-base">Request a New Deck Estimate</Link>
+              <Link href="/free-assessment" className="btn btn-ghost !min-h-[56px] !px-7 !text-base">Send Photos for a Deck Assessment</Link>
             </div>
             <p className="rise-3 mt-6 text-[14px] text-white/65">Managing an HOA, rental portfolio or commercial site? <Link href="/request-walkthrough" className="font-semibold text-white underline decoration-cedar-light underline-offset-4">Request a property walkthrough</Link></p>
           </div>
@@ -65,11 +66,11 @@ export default function Home() {
             <p className="text-[15px] text-stone">We tell you what failed, what&apos;s sound and what it&apos;s worth fixing. Repairs and sealing are quoted from your photos.</p>
             <span className="mt-2 text-sm font-semibold text-cedar-deep">Send 3 Photos for an Assessment <span aria-hidden className="inline-block transition group-hover:translate-x-1">→</span></span>
           </Link>
-          <Link href="/project-calculator" className="group flex flex-col gap-2 py-9 md:pl-10">
+          <Link href="/new-deck-estimate" className="group flex flex-col gap-2 py-9 md:pl-10">
             <p className="eyebrow text-cedar">Planning a new deck?</p>
-            <p className="font-display text-[26px] leading-tight text-char">See a planning figure before anyone visits.</p>
-            <p className="text-[15px] text-stone">Enter a size and get a starting figure and budget band, clearly labelled as planning assumptions.</p>
-            <span className="mt-2 text-sm font-semibold text-cedar-deep">Open the project calculator <span aria-hidden className="inline-block transition group-hover:translate-x-1">→</span></span>
+            <p className="font-display text-[26px] leading-tight text-char">Request a written estimate, or start with a planning figure.</p>
+            <p className="text-[15px] text-stone">Share a size and material preference for a scoped estimate. The <span className="font-semibold text-char">project calculator</span> is also available for a non-binding planning band.</p>
+            <span className="mt-2 text-sm font-semibold text-cedar-deep">Request a New Deck Estimate <span aria-hidden className="inline-block transition group-hover:translate-x-1">→</span></span>
           </Link>
         </div>
       </section>
@@ -81,6 +82,7 @@ export default function Home() {
         <div className="mx-auto grid max-w-[1320px] gap-14 lg:grid-cols-[5fr_7fr] lg:gap-20">
           <div className="relative aspect-[4/5] overflow-hidden lg:aspect-auto">
             <Photo k="autumnBoards" sizes="(min-width:1024px) 40vw, 100vw" />
+            <IllustrativeLabel />
           </div>
           <div>
             <SectionHead eyebrow="Why Boston decks fail early" title="It looked fine last summer." accent="Then winter happened." />
@@ -119,6 +121,8 @@ export default function Home() {
         </div>
       </section>
 
+      <RepairMatrix />
+
       {/* Craft band */}
       <section className="relative isolate overflow-hidden bg-char text-white">
         <div className="photo-shade absolute inset-0 -z-10"><Photo k="crewFraming" sizes="100vw" position="50% 40%" /></div>
@@ -139,7 +143,7 @@ export default function Home() {
               <Link href="/fencing/commercial" className="btn btn-outline">Commercial and property fencing</Link>
             </div>
           </div>
-          <div className="relative order-1 aspect-[4/5] overflow-hidden lg:order-2"><Photo k="fenceGarden" sizes="(min-width:1024px) 50vw, 100vw" /></div>
+          <div className="relative order-1 aspect-[4/5] overflow-hidden lg:order-2"><Photo k="fenceGarden" sizes="(min-width:1024px) 50vw, 100vw" /><IllustrativeLabel /></div>
         </div>
       </section>
 
@@ -181,7 +185,7 @@ export default function Home() {
               </div>
             </div>
             <div className="space-y-6">
-              <div className="relative aspect-[16/10] overflow-hidden"><Photo k="townhomeDeck" sizes="(min-width:1024px) 50vw, 100vw" /></div>
+              <div className="relative aspect-[16/10] overflow-hidden"><Photo k="townhomeDeck" sizes="(min-width:1024px) 50vw, 100vw" /><IllustrativeLabel /></div>
               <PortfolioPlanner compact />
             </div>
           </div>
@@ -205,14 +209,16 @@ export default function Home() {
         </div>
       </section>
 
-      <Process />
+      <ScopingSteps />
+
+      <HomeGallery />
 
       <Reviews />
 
       {/* Service areas */}
       <section className="bg-bone px-5 py-24 lg:px-8">
         <div className="mx-auto grid max-w-[1320px] gap-14 lg:grid-cols-[1fr_1.1fr] lg:items-center">
-          <div className="relative aspect-[3/2] overflow-hidden"><Photo k="newEnglandHome" sizes="(min-width:1024px) 45vw, 100vw" /></div>
+          <div className="relative aspect-[3/2] overflow-hidden"><Photo k="newEnglandHome" sizes="(min-width:1024px) 45vw, 100vw" /><IllustrativeLabel /></div>
           <div>
             <SectionHead eyebrow="Service area" title={`${TOWNS.length}+ communities across`} accent="Greater Boston." />
             <div className="mt-8"><TownPills /></div>
