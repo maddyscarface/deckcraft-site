@@ -60,9 +60,9 @@ export const SERVICES: Record<string, ServicePageConfig> = {
     slug: "services/deck-repair",
     name: "Deck Repair",
     schemaType: "Deck Repair",
-    title: "Deck Repair in Greater Boston | DeckCraft Boston",
+    title: "Deck Repair in Greater Boston | DeckCraft",
     description:
-      "Rotted boards, soft spots, loose framing and ledger problems repaired across Greater Boston. Send 3 photos for a free assessment.",
+      "Get a photo-based assessment for deck structure, boards, stairs or railings. DeckCraft serves Greater Boston homeowners.",
     eyebrow: "DECK REPAIR",
     h1: "Deck repair that fixes the cause, not just the board.",
     subhead:
@@ -92,7 +92,7 @@ export const SERVICES: Record<string, ServicePageConfig> = {
     slug: "services/deck-staining-sealing",
     name: "Deck Staining and Sealing",
     schemaType: "Deck Staining",
-    title: "Deck Staining and Sealing in Greater Boston | DeckCraft Boston",
+    title: "Deck Staining and Sealing in Greater Boston | DeckCraft",
     description:
       "Deck cleaning, brightening, staining and sealing for Greater Boston homes and properties. Seal before the freeze. Free photo assessment.",
     eyebrow: "STAINING AND SEALING",
@@ -124,7 +124,7 @@ export const SERVICES: Record<string, ServicePageConfig> = {
     slug: "services/board-railing-stairs",
     name: "Boards, Railings and Stairs",
     schemaType: "Deck Railing and Stair Repair",
-    title: "Deck Railing and Stair Repair in Greater Boston | DeckCraft Boston",
+    title: "Deck Railing and Stair Repair in Greater Boston | DeckCraft",
     description:
       "Wobbly railings, loose balusters, cracked treads and failing stringers repaired across Greater Boston. Free photo assessment.",
     eyebrow: "BOARDS, RAILINGS AND STAIRS",
@@ -156,9 +156,9 @@ export const SERVICES: Record<string, ServicePageConfig> = {
     slug: "services/new-decks",
     name: "New Decks",
     schemaType: "Deck Construction",
-    title: "New Deck Builders in Greater Boston | DeckCraft",
+    title: "New Deck Construction in Boston | DeckCraft",
     description:
-      "New decks in pressure-treated, cedar or composite for Greater Boston homes, planned from $39.99/sq ft starting (planning assumption). Permits handled. Get a new deck estimate.",
+      "Plan a new deck in Greater Boston with a clear scope, materials discussion and written estimate from DeckCraft.",
     eyebrow: "NEW DECKS",
     h1: "A new deck, designed and built for New England.",
     subhead:
@@ -188,7 +188,7 @@ export const SERVICES: Record<string, ServicePageConfig> = {
     slug: "services/deck-rebuild-resurfacing",
     name: "Deck Rebuild and Resurfacing",
     schemaType: "Deck Resurfacing",
-    title: "Deck Rebuilds and Resurfacing in Greater Boston | DeckCraft Boston",
+    title: "Deck Rebuilds and Resurfacing in Greater Boston | DeckCraft",
     description:
       "New boards, railings and stairs on sound framing, or a full rebuild when the structure has failed. Greater Boston deck rebuilds and resurfacing, scoped from your photos.",
     eyebrow: "REBUILD AND RESURFACE",
@@ -218,7 +218,7 @@ export const SERVICES: Record<string, ServicePageConfig> = {
     slug: "fencing/residential",
     name: "Residential Fencing",
     schemaType: "Fence Installation and Repair",
-    title: "Residential Fence Installation and Repair in Boston | DeckCraft Boston",
+    title: "Residential Fence Installation and Repair in Boston | DeckCraft",
     description:
       "Wood, vinyl, aluminum, picket and pool fencing for Greater Boston homes: repair, new install, staining and gates. Free assessment.",
     eyebrow: "RESIDENTIAL FENCING",
@@ -251,7 +251,7 @@ export const SERVICES: Record<string, ServicePageConfig> = {
     slug: "fencing/commercial",
     name: "Commercial and Property Fencing",
     schemaType: "Commercial Fencing",
-    title: "Commercial Fence Contractor in Greater Boston | DeckCraft Boston",
+    title: "Commercial Fence Contractor in Greater Boston | DeckCraft",
     description:
       "Commercial and property fencing for HOAs, condo associations, landlords and businesses across Greater Boston. Perimeter, pool, dumpster enclosures and repairs.",
     eyebrow: "COMMERCIAL AND PROPERTY FENCING",
