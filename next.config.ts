@@ -46,10 +46,12 @@ const config: NextConfig = {
   images: { formats: ["image/avif", "image/webp"], deviceSizes: [640, 828, 1080, 1280, 1600, 1920] },
   async headers() {
     const robots = { key: "X-Robots-Tag", value: "noindex, nofollow" };
-    const privateSources = ["/admin/:path*", "/api/:path*", "/thank-you", "/photo-credits"];
+    const privateSources = ["/admin/:path*", "/api/:path*", "/thank-you", "/photo-credits", "/w/:path*", "/walkthrough/:path*"];
     return [
       { source: "/(.*)", headers: noIndex ? [...securityHeaders, robots] : securityHeaders },
       ...privateSources.map((source) => ({ source, headers: [robots] })),
+      // Private customer walkthrough links: the token must never leak via Referer or shared caches.
+      { source: "/w/:path*", headers: [{ key: "Referrer-Policy", value: "no-referrer" }, { key: "Cache-Control", value: "private, no-store" }] },
       { source: "/site.webmanifest", headers: [{ key: "Content-Type", value: "application/manifest+json; charset=utf-8" }] },
     ];
   },
