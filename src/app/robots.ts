@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { site, noIndex } from "@/config/site";
 
-const PRIVATE = ["/admin", "/admin/", "/api/", "/thank-you", "/photo-credits"];
+const PRIVATE = ["/admin", "/admin/", "/api/", "/thank-you", "/photo-credits", "/w/", "/walkthrough/"];
 
 export default function robots(): MetadataRoute.Robots {
   // Staging, preview and unapproved hosts: block all crawlers. robots.txt is not access control.
