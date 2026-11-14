@@ -39,7 +39,7 @@ Before any asset ships, each claim must have a proof on file or be removed:
 | Licensed / insured / HIC number | Certificate + registration number | **Not verified** (site gates it behind `site.credentials.licensedAndInsuredVerified`) |
 | Years in business, jobs completed | Owner records | Not supplied, do not use |
 | Reviews / testimonials / star ratings | Link to the real review, reviewer consent for ads | None yet, do not use |
-| Prices | `src/config/pricing.ts` only: new decks from $39.99/sq ft starting, bands $8k–15k / $15k–25k / $25k+, always labelled "planning assumption (owner to confirm)". Repairs/sealing "quoted from your photos". | Owner to confirm |
+| Prices | **Phase 4: none in customer-facing creative, pages or notifications.** No per-sq-ft figures, bands, ranges or "from" prices. Internal planning numbers live server-side only (`src/config/estimate-internal.ts`, owner price book). Customers receive a written estimate only after owner approval. |
 | Seasonal urgency ("book before…") | Real schedule constraint confirmed by owner | Avoid capacity claims like "slots are open" |
 | Warranty | Written warranty terms | Not supplied, do not use |
 
@@ -78,7 +78,7 @@ Copy and scripts may be drafted with an AI assistant; visuals must be **owned wo
 ### B3 · Composite deck detail
 - Objective: new-deck consideration. Audience: homeowner-newdeck. Landing: `/project-calculator`.
 - Shot list: board grain and colour, hidden fasteners, picture-frame border, fascia, stair nosing. Brand of board named only if accurate.
-- Pricing line (if any): "New decks from $39.99/sq ft starting (planning assumption)", plus composite costs more.
+- Pricing line: none (Phase 4). Use "Written estimate after we review your walkthrough" instead.
 
 ### B4 · New railing and stairs
 - Objective: safety upgrades. Audience: homeowner-repair, landlord-pm.

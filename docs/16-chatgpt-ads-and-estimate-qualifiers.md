@@ -50,7 +50,7 @@ Server side, answers are sanitised against the config (unknown ids dropped), add
 | GHL field | Example |
 |---|---|
 | `est_project_type` / `est_size` / `est_add_ons` | New deck: composite / 16×20 (320 sq ft) / Stairs |
-| `est_budget` / `est_typical_range` / `est_budget_fit` | $25–35k / $21k–$40k / within · low_end · below · above · unknown |
+| `est_budget` / `est_typical_range` / `est_budget_fit` (Phase 4: internal only, NOT sent to GHL unless `GHL_SEND_INTERNAL_PRICING=true`; the budget question was removed from public forms) | $25–35k / $21k–$40k / within · low_end · below · above · unknown |
 | `est_offer_guidance` | "Budget fits the typical … Quote the standard scope and offer one upgrade." |
 | `est_start` / `est_preferred_date` / `est_preferred_time` | Within 30 days / 2026-11-12 / 12:00 PM (Eastern Time) |
 | `est_favorites` / `est_saw_pricing` / `est_address` | Modern gray composite, Cable railings / yes (2x) / 12 Maple Ave… |

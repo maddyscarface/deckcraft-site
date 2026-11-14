@@ -71,7 +71,7 @@ Optimization event: the `Lead` website event (Pixel + CAPI, deduplicated by `eve
 - **Placement:** Feed, Stories
 - **Creative direction:** Split screen: crew pulling 4 bad boards versus the whole deck. Text overlay "Same deck. Different answer."
 - **15s:** Bad boards out, new boards in, "Repair, not replace" overlay, CTA.
-- **30s:** Talking head: "We get calls from people quoted $20k for a new deck. Sometimes that's right. Often the framing's fine." Cut to repair process, then the finished deck. CTA.
+- **30s:** Talking head: "We get calls from people told they need a whole new deck. Sometimes that's right. Often the framing's fine." Cut to repair process, then the finished deck. CTA.
 - **Landing page:** /services/deck-repair · **Event:** Lead
 
 ### R3 — Triple-decker rear porch
