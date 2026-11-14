@@ -3,7 +3,7 @@ import { leadSchema } from "@/lib/lead-schema";
 import { rateLimit } from "@/lib/server/ratelimit";
 import { submitLead } from "@/lib/server/lead-service";
 import { BRAND, flags } from "@/lib/p4/flags";
-import { db } from "@/lib/p4/db";
+import { db, walkthroughStorageAllowed } from "@/lib/p4/db";
 import { enqueue } from "@/lib/p4/outbox";
 import { createInvite, createProject } from "@/lib/walkthrough/service";
 import { WALKTHROUGH_SERVICES, type WalkthroughService } from "@/lib/walkthrough/templates";
@@ -22,6 +22,7 @@ const extra = z.object({ service: z.enum(WALKTHROUGH_SERVICES), sqft: z.coerce.n
  */
 export async function POST(req: Request) {
   if (!flags().walkthrough) return json({ ok: false, error: "Not available" }, 404);
+  if (!walkthroughStorageAllowed()) return json({ ok: false, error: "The guided walkthrough isn't available yet. Please send photos through the free assessment form instead." }, 503);
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   let body: Record<string, unknown>;
   try { body = (await req.json()) as Record<string, unknown>; } catch { return json({ ok: false, error: "Invalid JSON" }, 400); }
