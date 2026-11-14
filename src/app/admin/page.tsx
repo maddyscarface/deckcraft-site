@@ -1,6 +1,10 @@
 import { listLeads, type StoredLead } from "@/lib/server/store";
 import { integrationStatus } from "@/lib/server/env";
 import { activeSeasonal, seasonalSchedule } from "@/config/seasonal";
+import { pageGuard } from "@/lib/p4/admin-page";
+import { can } from "@/lib/p4/rbac";
+import { BRAND } from "@/lib/p4/flags";
+import { Forbidden } from "@/components/admin/ui";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Dashboard", robots: { index: false, follow: false } };
@@ -13,6 +17,9 @@ function count<T extends string>(rows: StoredLead[], key: string) {
 
 export default async function Admin({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
   const { view } = await searchParams;
+  const { staff, allowed } = await pageGuard("leads.read");
+  if (!allowed) return <Forbidden perm="leads.read" />;
+  const pii = can(staff, "pii.read", BRAND);
   let rows: StoredLead[] = [];
   let err = "";
   try { rows = await listLeads(1000); } catch (e) { err = String(e); }
@@ -59,7 +66,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
                   <td className="p-3 font-semibold">{String(r.lead_score ?? "")}</td><td className="p-3">{new Date(r.created_at).toLocaleString("en-US", { timeZone: "America/New_York" })}</td>
                   <td className="p-3">{String(r.first_name ?? "")} {String(r.last_name ?? "")}{r.company_name ? ` · ${r.company_name}` : ""}</td>
                   <td className="p-3">{String(r.customer_type ?? "")}</td><td className="p-3">{String(r.funnel ?? "")}</td><td className="p-3">{String(r.town ?? "")}</td>
-                  <td className="p-3">{String(r.phone ?? "")}</td><td className="p-3">{Array.isArray(r.photo_urls) ? (r.photo_urls as unknown[]).length : 0}</td>
+                  <td className="p-3">{pii ? String(r.phone ?? "") : "•••"}</td><td className="p-3">{Array.isArray(r.photo_urls) ? (r.photo_urls as unknown[]).length : 0}</td>
                   <td className="p-3">{String(r.timeline ?? "")}</td><td className="p-3">{r.ghl_sync_status}</td>
                 </tr>))}
                 {!bdr.length && <tr><td className="p-6 text-hunter/60" colSpan={10}>No new leads.</td></tr>}
