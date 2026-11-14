@@ -29,7 +29,7 @@ export const POSTS: Post[] = [
         "We don't publish repair price lists, because two decks of the same size can need very different work. Repair, staining and sealing are quoted from your photos and confirmed in writing after an on-site check, separately from new-deck pricing.",
       ] },
       { h: "Repair pricing versus new-deck pricing", p: [
-        "Repairs are scoped item by item: boards, joists, ledger, flashing, railings and stairs. New decks are planned per square foot: our current planning assumption starts at $39.99 per square foot for a straightforward pressure-treated deck (to be confirmed, before permits, demolition and upgrades). Most new-deck projects fall into planning bands of $8k–15k, $15k–25k or $25k+. None of these figures is a quote; your price is set in a written estimate.",
+        "Repairs are scoped item by item: boards, joists, ledger, flashing, railings and stairs. New decks are scoped from size, height, materials, stairs, railings, footings and site access. We don’t publish prices or calculators: your price is set only in a written estimate after we confirm the site.",
       ] },
       { h: "What pushes the price up", p: [
         "Framing and ledger damage. Replacing deck boards is straightforward. Sistering joists, replacing a section of ledger or adding flashing takes more labor and sometimes a permit.",
@@ -209,10 +209,10 @@ export const POSTS: Post[] = [
     category: "Decks",
     published: "2026-11-13",
     updated: "2026-11-13",
-    answer: "A written deck estimate is a scoped price for a defined set of work, prepared after we have reviewed your photos and, when needed, visited the site. It is not the same as a planning figure or a calculator result. Those are dated assumptions, labelled as such, to help you think about budget before anyone writes a scope.",
+    answer: "A written deck estimate is a scoped price for a defined set of work, prepared after we have reviewed your photos and, when needed, visited the site. We don’t publish price lists, starting rates or calculator results, because two decks of the same size can need very different work.",
     sections: [
-      { h: "Planning figures are not quotes", p: [
-        "The project calculator and any published starting number, including a per-square-foot planning assumption for a straightforward new deck, exist to give you a sense of scale. They are marked as owner-to-confirm where the figure still needs the owner’s sign-off, and they exclude items such as permits, demolition and upgrades unless the page says otherwise.",
+      { h: "Why there is no price list", p: [
+        "Our scope planner helps you describe size, railings and extras; it does not produce a price. A guided walkthrough on your phone adds photos, a short video and your own tape measurements so we can scope the work before a site visit.",
         "Two decks of the same size can need very different work. That is why repair, staining and railing jobs are quoted from photos and a site check, not from a public price list.",
       ] },
       { h: "From photos to a written scope", p: [

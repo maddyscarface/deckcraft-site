@@ -1,23 +1,14 @@
 import type { EstimateConfig } from "@/lib/estimate/qualifiers";
 import type { BriefTheme } from "@/lib/estimate/lead-brief";
 import type { QualifierTheme } from "@/components/estimate/EstimateQualifiers";
-import { PRICING, pricingLabel } from "@/config/pricing";
 
 /**
- * DeckCraft pre-estimate qualifiers.
+ * DeckCraft pre-estimate qualifiers: PUBLIC, client-safe config.
  *
- * PUBLIC PRICING (Phase 2 spec): customers only ever see the new-deck starting figure ($/sq ft from
- * src/config/pricing.ts) and "quoted from your photos" for everything else (see `publicPricing`). The `typical`
- * ranges below are INTERNAL: used only for the team lead brief / GHL budget-fit note.
+ * PHASE 4: customers never see prices, ranges, budget brackets or calculations. This file is bundled into client
+ * components, so it carries NO numbers. Internal typical ranges live in ./estimate-internal.ts (server-only).
  *
- * [OWNER TO CONFIRM] Every `typical` range below is a planning placeholder. Repair, staining and
- * resurfacing are derived from PRICE_GUIDE in src/lib/services.ts; new-deck and fence ranges are
- * assumptions (~$45–75/sq ft wood, ~$60–110/sq ft composite installed). Replace with your own
- * job history, then set rangesConfirmed: true.
- *
- * favorites: there are no real gallery jobs yet (src/lib/gallery.ts is empty), so customers pick
- * styles. When you publish real jobs with permission, add them here, e.g.
- * { id: "maple-ave", label: "Maple Ave, Newton", hint: "Gray composite + cable rail" }.
+ * favorites: there are no real gallery jobs yet (src/lib/gallery.ts is empty), so customers pick styles.
  */
 const sq = (w: number, l: number) => `${w}×${l} (${w * l} sq ft)`;
 
@@ -30,88 +21,80 @@ export const estimateConfig: EstimateConfig = {
     {
       id: "deck_repair", label: "Deck repair",
       sizes: [
-        { id: "small", label: "Small fix", hint: "A few boards or one step", typical: [400, 1200] },
-        { id: "medium", label: "Several boards or a railing section", typical: [1160, 4161] },
-        { id: "large", label: "Major repair", hint: "Framing, stairs or large areas", typical: [4000, 12000] },
+        { id: "small", label: "Small fix", hint: "A few boards or one step" },
+        { id: "medium", label: "Several boards or a railing section" },
+        { id: "large", label: "Major repair", hint: "Framing, stairs or large areas" },
       ],
       addOns: [
-        { id: "railing_repair", label: "Railing repair", typical: [500, 2500] },
-        { id: "stairs_repair", label: "Stair repair", typical: [600, 2500] },
+        { id: "railing_repair", label: "Railing repair" },
+        { id: "stairs_repair", label: "Stair repair" },
       ],
     },
     {
       id: "staining", label: "Staining or sealing",
       sizes: [
-        { id: "s150", label: "Up to 150 sq ft", hint: "About 12×12", typical: [800, 1350] },
-        { id: "s300", label: "150–300 sq ft", typical: [1200, 2400] },
-        { id: "s500", label: "300–500 sq ft", typical: [2000, 3800] },
-        { id: "s500p", label: "500+ sq ft", typical: [3500, 6500] },
+        { id: "s150", label: "Up to 150 sq ft", hint: "About 12×12" },
+        { id: "s300", label: "150–300 sq ft" },
+        { id: "s500", label: "300–500 sq ft" },
+        { id: "s500p", label: "500+ sq ft" },
       ],
       addOns: [
-        { id: "rail_stain", label: "Railings", typical: [300, 900] },
-        { id: "stairs_stain", label: "Stairs", typical: [200, 600] },
+        { id: "rail_stain", label: "Railings" },
+        { id: "stairs_stain", label: "Stairs" },
       ],
     },
     {
       id: "resurface", label: "Resurface (new boards, keep frame)",
       sizes: [
-        { id: "12x12", label: sq(12, 12), typical: [2200, 7200] },
-        { id: "12x16", label: sq(12, 16), typical: [2900, 9600] },
-        { id: "16x20", label: sq(16, 20), typical: [4800, 16000] },
-        { id: "20x24", label: sq(20, 24), typical: [7200, 24000] },
+        { id: "12x12", label: sq(12, 12) },
+        { id: "12x16", label: sq(12, 16) },
+        { id: "16x20", label: sq(16, 20) },
+        { id: "20x24", label: sq(20, 24) },
       ],
     },
     {
       id: "new_deck_wood", label: "New deck: pressure-treated wood",
       sizes: [
-        { id: "12x12", label: sq(12, 12), typical: [6500, 11000] },
-        { id: "12x16", label: sq(12, 16), typical: [8500, 14500] },
-        { id: "16x20", label: sq(16, 20), typical: [14500, 24000] },
-        { id: "20x24", label: sq(20, 24), typical: [21500, 36000] },
+        { id: "12x12", label: sq(12, 12) },
+        { id: "12x16", label: sq(12, 16) },
+        { id: "16x20", label: sq(16, 20) },
+        { id: "20x24", label: sq(20, 24) },
       ],
       addOns: [
-        { id: "stairs", label: "Stairs", typical: [1500, 4000] },
-        { id: "rail_upgrade", label: "Upgraded railings (aluminum or cable)", typical: [2500, 8000] },
-        { id: "lighting", label: "Built-in lighting", typical: [800, 2500] },
-        { id: "demo", label: "Remove the old deck", typical: [1500, 4000] },
+        { id: "stairs", label: "Stairs" },
+        { id: "rail_upgrade", label: "Upgraded railings (aluminum or cable)" },
+        { id: "lighting", label: "Built-in lighting" },
+        { id: "demo", label: "Remove the old deck" },
       ],
     },
     {
       id: "new_deck_composite", label: "New deck: composite",
       sizes: [
-        { id: "12x12", label: sq(12, 12), typical: [9000, 16000] },
-        { id: "12x16", label: sq(12, 16), typical: [11500, 21000] },
-        { id: "16x20", label: sq(16, 20), typical: [19000, 35000] },
-        { id: "20x24", label: sq(20, 24), typical: [29000, 53000] },
+        { id: "12x12", label: sq(12, 12) },
+        { id: "12x16", label: sq(12, 16) },
+        { id: "16x20", label: sq(16, 20) },
+        { id: "20x24", label: sq(20, 24) },
       ],
       addOns: [
-        { id: "stairs", label: "Stairs", typical: [1800, 4500] },
-        { id: "rail_upgrade", label: "Upgraded railings (aluminum or cable)", typical: [2500, 8000] },
-        { id: "lighting", label: "Built-in lighting", typical: [800, 2500] },
-        { id: "demo", label: "Remove the old deck", typical: [1500, 4000] },
+        { id: "stairs", label: "Stairs" },
+        { id: "rail_upgrade", label: "Upgraded railings (aluminum or cable)" },
+        { id: "lighting", label: "Built-in lighting" },
+        { id: "demo", label: "Remove the old deck" },
       ],
     },
     {
       id: "fence", label: "Fence",
       sizes: [
-        { id: "repair", label: "Fence or gate repair", typical: [400, 1500] },
-        { id: "lf100", label: "New fence, up to 100 ft", typical: [4000, 9000] },
-        { id: "lf200", label: "New fence, 100–200 ft", typical: [8000, 18000] },
-        { id: "lf200p", label: "New fence, 200+ ft", typical: [16000, 35000] },
+        { id: "repair", label: "Fence or gate repair" },
+        { id: "lf100", label: "New fence, up to 100 ft" },
+        { id: "lf200", label: "New fence, 100–200 ft" },
+        { id: "lf200p", label: "New fence, 200+ ft" },
       ],
-      addOns: [{ id: "gate", label: "New gate", typical: [600, 2000] }],
+      addOns: [{ id: "gate", label: "New gate" }],
     },
   ],
-  budgetBands: [
-    { id: "lt2_5k", label: "Under $2.5k", min: 0, max: 2500 },
-    { id: "2_5_5k", label: "$2.5k–5k", min: 2500, max: 5000 },
-    { id: "5_8k", label: "$5k–8k", min: 5000, max: 8000 },
-    // Spec planning bands (owner to confirm) for new decks:
-    { id: "8_15k", label: "$8k–15k", min: 8000, max: 15000 },
-    { id: "15_25k", label: "$15k–25k", min: 15000, max: 25000 },
-    { id: "25kp", label: "$25k+", min: 25000, max: null },
-    { id: "unsure", label: "Not sure yet", min: 0, max: null },
-  ],
+  // Phase 4: no budget question and no budget brackets on the public site.
+  budgetBands: [],
 
   startOptions: [
     { id: "asap", label: "As soon as possible" },
@@ -142,16 +125,10 @@ export const estimateConfig: EstimateConfig = {
     ],
   },
   priceGuidePath: "/homeowners#price-guide",
-  rangeNote: "Greater Boston planning range. Your exact price is confirmed in writing.",
+  rangeNote: "",
   rangesConfirmed: false,
   addressRequired: true,
   addressLabel: "Property address (so we can check access and permits)",
-  publicPricing: {
-    projectTypes: ["new_deck_wood", "new_deck_composite"],
-    perSqFt: PRICING.newDeckStartPerSqFt,
-    label: pricingLabel(),
-    quotedNote: "Repairs, resurfacing, staining and fencing are quoted from your photos, not from a list price.",
-  },
 };
 
 export const briefTheme: BriefTheme = { dark: "#172637", accent: "#ad7047", accentSoft: "#f5f2ec", ink: "#24282d", muted: "#617080" };
