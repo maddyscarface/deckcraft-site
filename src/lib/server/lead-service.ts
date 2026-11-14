@@ -12,7 +12,9 @@ import { env } from "./env";
 import { sendOpenAiEvent } from "../openai-ads/server";
 import { budgetFit, qualifierFields, qualifierScore, sanitizeQualifiers, type Qualifiers } from "../estimate/qualifiers";
 import { renderLeadBrief, sendLeadBrief } from "../estimate/lead-brief";
-import { START_TO_TIMELINE, estimateConfig, briefTheme } from "@/config/estimate";
+import { START_TO_TIMELINE, briefTheme } from "@/config/estimate";
+import { estimateInternalConfig as estimateConfig } from "@/config/estimate-internal";
+import { publicSafeQualifierFields } from "../p4/ghl-pricing";
 import { SERVICE_LABELS, WORK_TYPE_LABELS, MATERIAL_PREF_LABELS, URGENCY_LABELS, CONTACT_PREF_LABELS } from "../lead-schema";
 import { geographyFor } from "../towns";
 
@@ -67,7 +69,7 @@ export async function ghlPayload(lead: LeadInput, stored: { id: string; score: n
     landing_page: a.landing_page, referrer: a.referrer, first_touch_at: a.first_touch_at,
     openai_obref: a.openai_obref, openai_oppref: a.openai_oppref,
     msclkid: a.msclkid, ttclid: a.ttclid, ft_source: a.ft_source, ft_medium: a.ft_medium, ft_campaign: a.ft_campaign, ga_client_id: a.ga_client_id,
-    ...qualifierFields(estimateConfig, q),
+    ...publicSafeQualifierFields(qualifierFields(estimateConfig, q)),
   };
 }
 

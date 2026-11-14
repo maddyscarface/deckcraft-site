@@ -1,7 +1,7 @@
 "use client";
 import { dl, getAttribution, newEventId, setGoogleUserData, track } from "./tracking";
 
-export type SubmitResponse = { ok: boolean; id?: string; error?: string; fields?: Record<string, string>; funnel?: string; tier?: string };
+export type SubmitResponse = { ok: boolean; id?: string; error?: string; fields?: Record<string, string>; funnel?: string; tier?: string; url?: string };
 
 /** Uploads files one by one (progress-friendly, avoids body-size limits). Returns storage paths. */
 export async function uploadFiles(files: File[], kind: "assessment" | "property", onProgress?: (done: number) => void): Promise<string[]> {
@@ -23,7 +23,7 @@ export async function uploadFiles(files: File[], kind: "assessment" | "property"
  * Posts a lead. event_id is generated once per form instance and reused on retry,
  * so the server's idempotency check and Meta's dedup both hold.
  */
-export async function submitLead(payload: Record<string, unknown>, eventId: string, startedAt: number): Promise<SubmitResponse> {
+export async function submitLead(payload: Record<string, unknown>, eventId: string, startedAt: number, endpoint = "/api/leads"): Promise<SubmitResponse> {
   const body = {
     ...payload,
     event_id: eventId,
@@ -32,7 +32,7 @@ export async function submitLead(payload: Record<string, unknown>, eventId: stri
     elapsed_ms: Date.now() - startedAt,
     ads_consent: (window as unknown as { __dcAdsConsent?: string }).__dcAdsConsent !== "denied",
   };
-  const r = await fetch("/api/leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const r = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   const j = (await r.json().catch(() => ({ ok: false, error: "Network error" }))) as SubmitResponse;
   if (j.ok && j.id !== "ignored") {
     // Enhanced conversions for leads: GTM's Google tag hashes this before sending.

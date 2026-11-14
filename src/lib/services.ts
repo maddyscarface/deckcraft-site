@@ -24,34 +24,19 @@ export type ServicePageConfig = {
 };
 
 
-/**
- * Owner-supplied 2025–26 benchmarks. INTERNAL ONLY (lead-brief planning, estimate config notes). Not rendered on the
- * public site: Phase 2 spec allows only the new-deck assumptions in src/config/pricing.ts.
- */
-export const PRICE_GUIDE: PriceRow[] = [
-  { item: "Deck repair (average job)", range: "$1,160 to $4,161" },
-  { item: "Stain a 12×12 deck", range: "$800 to $1,350" },
-  { item: "Clean and seal", range: "$300 to $1,500" },
-  { item: "Refinish", range: "$3 to $7 per sq ft" },
-  { item: "Board replacement", range: "$25 to $125 per sq ft" },
-  { item: "Railing repair", range: "$39 to $237 per linear ft" },
-  { item: "Full resurfacing", range: "$15 to $50 per sq ft" },
-  { item: "Fence repair", range: "Quoted from your photos" },
-  { item: "New wood privacy fence", range: "Quoted per linear ft" },
-];
 
 export const PRICE_DISCLAIMER = `${PRICING.exclusions} ${PRICING.noGuarantee}`;
 
-/** Public rows: new-deck assumptions only. */
+/** Public rows (Phase 4): scope planning only. No prices, rates, bands or calculations on the public site. */
 export const NEW_DECK_PRICE_ROWS: PriceRow[] = [
-  { item: "New pressure-treated deck, starting assumption", range: `from $${PRICING.newDeckStartPerSqFt} / sq ft` },
-  ...PRICING.planningBands.map((b) => ({ item: `Planning band: ${b.fits.toLowerCase()}`, range: b.label })),
+  { item: "New decks", range: "Written estimate after a site visit" },
+  { item: "What shapes the estimate", range: "Size, height, materials, stairs, railings, footings, site access" },
+  { item: "Fastest way to start", range: "Guided mobile walkthrough" },
 ];
 
-/** Public rows for repair / staining / fencing: no numbers, quoted from photos. */
 export const QUOTED_ROWS = (what: string): PriceRow[] => [
-  { item: what, range: "Quoted from your photos" },
-  { item: "New deck pricing", range: `from $${PRICING.newDeckStartPerSqFt} / sq ft*` },
+  { item: what, range: "Scoped from your photos or walkthrough" },
+  { item: "Your price", range: "Written estimate only, after we confirm the site" },
 ];
 export { pricingLabel };
 
