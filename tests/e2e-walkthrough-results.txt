@@ -1,0 +1,5 @@
+PASS walkthrough 375px: start → photos → footprint (192 sq ft) → resume after reload → heights → review → submit → correction; no overflow, no prices, private headers
+PASS walkthrough 390px: start → photos → footprint (192 sq ft) → resume after reload → heights → review → submit → correction; no overflow, no prices, private headers
+PASS walkthrough 768px: start → photos → footprint (192 sq ft) → resume after reload → heights → review → submit → correction; no overflow, no prices, private headers
+PASS unknown walkthrough link → generic 'no longer active' page, API 404
+PASS admin smoke: project with walkthrough measurements → draft estimate (incomplete until rates) → manual rates → approve → private PDF export; customer still price-free; all admin pages 200; DataMoon synthetic mock run; audit chain verified

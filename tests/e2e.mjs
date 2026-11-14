@@ -12,7 +12,7 @@ const ghl = http.createServer((req, res) => {
   let b = ""; req.on("data", (c) => (b += c)); req.on("end", () => { try { received.push(JSON.parse(b)); } catch {} res.end("ok"); });
 }).listen(4555);
 
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.PW_CHROME ? { executablePath: process.env.PW_CHROME } : {});
 const results = [];
 const ok = (name) => { results.push(`PASS ${name}`); console.log("PASS", name); };
 
@@ -53,10 +53,9 @@ try {
     await f.getByRole("button", { name: "Continue" }).click();
     await f.locator("#town").fill("Newton");
     await f.getByRole("button", { name: "Continue" }).click();
-    // Step 3: pre-estimate qualifiers (project type → size → budget → start)
+    // Step 3: pre-estimate qualifiers (project type → size → start). Phase 4: no budget/price question.
     await f.getByRole("button", { name: "Deck repair", exact: true }).click();
     await f.getByRole("button", { name: /^Small fix/ }).click();
-    await f.getByRole("button", { name: "Under $2.5k", exact: true }).click();
     await f.getByRole("button", { name: "As soon as possible", exact: true }).click();
     if (await f.getByTestId("q-address").count()) await f.getByTestId("q-address").fill("12 Test St, Newton, MA");
     await f.getByRole("button", { name: "Continue" }).click();
@@ -118,7 +117,6 @@ try {
     await f.getByRole("button", { name: "Continue" }).click();
     await f.getByRole("button", { name: "New deck: pressure-treated wood", exact: true }).click();
     await f.getByRole("button", { name: "12×16 (192 sq ft)", exact: true }).click();
-    await f.getByRole("button", { name: "$8k–15k", exact: true }).click();
     await f.getByRole("button", { name: "Next spring", exact: true }).click();
     if (await f.getByTestId("q-address").count()) await f.getByTestId("q-address").fill("8 Test Rd, Brookline, MA");
     await f.getByRole("button", { name: "Continue" }).click();
@@ -142,6 +140,7 @@ try {
     assert.equal(p.work_type, "new");
     assert.ok(String(p.source_page || "").startsWith("/new-deck-estimate"), `source_page ${p.source_page}`);
     assert.equal(p.est_start, "Next spring");
+    assert.ok(!/est_typical_range|est_budget_fit|est_offer_guidance|est_budget"/.test(JSON.stringify(p)), "no internal pricing fields sent to GHL");
     assert.equal(p.photo_count, 2);
     assert.ok(p.tags.includes("photos:received") && p.tags.includes("paid:google"));
     await page.reload();
@@ -223,7 +222,13 @@ try {
     assert.ok(!/stonecraft|sir grout/i.test(home));
     const wh = await fetch(`${BASE}/api/crm-webhook`, { method: "POST", body: "{}" });
     assert.equal(wh.status, 401);
-    ok("422 on bad input, honeypot silently ignored, spoofed upload rejected (415), sitemap/schema OK, CRM webhook requires secret");
+    // Phase 4: customer-visible pages carry no price figures, bands or calculations
+    for (const path of ["/", "/new-deck-estimate", "/project-calculator", "/free-assessment", "/services/new-decks", "/services/deck-repair", "/llms.txt", "/walkthrough/start"]) {
+      const html = await (await fetch(BASE + path)).text();
+      const text = html.replace(/<script[\s\S]*?<\/script>/g, " ").replace(/<[^>]+>/g, " ");
+      assert.ok(!/\$\s?\d/.test(text), `price figure visible on ${path}: ${(text.match(/.{40}\$\s?\d.{20}/) || [""])[0]}`);
+    }
+    ok("422 on bad input, honeypot silently ignored, spoofed upload rejected (415), sitemap/schema OK, CRM webhook requires secret, no prices on public pages");
   }
 
   // 6. Screenshots
