@@ -12,14 +12,13 @@ import { Reviews } from "@/components/sections/Reviews";
 import { SERVICE_PROMISE } from "@/lib/programs";
 import { site, responsePhrase, phoneHref } from "@/config/site";
 import { TOWNS } from "@/lib/towns";
-import { PRICING } from "@/config/pricing";
 import { activeSeasonal, seasonalSchedule } from "@/config/seasonal";
 
 export const metadata = meta("/", "Deck Builders & Repairs in Boston | DeckCraft",
   "Deck building, replacement, repair, staining and fencing across Greater Boston. Request a scoped estimate from DeckCraft.");
 
 const HOME_FAQ = [
-  { q: "How much does deck repair cost in Boston?", a: "Repair is priced by what has failed (boards, framing, ledger, railings or stairs), so we quote it from your photos rather than publishing a list. It is priced separately from new decks, which we plan from a starting assumption of $39.99 per sq ft (to be confirmed). Your exact price is confirmed in writing after an on-site check." },
+  { q: "How much does deck repair cost in Boston?", a: "Repair is priced by what has failed (boards, framing, ledger, railings or stairs), so we quote it from your photos rather than publishing a list. New decks are estimated separately. Either way, you get a written estimate from us after we have reviewed your walkthrough or visited the site." },
   { q: "Is it better to repair or replace a deck?", a: "If the framing, joists, posts and ledger are sound, repair is usually the better value. If rot has reached the structure, replacement is often safer. Try our Repair-or-Replace Checker, then send photos so we can confirm." },
   { q: "When should you seal a deck in Massachusetts?", a: "Late spring through early fall, when the wood is dry and overnight temperatures stay above roughly 50°F. Sealing before the first freeze helps keep water out of the wood through winter." },
   { q: "Does an older deck need a structural inspection?", a: "Not automatically, but soft boards, rot at the joists or ledger, or posts that move are reasons to have it looked at in person before using it heavily. Our photo review is a starting point, not an inspection." },
@@ -101,10 +100,10 @@ export default function Home() {
             </ol>
             <div className="mt-10 flex flex-col gap-6 bg-navy p-7 text-white md:flex-row md:items-center md:justify-between md:p-8">
               <div>
-                <PricingTag dark prefix="How we price" />
-                <p className="mt-3 text-[15px] leading-relaxed text-white/80">Repairs, staining and sealing are <b className="text-white">quoted from your photos</b>. New decks are planned from <b className="text-white">${PRICING.newDeckStartPerSqFt} / sq ft</b> starting, in bands of {PRICING.planningBands.map((b, i) => <span key={b.id} className="whitespace-nowrap">{i ? " · " : ""}{b.label}</span>)}. Your price is confirmed in writing.</p>
+                <PricingTag dark />
+                <p className="mt-3 text-[15px] leading-relaxed text-white/80">We don&rsquo;t publish prices or calculators. Start with <b className="text-white">a guided walkthrough on your phone</b> (photos, a short video and a few tape measurements) or three photos. We scope the work, confirm the site in person, and your price arrives only in a <b className="text-white">written estimate</b>.</p>
               </div>
-              <Link href="/free-assessment" className="btn btn-cedar shrink-0">Find out what you have</Link>
+              <div className="flex shrink-0 flex-col gap-3 sm:flex-row"><Link href="/walkthrough/start" className="btn btn-cedar">Start a walkthrough</Link><Link href="/free-assessment" className="btn btn-ghost">Send 3 photos</Link></div>
             </div>
           </div>
         </div>

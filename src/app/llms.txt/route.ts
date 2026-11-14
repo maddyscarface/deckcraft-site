@@ -20,7 +20,7 @@ export function GET() {
 - Email: ${site.email}
 - Services: See the public service pages linked below.
 - Geography: ${TOWNS.map((t) => t.name).join(", ")}. Coverage of each listed town is confirmed against crew routing before a visit is scheduled. This list is not a claim that every Massachusetts ZIP is served.
-- Accuracy: Pricing and availability are subject to individual assessment. Public figures are planning assumptions, labelled as such. No legal, permitting or engineering clearance is implied unless it is documented in a written estimate.
+- Accuracy: Pricing and availability are subject to individual assessment. The site publishes no prices, rates or calculators; prices exist only in written estimates. No legal, permitting or engineering clearance is implied unless it is documented in a written estimate.
 
 ## Public information
 - Home: ${base}/
