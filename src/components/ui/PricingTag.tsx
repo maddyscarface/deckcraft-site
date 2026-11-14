@@ -1,6 +1,6 @@
 import { pricingEyebrow, pricingFlag } from "@/config/pricing";
 
-/** "Planning assumption" eyebrow with a compact "Owner to confirm" flag (spec §2 labelling). */
+/** "How we quote" eyebrow (Phase 4: no public prices). */
 export function PricingTag({ dark = false, prefix }: { dark?: boolean; prefix?: string }) {
   const flag = pricingFlag();
   return (
