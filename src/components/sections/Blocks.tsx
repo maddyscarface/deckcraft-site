@@ -72,8 +72,7 @@ export function ServicesGrid({ dark = true }: { dark?: boolean }) {
   );
 }
 
-export function PriceGuide({ rows, title = "How pricing works" }: { rows: PriceRow[]; title?: string }) {
-  const showsNewDeck = rows.some((r) => r.range.includes("/ sq ft"));
+export function PriceGuide({ rows, title = "How quoting works" }: { rows: PriceRow[]; title?: string }) {
   return (
     <div id="price-guide" className="scroll-mt-24 border border-line bg-white p-6 shadow-card md:p-10">
       <PricingViewBeacon where="price-guide" />
@@ -84,13 +83,12 @@ export function PriceGuide({ rows, title = "How pricing works" }: { rows: PriceR
           {rows.map((r) => (
             <tr key={r.item} className="border-b border-line last:border-0">
               <th className="py-4 pr-3 font-medium align-top">{r.item}</th>
-              <td className="num py-4 text-right text-[15px] leading-snug sm:text-[17px] sm:whitespace-nowrap">{r.range}</td>
+              <td className="py-4 text-right text-[15px] leading-snug">{r.range}</td>
             </tr>
           ))}
         </tbody>
       </table>
       <div className="mt-5 space-y-2 text-sm leading-relaxed text-stone">
-        {showsNewDeck && <p>* {PRICING.assumptions.join(" ")}</p>}
         <p>{PRICING.repairNote}</p>
         <p>{PRICE_DISCLAIMER}</p>
       </div>

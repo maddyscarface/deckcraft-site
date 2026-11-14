@@ -21,12 +21,15 @@ function choice(): "granted" | "denied" | null {
   try { return (localStorage.getItem(KEY) as "granted" | "denied" | null) ?? null; } catch { return null; }
 }
 
+/** Private customer links and staff pages never load ad/analytics tags (token URLs must not reach third parties). */
+export const isPrivatePath = (p: string | null) => Boolean(p && (p.startsWith("/w/") || p.startsWith("/admin")));
+
 export function Tracking() {
   const path = usePathname();
-  useEffect(() => { captureAttribution(); }, [path]);
-  useEffect(() => { dl("virtual_page_view", { page_path: path }); }, [path]);
-
-
+  const priv = isPrivatePath(path);
+  useEffect(() => { if (!priv) captureAttribution(); }, [path, priv]);
+  useEffect(() => { if (!priv) dl("virtual_page_view", { page_path: path }); }, [path, priv]);
+  if (priv) return null;
 
   return (
     <>
