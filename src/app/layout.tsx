@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Tracking } from "@/components/layout/Tracking";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import { consentInitScript } from "@/lib/consent";
 import { site, noIndex } from "@/config/site";
 
@@ -53,10 +54,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </noscript>
         )}
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-cedar focus:p-3 focus:text-white">Skip to content</a>
-        <AnnouncementBar />
-        <Header />
+        <SiteChrome><AnnouncementBar /><Header /></SiteChrome>
         <main id="main">{children}</main>
-        <Footer />
+        <SiteChrome><Footer /></SiteChrome>
         <Tracking />
       </body>
     </html>
