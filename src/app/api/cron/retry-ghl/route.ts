@@ -5,6 +5,9 @@ import { syncLeadToGhl } from "@/lib/server/ghl-api";
 import { ghlApiReady, ghlConfig } from "@/config/ghl";
 import { toLeadForGhl } from "@/lib/crm/lead-record";
 import { env } from "@/lib/server/env";
+import { processOutbox } from "@/lib/p4/outbox";
+import { outboxHandlers } from "@/lib/p4/handlers";
+import { BRAND } from "@/lib/p4/flags";
 
 export const runtime = "nodejs";
 
@@ -17,9 +20,11 @@ export async function GET(req: Request) {
   if (req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}` || !process.env.CRON_SECRET) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
+  // Phase 4: drain the durable event outbox first (CRM tags/stages only; no email, no prices).
+  const outbox = await processOutbox(BRAND, outboxHandlers()).catch((e) => ({ error: String(e).slice(0, 200) }));
   const cfg = ghlConfig();
   const api = ghlApiReady(cfg);
-  if (!api && !env.ghlWebhookUrl) return NextResponse.json({ ok: true, skipped: "GHL not configured" });
+  if (!api && !env.ghlWebhookUrl) return NextResponse.json({ ok: true, skipped: "GHL not configured", outbox });
   const rows = await listFailedSync();
   let sent = 0;
   for (const r of rows) {
@@ -31,5 +36,5 @@ export async function GET(req: Request) {
     await updateLead(id, { ghl_sync_status: res.ok ? "sent" : "failed", ghl_attempts: attempts, ghl_last_error: res.error ?? null, ...(res.contactId ? { ghl_contact_id: res.contactId } : {}), ...(res.opportunityId ? { ghl_opportunity_id: res.opportunityId } : {}) });
     if (res.ok) sent++;
   }
-  return NextResponse.json({ ok: true, mode: api ? "api" : "webhook", retried: rows.length, sent });
+  return NextResponse.json({ ok: true, mode: api ? "api" : "webhook", retried: rows.length, sent, outbox });
 }
