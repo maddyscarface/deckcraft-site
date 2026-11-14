@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { RESIDENTIAL_STAGES, COMMERCIAL_STAGES, CRM_EVENTS, ghlConfig, ownerFor } from "@/config/ghl";
 import { activeSeasonal, inWindow, SEASONAL_MODULES, EVERGREEN_MODULE } from "@/config/seasonal";
-import { PRICING, bandFor, newDeckStartingAt, pricingLabel } from "@/config/pricing";
+import { PRICING, bandFor, newDeckStartingAt } from "@/config/pricing";
 import { measurementFor } from "@/config/measurement";
 import { leadSchema } from "@/lib/lead-schema";
 import { geographyFor } from "@/lib/towns";
 import { START_TO_TIMELINE, estimateConfig } from "@/config/estimate";
+import { estimateInternalConfig } from "@/config/estimate-internal";
 import { sqftFromLabel } from "@/lib/estimate/qualifiers";
 import { SERVICE_CARDS } from "@/lib/services";
 
@@ -61,19 +62,20 @@ describe("seasonal modules (spec §1)", () => {
   });
 });
 
-describe("pricing assumptions (spec §2)", () => {
-  it("$39.99/sq ft starting and the three bands, flagged owner-to-confirm", () => {
+describe("internal pricing reference (Phase 2 values kept INTERNAL in Phase 4)", () => {
+  it("$39.99/sq ft starting and the three bands remain internal-only reference values", () => {
     expect(PRICING.newDeckStartPerSqFt).toBe(39.99);
     expect(PRICING.planningBands.map((b) => b.label)).toEqual(["$8k–15k", "$15k–25k", "$25k+"]);
-    expect(pricingLabel()).toMatch(/owner to confirm/);
     expect(newDeckStartingAt(320)).toBe(12797);
     expect(bandFor(12797)?.label).toBe("$8k–15k");
     expect(bandFor(30000)?.label).toBe("$25k+");
   });
-  it("only new-deck types show a public figure", () => {
-    expect(estimateConfig.publicPricing?.projectTypes).toEqual(["new_deck_wood", "new_deck_composite"]);
+  it("Phase 4: the public (client-bundled) config carries no prices, ranges or budget bands", () => {
+    expect(estimateConfig.publicPricing).toBeUndefined();
     expect(sqftFromLabel("16×20 (320 sq ft)")).toBe(320);
-    expect(estimateConfig.budgetBands.map((b) => b.id)).toEqual(expect.arrayContaining(["8_15k", "15_25k", "25kp"]));
+    expect(estimateConfig.budgetBands).toEqual([]);
+    expect(JSON.stringify(estimateConfig)).not.toMatch(/typical|\$\d/);
+    expect(estimateInternalConfig.budgetBands.map((b) => b.id)).toEqual(expect.arrayContaining(["8_15k", "15_25k", "25kp"]));
   });
   it("keeps START_TO_TIMELINE", () => {
     expect(START_TO_TIMELINE.within_30).toBe("this_season");
