@@ -21,9 +21,9 @@ const MATERIALS = ["Pressure-treated wood", "Cedar", "Composite", "Vinyl", "Alum
 const STRUCTURES = ["Ground-level deck", "Raised deck with stairs", "Second-story or stacked porch", "Roof deck", "Fence", "Nothing yet (new build)", "Not sure"];
 const ACCESS = ["Easy: side yard or gate", "Through the house only", "Tight lot or shared driveway", "Not sure"];
 const HOA_PERMIT = ["HOA approval needed", "Building permit likely", "Both HOA and permit", "Neither", "Not sure"];
-const LABELS = ["About you", "Your project", "Budget & visit", "Photos", "Anything else?"];
+const LABELS = ["About you", "Your project", "Timing & visit", "Photos", "Anything else?"];
 const LAST = LABELS.length - 1;
-/** Condensed forms keep budget/size/start but skip visit time, styles and address (asked on the call). */
+/** Condensed forms keep size/start but skip visit time, styles and address (asked on the call). */
 const CONDENSED_HIDE = ["visit", "favorites", "address"] as const;
 
 /** Pre-select the estimate project type from the services they ticked. */

@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useMemo } from "react";
-import { budgetFit, dateBounds, rangeText, sqftFromLabel, typicalRange, type EstimateConfig, type Option, type Qualifiers } from "@/lib/estimate/qualifiers";
-import { pricingViews, recordPricingView } from "@/lib/estimate/pricing-views";
+import { useMemo } from "react";
+import { dateBounds, type EstimateConfig, type Option, type Qualifiers } from "@/lib/estimate/qualifiers";
+import { pricingViews } from "@/lib/estimate/pricing-views";
 
 export type QualifierTheme = {
   input: string;
@@ -21,7 +21,7 @@ type Props = {
   errors?: Partial<Record<keyof Qualifiers, string>>;
   /** Hide parts another step already asks (e.g. a site that collects the address elsewhere). */
   hide?: ("address" | "favorites" | "visit")[];
-  /** false hides the typical range (e.g. a market without approved public pricing). */
+  /** Phase 4: ignored. Customers never see ranges or prices. Kept for call-site compatibility. */
   showRange?: boolean;
 };
 
@@ -36,25 +36,15 @@ export function validateQualifiers(cfg: EstimateConfig, q: Qualifiers, hide: Pro
   const e: Partial<Record<keyof Qualifiers, string>> = {};
   if (!q.project_type) e.project_type = "Choose a project type";
   else if (!q.size) e.size = "Choose the closest size";
-  if (!q.budget) e.budget = "Choose a budget range (\"Not sure yet\" is fine)";
   if (!q.start) e.start = "Choose when you'd like to start";
   if (!hide.includes("address") && cfg.addressRequired && !q.address?.trim()) e.address = "Address is required for the visit";
   return e;
 }
 
-export function EstimateQualifiers({ cfg, value: q, onChange, theme: t, errors = {}, hide = [], showRange = true }: Props) {
+export function EstimateQualifiers({ cfg, value: q, onChange, theme: t, errors = {}, hide = [] }: Props) {
   const set = (patch: Partial<Qualifiers>) => onChange({ ...q, ...patch });
   const pt = cfg.projectTypes.find((p) => p.id === q.project_type);
-  const pp = cfg.publicPricing;
-  const range = showRange && !pp ? typicalRange(cfg, q) : undefined;
-  const ppSize = pp && pt && pp.projectTypes.includes(pt.id) ? pt.sizes.find((x) => x.id === q.size) : undefined;
-  const ppSqft = ppSize ? sqftFromLabel(ppSize.label) : undefined;
-  const ppStart = pp && ppSqft ? Math.round((ppSqft * pp.perSqFt) / 100) * 100 : undefined;
-  const fit = budgetFit(cfg, q);
   const bounds = useMemo(() => dateBounds(cfg), [cfg]);
-
-  // Seeing the typical range in the form counts as seeing pricing.
-  useEffect(() => { if (range || ppStart) recordPricingView("form-range"); }, [range?.[0], range?.[1], ppStart]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const chips = (name: keyof Qualifiers, opts: Option[], multi = false) => (
     <div className="flex flex-wrap gap-2" role="group" aria-label={String(name)}>
@@ -101,34 +91,6 @@ export function EstimateQualifiers({ cfg, value: q, onChange, theme: t, errors =
           {chips("add_ons", pt.addOns, true)}
         </div>
       ) : null}
-
-      {pp && pt && (
-        <div className={t.box} data-testid="typical-range" aria-live="polite">
-          {ppStart ? (
-            <p className="text-sm">Starting figure for this size: <strong className="text-lg">from ${ppStart.toLocaleString("en-US")}</strong> <span className={t.muted}>({ppSqft} sq ft × ${pp.perSqFt}/sq ft)</span></p>
-          ) : pp.projectTypes.includes(pt.id) ? (
-            <p className="text-sm">Pick a size to see a starting figure.</p>
-          ) : (
-            <p className="text-sm">{pp.quotedNote}</p>
-          )}
-          <p className={`mt-1 text-xs ${t.muted}`}>{pp.label}. Excludes permits, demolition, stairs, upgraded railings and site conditions. Confirmed in writing after review.</p>
-        </div>
-      )}
-      {range && (
-        <div className={t.box} data-testid="typical-range" aria-live="polite">
-          <p className="text-sm">Typical for this project: <strong className="text-lg">{rangeText(range)}</strong></p>
-          <p className={`mt-1 text-xs ${t.muted}`}>{cfg.rangeNote} <a href={cfg.priceGuidePath} className={t.link} target="_blank" rel="noopener">See the full price guide</a></p>
-        </div>
-      )}
-
-      <div>
-        <p className={t.label}>What budget are you working with? *</p>
-        {chips("budget", cfg.budgetBands)}
-        {err("budget")}
-        {showRange && fit.fit === "below" && (
-          <p className={`mt-2 text-sm ${t.muted}`} data-testid="budget-below">{"That's under the typical range for this scope. That's okay: we'll suggest a phased or essentials option on the call."}</p>
-        )}
-      </div>
 
       <div>
         <p className={t.label}>When would you like to start? *</p>
